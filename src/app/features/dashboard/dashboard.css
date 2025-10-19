@@ -1,0 +1,16 @@
+.dashboard-container {
+    padding: 2rem;
+    max-width: 800px;
+
+    margin: 0 auto;
+}
+
+.admin-badge {
+    color: var(--p-primary-color);
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+p {
+    margin: 0.5rem 0;
+}

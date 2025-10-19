@@ -1,0 +1,30 @@
+<div class="dashboard-container">
+    <p-card>
+        <ng-template pTemplate="header">
+            <h2>Dashboard</h2>
+        </ng-template>
+
+        <p>
+            Welcome, <strong>{{ authService.userName() }}</strong
+            >!
+        </p>
+        <p>Email: {{ authService.userEmail() }}</p>
+
+        @if (authService.userRoles().length > 0) {
+        <p>
+            Role: <strong>{{ authService.userRoles()[0]?.name }}</strong>
+        </p>
+        } @if (authService.isAdmin()) {
+        <p class="admin-badge">✨ Administrator Access</p>
+        }
+
+        <ng-template pTemplate="footer">
+            <p-button
+                label="Logout"
+                icon="pi pi-sign-out"
+                severity="secondary"
+                (onClick)="authService.logout()"
+            />
+        </ng-template>
+    </p-card>
+</div>
