@@ -1,0 +1,57 @@
+<div class="login-container">
+  <p-card class="login-card">
+    <ng-template pTemplate="header">
+      <div class="login-header">
+        <h1>Photography Studio</h1>
+        <p>Management System</p>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          placeholder="admin@studio.gt"
+          type="email"
+          class="w-full"
+        />
+        @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+          <small class="p-error">Valid email is required</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="Enter your password"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+          <small class="p-error">Password is required (min 6 characters)</small>
+        }
+      </div>
+
+      @if (error()) {
+        <div class="error-message">
+          <small class="p-error">{{ error() }}</small>
+        </div>
+      }
+
+      <p-button
+        type="submit"
+        label="Login"
+        icon="pi pi-sign-in"
+        [loading]="loading()"
+        [disabled]="loginForm.invalid"
+        styleClass="w-full"
+      />
+    </form>
+  </p-card>
+</div>

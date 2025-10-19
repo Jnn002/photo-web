@@ -1,13 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ButtonDemo } from './button-demo/button-demo';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, ButtonDemo],
-    templateUrl: './app.html',
-    styleUrl: './app.css',
+    imports: [RouterOutlet, ToastModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <p-toast />
+        <router-outlet />
+    `
 })
-export class App {
-    protected readonly title = signal('photography-studio-web');
-}
+export class App {}
