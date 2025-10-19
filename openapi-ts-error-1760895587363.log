@@ -1,0 +1,22 @@
+[2025-10-19T17:39:47.363Z] Error: Missing $ref pointer "#/components/schemas/app__users__schemas__UserCreate-Input__1". Token "app__users__schemas__UserCreate-Input__1" does not exist.
+Stack:
+MissingPointerError: Missing $ref pointer "#/components/schemas/app__users__schemas__UserCreate-Input__1". Token "app__users__schemas__UserCreate-Input__1" does not exist.
+    at Pointer.resolve (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/pointer.js:113:23)
+    at $Ref.resolve (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/ref.js:79:24)
+    at $Refs._resolve (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/refs.js:168:21)
+    at inventory$Ref (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:136:25)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:266:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at crawl (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:281:21)
+    at bundle (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/bundle.js:555:5)
+    at $RefParser.bundle (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+json-schema-ref-parser@1.2.0/node_modules/@hey-api/json-schema-ref-parser/dist/lib/index.js:143:32)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async na (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+openapi-ts@0.85.2_typescript@5.9.3/node_modules/@hey-api/openapi-ts/dist/index.cjs:47:9979)
+    at async /home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+openapi-ts@0.85.2_typescript@5.9.3/node_modules/@hey-api/openapi-ts/dist/index.cjs:1352:6888
+    at async Promise.all (index 0)
+    at async LH (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+openapi-ts@0.85.2_typescript@5.9.3/node_modules/@hey-api/openapi-ts/dist/index.cjs:1352:6835)
+    at async start (/home/jon/photography-studio/photography-studio-web/node_modules/.pnpm/@hey-api+openapi-ts@0.85.2_typescript@5.9.3/node_modules/@hey-api/openapi-ts/bin/index.cjs:132:21)

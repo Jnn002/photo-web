@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles for Photography Studio Management System */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 14px;
+  background-color: var(--p-surface-ground);
+  color: var(--p-text-color);
+}
+
+/* Utility classes */
+.card {
+  background: var(--p-surface-card);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),
+              0 1px 1px 0 rgba(0,0,0,.14),
+              0 1px 3px 0 rgba(0,0,0,.12);
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
