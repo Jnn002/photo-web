@@ -11,6 +11,7 @@ import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { tokenRefreshInterceptor } from './core/interceptors/token-refresh.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -18,7 +19,11 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideHttpClient(
-            withInterceptors([authInterceptor, errorInterceptor])
+            withInterceptors([
+                authInterceptor,
+                tokenRefreshInterceptor,
+                errorInterceptor
+            ])
         ),
         provideAnimationsAsync(),
         providePrimeNG({

@@ -48,13 +48,25 @@ export class TopbarComponent {
   }
 
   logout(): void {
+    // AuthService.logout() ya maneja la navegación
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
   }
 
   getUserInitials(): string {
     const user = this.currentUser();
-    if (!user?.email) return 'U';
-    return user.email.charAt(0).toUpperCase();
+    if (!user) return 'U';
+
+    // Usar nombre completo si está disponible
+    if (user.full_name) {
+      const names = user.full_name.trim().split(' ');
+      if (names.length >= 2) {
+        // Primera letra del nombre y apellido
+        return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+      }
+      return names[0].charAt(0).toUpperCase();
+    }
+
+    // Fallback a email
+    return user.email?.charAt(0).toUpperCase() || 'U';
   }
 }

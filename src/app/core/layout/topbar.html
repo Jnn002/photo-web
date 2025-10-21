@@ -10,13 +10,19 @@
   </div>
 
   <div class="topbar-right">
-    <div class="user-section">
-      <span class="user-name">Admin User</span>
+    <div class="user-section" (click)="userMenu.toggle($event)">
+      <span class="user-name">{{ currentUser()?.full_name || currentUser()?.email || 'Usuario' }}</span>
       <p-avatar
         [label]="getUserInitials()"
         shape="circle"
         styleClass="user-avatar"
       />
     </div>
+    <p-menu
+      #userMenu
+      [model]="userMenuItems"
+      [popup]="true"
+      appendTo="body"
+    />
   </div>
 </header>

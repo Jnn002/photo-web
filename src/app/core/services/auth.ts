@@ -102,9 +102,12 @@ export class AuthService {
             })
             .pipe(
                 tap((response) => {
-                    this.handleAuthSuccess(response);
+                    // Actualizar tokens sin recargar roles/permisos (ya los tenemos)
+                    this.storage.setAccessToken(response.access_token);
+                    this.storage.setRefreshToken(response.refresh_token);
                 }),
-                catchError(() => {
+                catchError((error) => {
+                    console.error('Token refresh failed:', error);
                     this.logout();
                     return of(null);
                 })
@@ -114,13 +117,24 @@ export class AuthService {
     logout(): void {
         const refreshToken = this.storage.getRefreshToken();
 
+        // Limpiar estado local inmediatamente
+        this.clearAuth();
+
+        // Intentar revocar token en el backend (fire and forget)
         if (refreshToken) {
             this.http
                 .post(`${environment.apiUrl}/auth/logout`, { refresh_token: refreshToken })
+                .pipe(
+                    catchError((error) => {
+                        // Ignorar errores de logout en backend
+                        console.warn('Backend logout failed:', error);
+                        return of(null);
+                    })
+                )
                 .subscribe();
         }
 
-        this.clearAuth();
+        // Redirigir a login
         this.router.navigate(['/auth/login']);
     }
 
