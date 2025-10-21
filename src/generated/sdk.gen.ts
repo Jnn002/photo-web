@@ -2,9 +2,244 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddItemToPackageApiV1PackagesPackageIdItemsPostData, AddItemToPackageApiV1PackagesPackageIdItemsPostErrors, AddItemToPackageApiV1PackagesPackageIdItemsPostResponses, AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostData, AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostErrors, AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostResponses, AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostData, AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostErrors, AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostResponses, AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostData, AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostErrors, AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostResponses, AssignPhotographerApiV1SessionsSessionIdPhotographersPostData, AssignPhotographerApiV1SessionsSessionIdPhotographersPostErrors, AssignPhotographerApiV1SessionsSessionIdPhotographersPostResponses, AssignRoleApiV1UsersUserIdRolesRoleIdPostData, AssignRoleApiV1UsersUserIdRolesRoleIdPostErrors, AssignRoleApiV1UsersUserIdRolesRoleIdPostResponses, CancelSessionApiV1SessionsSessionIdCancelPostData, CancelSessionApiV1SessionsSessionIdCancelPostErrors, CancelSessionApiV1SessionsSessionIdCancelPostResponses, ChangePasswordApiV1UsersUserIdPasswordPatchData, ChangePasswordApiV1UsersUserIdPasswordPatchErrors, ChangePasswordApiV1UsersUserIdPasswordPatchResponses, CreateClientApiV1ClientsPostData, CreateClientApiV1ClientsPostErrors, CreateClientApiV1ClientsPostResponses, CreateItemApiV1ItemsPostData, CreateItemApiV1ItemsPostErrors, CreateItemApiV1ItemsPostResponses, CreatePackageApiV1PackagesPostData, CreatePackageApiV1PackagesPostErrors, CreatePackageApiV1PackagesPostResponses, CreatePermissionApiV1PermissionsPostData, CreatePermissionApiV1PermissionsPostErrors, CreatePermissionApiV1PermissionsPostResponses, CreateRoleApiV1RolesPostData, CreateRoleApiV1RolesPostErrors, CreateRoleApiV1RolesPostResponses, CreateRoomApiV1RoomsPostData, CreateRoomApiV1RoomsPostErrors, CreateRoomApiV1RoomsPostResponses, CreateSessionApiV1SessionsPostData, CreateSessionApiV1SessionsPostErrors, CreateSessionApiV1SessionsPostResponses, CreateUserApiV1UsersPostData, CreateUserApiV1UsersPostErrors, CreateUserApiV1UsersPostResponses, DeactivateClientApiV1ClientsClientIdDeleteData, DeactivateClientApiV1ClientsClientIdDeleteErrors, DeactivateClientApiV1ClientsClientIdDeleteResponses, DeactivateItemApiV1ItemsItemIdDeleteData, DeactivateItemApiV1ItemsItemIdDeleteErrors, DeactivateItemApiV1ItemsItemIdDeleteResponses, DeactivatePackageApiV1PackagesPackageIdDeleteData, DeactivatePackageApiV1PackagesPackageIdDeleteErrors, DeactivatePackageApiV1PackagesPackageIdDeleteResponses, DeactivateRoomApiV1RoomsRoomIdDeleteData, DeactivateRoomApiV1RoomsRoomIdDeleteErrors, DeactivateRoomApiV1RoomsRoomIdDeleteResponses, DeactivateUserApiV1UsersUserIdDeleteData, DeactivateUserApiV1UsersUserIdDeleteErrors, DeactivateUserApiV1UsersUserIdDeleteResponses, GetBusinessRulesApiV1ConfigBusinessRulesGetData, GetBusinessRulesApiV1ConfigBusinessRulesGetResponses, GetClientApiV1ClientsClientIdGetData, GetClientApiV1ClientsClientIdGetErrors, GetClientApiV1ClientsClientIdGetResponses, GetCurrentUserInfoApiV1UsersMeGetData, GetCurrentUserInfoApiV1UsersMeGetResponses, GetCurrentUserPermissionsApiV1UsersMePermissionsGetData, GetCurrentUserPermissionsApiV1UsersMePermissionsGetResponses, GetDashboardStatsApiV1DashboardStatsGetData, GetDashboardStatsApiV1DashboardStatsGetErrors, GetDashboardStatsApiV1DashboardStatsGetResponses, GetEnumsApiV1EnumsGetData, GetEnumsApiV1EnumsGetResponses, GetItemApiV1ItemsItemIdGetData, GetItemApiV1ItemsItemIdGetErrors, GetItemApiV1ItemsItemIdGetResponses, GetPackageApiV1PackagesPackageIdGetData, GetPackageApiV1PackagesPackageIdGetErrors, GetPackageApiV1PackagesPackageIdGetResponses, GetPackageItemsApiV1PackagesPackageIdItemsGetData, GetPackageItemsApiV1PackagesPackageIdItemsGetErrors, GetPackageItemsApiV1PackagesPackageIdItemsGetResponses, GetRoleApiV1RolesRoleIdGetData, GetRoleApiV1RolesRoleIdGetErrors, GetRoleApiV1RolesRoleIdGetResponses, GetRoomApiV1RoomsRoomIdGetData, GetRoomApiV1RoomsRoomIdGetErrors, GetRoomApiV1RoomsRoomIdGetResponses, GetSessionApiV1SessionsSessionIdGetData, GetSessionApiV1SessionsSessionIdGetErrors, GetSessionApiV1SessionsSessionIdGetResponses, GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetData, GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetErrors, GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetResponses, GetUserApiV1UsersUserIdGetData, GetUserApiV1UsersUserIdGetErrors, GetUserApiV1UsersUserIdGetResponses, HealthCheckHealthGetData, HealthCheckHealthGetResponses, ListClientsApiV1ClientsGetData, ListClientsApiV1ClientsGetErrors, ListClientsApiV1ClientsGetResponses, ListItemsApiV1ItemsGetData, ListItemsApiV1ItemsGetErrors, ListItemsApiV1ItemsGetResponses, ListMyAssignmentsApiV1SessionsMyAssignmentsGetData, ListMyAssignmentsApiV1SessionsMyAssignmentsGetErrors, ListMyAssignmentsApiV1SessionsMyAssignmentsGetResponses, ListMyEditingApiV1SessionsMyEditingGetData, ListMyEditingApiV1SessionsMyEditingGetErrors, ListMyEditingApiV1SessionsMyEditingGetResponses, ListPackagesApiV1PackagesGetData, ListPackagesApiV1PackagesGetErrors, ListPackagesApiV1PackagesGetResponses, ListPermissionsApiV1PermissionsGetData, ListPermissionsApiV1PermissionsGetErrors, ListPermissionsApiV1PermissionsGetResponses, ListPermissionsByModuleApiV1PermissionsByModuleGetData, ListPermissionsByModuleApiV1PermissionsByModuleGetErrors, ListPermissionsByModuleApiV1PermissionsByModuleGetResponses, ListRolesApiV1RolesGetData, ListRolesApiV1RolesGetErrors, ListRolesApiV1RolesGetResponses, ListRoomsApiV1RoomsGetData, ListRoomsApiV1RoomsGetErrors, ListRoomsApiV1RoomsGetResponses, ListSessionDetailsApiV1SessionsSessionIdDetailsGetData, ListSessionDetailsApiV1SessionsSessionIdDetailsGetErrors, ListSessionDetailsApiV1SessionsSessionIdDetailsGetResponses, ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetData, ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetErrors, ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetResponses, ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetData, ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetErrors, ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetResponses, ListSessionsApiV1SessionsGetData, ListSessionsApiV1SessionsGetErrors, ListSessionsApiV1SessionsGetResponses, ListUserRolesApiV1UsersUserIdRolesGetData, ListUserRolesApiV1UsersUserIdRolesGetErrors, ListUserRolesApiV1UsersUserIdRolesGetResponses, ListUsersApiV1UsersGetData, ListUsersApiV1UsersGetErrors, ListUsersApiV1UsersGetResponses, LoginApiV1AuthLoginPostData, LoginApiV1AuthLoginPostErrors, LoginApiV1AuthLoginPostResponses, LogoutApiV1AuthLogoutPostData, LogoutApiV1AuthLogoutPostErrors, LogoutApiV1AuthLogoutPostResponses, MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchData, MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchErrors, MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchResponses, MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchData, MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchErrors, MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchResponses, MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostData, MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostErrors, MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostResponses, ReactivateClientApiV1ClientsClientIdReactivatePutData, ReactivateClientApiV1ClientsClientIdReactivatePutErrors, ReactivateClientApiV1ClientsClientIdReactivatePutResponses, ReactivateItemApiV1ItemsItemIdReactivatePutData, ReactivateItemApiV1ItemsItemIdReactivatePutErrors, ReactivateItemApiV1ItemsItemIdReactivatePutResponses, ReactivatePackageApiV1PackagesPackageIdReactivatePutData, ReactivatePackageApiV1PackagesPackageIdReactivatePutErrors, ReactivatePackageApiV1PackagesPackageIdReactivatePutResponses, ReactivateRoomApiV1RoomsRoomIdReactivatePutData, ReactivateRoomApiV1RoomsRoomIdReactivatePutErrors, ReactivateRoomApiV1RoomsRoomIdReactivatePutResponses, ReactivateUserApiV1UsersUserIdReactivatePutData, ReactivateUserApiV1UsersUserIdReactivatePutErrors, ReactivateUserApiV1UsersUserIdReactivatePutResponses, RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostData, RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostErrors, RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostResponses, RecordPaymentApiV1SessionsSessionIdPaymentsPostData, RecordPaymentApiV1SessionsSessionIdPaymentsPostErrors, RecordPaymentApiV1SessionsSessionIdPaymentsPostResponses, RefreshTokenApiV1AuthRefreshPostData, RefreshTokenApiV1AuthRefreshPostErrors, RefreshTokenApiV1AuthRefreshPostResponses, RegisterUserApiV1AuthRegisterPostData, RegisterUserApiV1AuthRegisterPostErrors, RegisterUserApiV1AuthRegisterPostResponses, RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteData, RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteErrors, RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteResponses, RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteData, RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteErrors, RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteResponses, RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteData, RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteErrors, RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteResponses, RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteData, RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteErrors, RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteResponses, RootGetData, RootGetResponses, SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutData, SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutErrors, SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutResponses, TransitionStatusApiV1SessionsSessionIdTransitionPostData, TransitionStatusApiV1SessionsSessionIdTransitionPostErrors, TransitionStatusApiV1SessionsSessionIdTransitionPostResponses, UpdateClientApiV1ClientsClientIdPatchData, UpdateClientApiV1ClientsClientIdPatchErrors, UpdateClientApiV1ClientsClientIdPatchResponses, UpdateItemApiV1ItemsItemIdPatchData, UpdateItemApiV1ItemsItemIdPatchErrors, UpdateItemApiV1ItemsItemIdPatchResponses, UpdatePackageApiV1PackagesPackageIdPatchData, UpdatePackageApiV1PackagesPackageIdPatchErrors, UpdatePackageApiV1PackagesPackageIdPatchResponses, UpdateRoleApiV1RolesRoleIdPatchData, UpdateRoleApiV1RolesRoleIdPatchErrors, UpdateRoleApiV1RolesRoleIdPatchResponses, UpdateRoomApiV1RoomsRoomIdPatchData, UpdateRoomApiV1RoomsRoomIdPatchErrors, UpdateRoomApiV1RoomsRoomIdPatchResponses, UpdateSessionApiV1SessionsSessionIdPatchData, UpdateSessionApiV1SessionsSessionIdPatchErrors, UpdateSessionApiV1SessionsSessionIdPatchResponses, UpdateUserApiV1UsersUserIdPatchData, UpdateUserApiV1UsersUserIdPatchErrors, UpdateUserApiV1UsersUserIdPatchResponses } from './types.gen';
+import type {
+    AddItemToPackageApiV1PackagesPackageIdItemsPostData,
+    AddItemToPackageApiV1PackagesPackageIdItemsPostErrors,
+    AddItemToPackageApiV1PackagesPackageIdItemsPostResponses,
+    AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostData,
+    AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostErrors,
+    AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostResponses,
+    AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostData,
+    AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostErrors,
+    AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostResponses,
+    AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostData,
+    AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostErrors,
+    AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostResponses,
+    AssignPhotographerApiV1SessionsSessionIdPhotographersPostData,
+    AssignPhotographerApiV1SessionsSessionIdPhotographersPostErrors,
+    AssignPhotographerApiV1SessionsSessionIdPhotographersPostResponses,
+    AssignRoleApiV1UsersUserIdRolesRoleIdPostData,
+    AssignRoleApiV1UsersUserIdRolesRoleIdPostErrors,
+    AssignRoleApiV1UsersUserIdRolesRoleIdPostResponses,
+    CancelSessionApiV1SessionsSessionIdCancelPostData,
+    CancelSessionApiV1SessionsSessionIdCancelPostErrors,
+    CancelSessionApiV1SessionsSessionIdCancelPostResponses,
+    ChangePasswordApiV1UsersUserIdPasswordPatchData,
+    ChangePasswordApiV1UsersUserIdPasswordPatchErrors,
+    ChangePasswordApiV1UsersUserIdPasswordPatchResponses,
+    CreateClientApiV1ClientsPostData,
+    CreateClientApiV1ClientsPostErrors,
+    CreateClientApiV1ClientsPostResponses,
+    CreateItemApiV1ItemsPostData,
+    CreateItemApiV1ItemsPostErrors,
+    CreateItemApiV1ItemsPostResponses,
+    CreatePackageApiV1PackagesPostData,
+    CreatePackageApiV1PackagesPostErrors,
+    CreatePackageApiV1PackagesPostResponses,
+    CreatePermissionApiV1PermissionsPostData,
+    CreatePermissionApiV1PermissionsPostErrors,
+    CreatePermissionApiV1PermissionsPostResponses,
+    CreateRoleApiV1RolesPostData,
+    CreateRoleApiV1RolesPostErrors,
+    CreateRoleApiV1RolesPostResponses,
+    CreateRoomApiV1RoomsPostData,
+    CreateRoomApiV1RoomsPostErrors,
+    CreateRoomApiV1RoomsPostResponses,
+    CreateSessionApiV1SessionsPostData,
+    CreateSessionApiV1SessionsPostErrors,
+    CreateSessionApiV1SessionsPostResponses,
+    CreateUserApiV1UsersPostData,
+    CreateUserApiV1UsersPostErrors,
+    CreateUserApiV1UsersPostResponses,
+    DeactivateClientApiV1ClientsClientIdDeleteData,
+    DeactivateClientApiV1ClientsClientIdDeleteErrors,
+    DeactivateClientApiV1ClientsClientIdDeleteResponses,
+    DeactivateItemApiV1ItemsItemIdDeleteData,
+    DeactivateItemApiV1ItemsItemIdDeleteErrors,
+    DeactivateItemApiV1ItemsItemIdDeleteResponses,
+    DeactivatePackageApiV1PackagesPackageIdDeleteData,
+    DeactivatePackageApiV1PackagesPackageIdDeleteErrors,
+    DeactivatePackageApiV1PackagesPackageIdDeleteResponses,
+    DeactivateRoomApiV1RoomsRoomIdDeleteData,
+    DeactivateRoomApiV1RoomsRoomIdDeleteErrors,
+    DeactivateRoomApiV1RoomsRoomIdDeleteResponses,
+    DeactivateUserApiV1UsersUserIdDeleteData,
+    DeactivateUserApiV1UsersUserIdDeleteErrors,
+    DeactivateUserApiV1UsersUserIdDeleteResponses,
+    GetBusinessRulesApiV1ConfigBusinessRulesGetData,
+    GetBusinessRulesApiV1ConfigBusinessRulesGetResponses,
+    GetClientApiV1ClientsClientIdGetData,
+    GetClientApiV1ClientsClientIdGetErrors,
+    GetClientApiV1ClientsClientIdGetResponses,
+    GetCurrentUserInfoApiV1UsersMeGetData,
+    GetCurrentUserInfoApiV1UsersMeGetResponses,
+    GetCurrentUserPermissionsApiV1UsersMePermissionsGetData,
+    GetCurrentUserPermissionsApiV1UsersMePermissionsGetResponses,
+    GetDashboardStatsApiV1DashboardStatsGetData,
+    GetDashboardStatsApiV1DashboardStatsGetErrors,
+    GetDashboardStatsApiV1DashboardStatsGetResponses,
+    GetEnumsApiV1EnumsGetData,
+    GetEnumsApiV1EnumsGetResponses,
+    GetItemApiV1ItemsItemIdGetData,
+    GetItemApiV1ItemsItemIdGetErrors,
+    GetItemApiV1ItemsItemIdGetResponses,
+    GetPackageApiV1PackagesPackageIdGetData,
+    GetPackageApiV1PackagesPackageIdGetErrors,
+    GetPackageApiV1PackagesPackageIdGetResponses,
+    GetPackageItemsApiV1PackagesPackageIdItemsGetData,
+    GetPackageItemsApiV1PackagesPackageIdItemsGetErrors,
+    GetPackageItemsApiV1PackagesPackageIdItemsGetResponses,
+    GetRoleApiV1RolesRoleIdGetData,
+    GetRoleApiV1RolesRoleIdGetErrors,
+    GetRoleApiV1RolesRoleIdGetResponses,
+    GetRoomApiV1RoomsRoomIdGetData,
+    GetRoomApiV1RoomsRoomIdGetErrors,
+    GetRoomApiV1RoomsRoomIdGetResponses,
+    GetSessionApiV1SessionsSessionIdGetData,
+    GetSessionApiV1SessionsSessionIdGetErrors,
+    GetSessionApiV1SessionsSessionIdGetResponses,
+    GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetData,
+    GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetErrors,
+    GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetResponses,
+    GetUserApiV1UsersUserIdGetData,
+    GetUserApiV1UsersUserIdGetErrors,
+    GetUserApiV1UsersUserIdGetResponses,
+    HealthCheckHealthGetData,
+    HealthCheckHealthGetResponses,
+    ListClientsApiV1ClientsGetData,
+    ListClientsApiV1ClientsGetErrors,
+    ListClientsApiV1ClientsGetResponses,
+    ListItemsApiV1ItemsGetData,
+    ListItemsApiV1ItemsGetErrors,
+    ListItemsApiV1ItemsGetResponses,
+    ListMyAssignmentsApiV1SessionsMyAssignmentsGetData,
+    ListMyAssignmentsApiV1SessionsMyAssignmentsGetErrors,
+    ListMyAssignmentsApiV1SessionsMyAssignmentsGetResponses,
+    ListMyEditingApiV1SessionsMyEditingGetData,
+    ListMyEditingApiV1SessionsMyEditingGetErrors,
+    ListMyEditingApiV1SessionsMyEditingGetResponses,
+    ListPackagesApiV1PackagesGetData,
+    ListPackagesApiV1PackagesGetErrors,
+    ListPackagesApiV1PackagesGetResponses,
+    ListPermissionsApiV1PermissionsGetData,
+    ListPermissionsApiV1PermissionsGetErrors,
+    ListPermissionsApiV1PermissionsGetResponses,
+    ListPermissionsByModuleApiV1PermissionsByModuleGetData,
+    ListPermissionsByModuleApiV1PermissionsByModuleGetErrors,
+    ListPermissionsByModuleApiV1PermissionsByModuleGetResponses,
+    ListRolesApiV1RolesGetData,
+    ListRolesApiV1RolesGetErrors,
+    ListRolesApiV1RolesGetResponses,
+    ListRoomsApiV1RoomsGetData,
+    ListRoomsApiV1RoomsGetErrors,
+    ListRoomsApiV1RoomsGetResponses,
+    ListSessionDetailsApiV1SessionsSessionIdDetailsGetData,
+    ListSessionDetailsApiV1SessionsSessionIdDetailsGetErrors,
+    ListSessionDetailsApiV1SessionsSessionIdDetailsGetResponses,
+    ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetData,
+    ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetErrors,
+    ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetResponses,
+    ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetData,
+    ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetErrors,
+    ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetResponses,
+    ListSessionsApiV1SessionsGetData,
+    ListSessionsApiV1SessionsGetErrors,
+    ListSessionsApiV1SessionsGetResponses,
+    ListUserRolesApiV1UsersUserIdRolesGetData,
+    ListUserRolesApiV1UsersUserIdRolesGetErrors,
+    ListUserRolesApiV1UsersUserIdRolesGetResponses,
+    ListUsersApiV1UsersGetData,
+    ListUsersApiV1UsersGetErrors,
+    ListUsersApiV1UsersGetResponses,
+    LoginApiV1AuthLoginPostData,
+    LoginApiV1AuthLoginPostErrors,
+    LoginApiV1AuthLoginPostResponses,
+    LogoutApiV1AuthLogoutPostData,
+    LogoutApiV1AuthLogoutPostErrors,
+    LogoutApiV1AuthLogoutPostResponses,
+    MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchData,
+    MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchErrors,
+    MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchResponses,
+    MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchData,
+    MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchErrors,
+    MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchResponses,
+    MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostData,
+    MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostErrors,
+    MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostResponses,
+    ReactivateClientApiV1ClientsClientIdReactivatePutData,
+    ReactivateClientApiV1ClientsClientIdReactivatePutErrors,
+    ReactivateClientApiV1ClientsClientIdReactivatePutResponses,
+    ReactivateItemApiV1ItemsItemIdReactivatePutData,
+    ReactivateItemApiV1ItemsItemIdReactivatePutErrors,
+    ReactivateItemApiV1ItemsItemIdReactivatePutResponses,
+    ReactivatePackageApiV1PackagesPackageIdReactivatePutData,
+    ReactivatePackageApiV1PackagesPackageIdReactivatePutErrors,
+    ReactivatePackageApiV1PackagesPackageIdReactivatePutResponses,
+    ReactivateRoomApiV1RoomsRoomIdReactivatePutData,
+    ReactivateRoomApiV1RoomsRoomIdReactivatePutErrors,
+    ReactivateRoomApiV1RoomsRoomIdReactivatePutResponses,
+    ReactivateUserApiV1UsersUserIdReactivatePutData,
+    ReactivateUserApiV1UsersUserIdReactivatePutErrors,
+    ReactivateUserApiV1UsersUserIdReactivatePutResponses,
+    RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostData,
+    RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostErrors,
+    RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostResponses,
+    RecordPaymentApiV1SessionsSessionIdPaymentsPostData,
+    RecordPaymentApiV1SessionsSessionIdPaymentsPostErrors,
+    RecordPaymentApiV1SessionsSessionIdPaymentsPostResponses,
+    RefreshTokenApiV1AuthRefreshPostData,
+    RefreshTokenApiV1AuthRefreshPostErrors,
+    RefreshTokenApiV1AuthRefreshPostResponses,
+    RegisterUserApiV1AuthRegisterPostData,
+    RegisterUserApiV1AuthRegisterPostErrors,
+    RegisterUserApiV1AuthRegisterPostResponses,
+    RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteData,
+    RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteErrors,
+    RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteResponses,
+    RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteData,
+    RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteErrors,
+    RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteResponses,
+    RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteData,
+    RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteErrors,
+    RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteResponses,
+    RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteData,
+    RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteErrors,
+    RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteResponses,
+    RootGetData,
+    RootGetResponses,
+    SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutData,
+    SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutErrors,
+    SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutResponses,
+    TransitionStatusApiV1SessionsSessionIdTransitionPostData,
+    TransitionStatusApiV1SessionsSessionIdTransitionPostErrors,
+    TransitionStatusApiV1SessionsSessionIdTransitionPostResponses,
+    UpdateClientApiV1ClientsClientIdPatchData,
+    UpdateClientApiV1ClientsClientIdPatchErrors,
+    UpdateClientApiV1ClientsClientIdPatchResponses,
+    UpdateItemApiV1ItemsItemIdPatchData,
+    UpdateItemApiV1ItemsItemIdPatchErrors,
+    UpdateItemApiV1ItemsItemIdPatchResponses,
+    UpdatePackageApiV1PackagesPackageIdPatchData,
+    UpdatePackageApiV1PackagesPackageIdPatchErrors,
+    UpdatePackageApiV1PackagesPackageIdPatchResponses,
+    UpdateRoleApiV1RolesRoleIdPatchData,
+    UpdateRoleApiV1RolesRoleIdPatchErrors,
+    UpdateRoleApiV1RolesRoleIdPatchResponses,
+    UpdateRoomApiV1RoomsRoomIdPatchData,
+    UpdateRoomApiV1RoomsRoomIdPatchErrors,
+    UpdateRoomApiV1RoomsRoomIdPatchResponses,
+    UpdateSessionApiV1SessionsSessionIdPatchData,
+    UpdateSessionApiV1SessionsSessionIdPatchErrors,
+    UpdateSessionApiV1SessionsSessionIdPatchResponses,
+    UpdateUserApiV1UsersUserIdPatchData,
+    UpdateUserApiV1UsersUserIdPatchErrors,
+    UpdateUserApiV1UsersUserIdPatchResponses,
+} from './types';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<
+    TData extends TDataShape = TDataShape,
+    ThrowOnError extends boolean = boolean
+> = Options2<TData, ThrowOnError> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -25,10 +260,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Returns basic application status and version information.
  */
-export const healthCheckHealthGet = <ThrowOnError extends boolean = false>(options?: Options<HealthCheckHealthGetData, ThrowOnError>) => {
+export const healthCheckHealthGet = <ThrowOnError extends boolean = false>(
+    options?: Options<HealthCheckHealthGetData, ThrowOnError>
+) => {
     return (options?.client ?? client).get<HealthCheckHealthGetResponses, unknown, ThrowOnError>({
         url: '/health',
-        ...options
+        ...options,
     });
 };
 
@@ -39,10 +276,12 @@ export const healthCheckHealthGet = <ThrowOnError extends boolean = false>(optio
  *
  * Welcome message with API information.
  */
-export const rootGet = <ThrowOnError extends boolean = false>(options?: Options<RootGetData, ThrowOnError>) => {
+export const rootGet = <ThrowOnError extends boolean = false>(
+    options?: Options<RootGetData, ThrowOnError>
+) => {
     return (options?.client ?? client).get<RootGetResponses, unknown, ThrowOnError>({
         url: '/',
-        ...options
+        ...options,
     });
 };
 
@@ -87,10 +326,16 @@ export const rootGet = <ThrowOnError extends boolean = false>(options?: Options<
  * }
  * ```
  */
-export const getBusinessRulesApiV1ConfigBusinessRulesGet = <ThrowOnError extends boolean = false>(options?: Options<GetBusinessRulesApiV1ConfigBusinessRulesGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetBusinessRulesApiV1ConfigBusinessRulesGetResponses, unknown, ThrowOnError>({
+export const getBusinessRulesApiV1ConfigBusinessRulesGet = <ThrowOnError extends boolean = false>(
+    options?: Options<GetBusinessRulesApiV1ConfigBusinessRulesGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        GetBusinessRulesApiV1ConfigBusinessRulesGetResponses,
+        unknown,
+        ThrowOnError
+    >({
         url: '/api/v1/config/business-rules',
-        ...options
+        ...options,
     });
 };
 
@@ -139,10 +384,12 @@ export const getBusinessRulesApiV1ConfigBusinessRulesGet = <ThrowOnError extends
  * }
  * ```
  */
-export const getEnumsApiV1EnumsGet = <ThrowOnError extends boolean = false>(options?: Options<GetEnumsApiV1EnumsGetData, ThrowOnError>) => {
+export const getEnumsApiV1EnumsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<GetEnumsApiV1EnumsGetData, ThrowOnError>
+) => {
     return (options?.client ?? client).get<GetEnumsApiV1EnumsGetResponses, unknown, ThrowOnError>({
         url: '/api/v1/enums',
-        ...options
+        ...options,
     });
 };
 
@@ -151,14 +398,20 @@ export const getEnumsApiV1EnumsGet = <ThrowOnError extends boolean = false>(opti
  *
  * Authenticate user with email and password. Returns access token and refresh token.
  */
-export const loginApiV1AuthLoginPost = <ThrowOnError extends boolean = false>(options: Options<LoginApiV1AuthLoginPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<LoginApiV1AuthLoginPostResponses, LoginApiV1AuthLoginPostErrors, ThrowOnError>({
+export const loginApiV1AuthLoginPost = <ThrowOnError extends boolean = false>(
+    options: Options<LoginApiV1AuthLoginPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        LoginApiV1AuthLoginPostResponses,
+        LoginApiV1AuthLoginPostErrors,
+        ThrowOnError
+    >({
         url: '/api/v1/auth/login',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -167,14 +420,20 @@ export const loginApiV1AuthLoginPost = <ThrowOnError extends boolean = false>(op
  *
  * Exchange a valid refresh token for a new access token and refresh token.
  */
-export const refreshTokenApiV1AuthRefreshPost = <ThrowOnError extends boolean = false>(options: Options<RefreshTokenApiV1AuthRefreshPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<RefreshTokenApiV1AuthRefreshPostResponses, RefreshTokenApiV1AuthRefreshPostErrors, ThrowOnError>({
+export const refreshTokenApiV1AuthRefreshPost = <ThrowOnError extends boolean = false>(
+    options: Options<RefreshTokenApiV1AuthRefreshPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        RefreshTokenApiV1AuthRefreshPostResponses,
+        RefreshTokenApiV1AuthRefreshPostErrors,
+        ThrowOnError
+    >({
         url: '/api/v1/auth/refresh',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -183,20 +442,26 @@ export const refreshTokenApiV1AuthRefreshPost = <ThrowOnError extends boolean = 
  *
  * Logout current user by revoking both access and refresh tokens.
  */
-export const logoutApiV1AuthLogoutPost = <ThrowOnError extends boolean = false>(options: Options<LogoutApiV1AuthLogoutPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<LogoutApiV1AuthLogoutPostResponses, LogoutApiV1AuthLogoutPostErrors, ThrowOnError>({
+export const logoutApiV1AuthLogoutPost = <ThrowOnError extends boolean = false>(
+    options: Options<LogoutApiV1AuthLogoutPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        LogoutApiV1AuthLogoutPostResponses,
+        LogoutApiV1AuthLogoutPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/auth/logout',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -205,14 +470,20 @@ export const logoutApiV1AuthLogoutPost = <ThrowOnError extends boolean = false>(
  *
  * Register a new user without authentication. User gets basic "user" role.
  */
-export const registerUserApiV1AuthRegisterPost = <ThrowOnError extends boolean = false>(options: Options<RegisterUserApiV1AuthRegisterPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<RegisterUserApiV1AuthRegisterPostResponses, RegisterUserApiV1AuthRegisterPostErrors, ThrowOnError>({
+export const registerUserApiV1AuthRegisterPost = <ThrowOnError extends boolean = false>(
+    options: Options<RegisterUserApiV1AuthRegisterPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        RegisterUserApiV1AuthRegisterPostResponses,
+        RegisterUserApiV1AuthRegisterPostErrors,
+        ThrowOnError
+    >({
         url: '/api/v1/auth/register',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -221,16 +492,22 @@ export const registerUserApiV1AuthRegisterPost = <ThrowOnError extends boolean =
  *
  * Get paginated list of users. Requires user.list permission.
  */
-export const listUsersApiV1UsersGet = <ThrowOnError extends boolean = false>(options?: Options<ListUsersApiV1UsersGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListUsersApiV1UsersGetResponses, ListUsersApiV1UsersGetErrors, ThrowOnError>({
+export const listUsersApiV1UsersGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListUsersApiV1UsersGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListUsersApiV1UsersGetResponses,
+        ListUsersApiV1UsersGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users',
-        ...options
+        ...options,
     });
 };
 
@@ -239,20 +516,26 @@ export const listUsersApiV1UsersGet = <ThrowOnError extends boolean = false>(opt
  *
  * Create a new user. Requires user.create permission.
  */
-export const createUserApiV1UsersPost = <ThrowOnError extends boolean = false>(options: Options<CreateUserApiV1UsersPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateUserApiV1UsersPostResponses, CreateUserApiV1UsersPostErrors, ThrowOnError>({
+export const createUserApiV1UsersPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateUserApiV1UsersPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateUserApiV1UsersPostResponses,
+        CreateUserApiV1UsersPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -261,16 +544,22 @@ export const createUserApiV1UsersPost = <ThrowOnError extends boolean = false>(o
  *
  * Get information about the currently authenticated user.
  */
-export const getCurrentUserInfoApiV1UsersMeGet = <ThrowOnError extends boolean = false>(options?: Options<GetCurrentUserInfoApiV1UsersMeGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetCurrentUserInfoApiV1UsersMeGetResponses, unknown, ThrowOnError>({
+export const getCurrentUserInfoApiV1UsersMeGet = <ThrowOnError extends boolean = false>(
+    options?: Options<GetCurrentUserInfoApiV1UsersMeGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        GetCurrentUserInfoApiV1UsersMeGetResponses,
+        unknown,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/me',
-        ...options
+        ...options,
     });
 };
 
@@ -279,16 +568,24 @@ export const getCurrentUserInfoApiV1UsersMeGet = <ThrowOnError extends boolean =
  *
  * Get all permission codes for the currently authenticated user.
  */
-export const getCurrentUserPermissionsApiV1UsersMePermissionsGet = <ThrowOnError extends boolean = false>(options?: Options<GetCurrentUserPermissionsApiV1UsersMePermissionsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetCurrentUserPermissionsApiV1UsersMePermissionsGetResponses, unknown, ThrowOnError>({
+export const getCurrentUserPermissionsApiV1UsersMePermissionsGet = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<GetCurrentUserPermissionsApiV1UsersMePermissionsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        GetCurrentUserPermissionsApiV1UsersMePermissionsGetResponses,
+        unknown,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/me/permissions',
-        ...options
+        ...options,
     });
 };
 
@@ -297,16 +594,22 @@ export const getCurrentUserPermissionsApiV1UsersMePermissionsGet = <ThrowOnError
  *
  * Deactivate (soft delete) a user. Requires user.delete permission.
  */
-export const deactivateUserApiV1UsersUserIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeactivateUserApiV1UsersUserIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeactivateUserApiV1UsersUserIdDeleteResponses, DeactivateUserApiV1UsersUserIdDeleteErrors, ThrowOnError>({
+export const deactivateUserApiV1UsersUserIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<DeactivateUserApiV1UsersUserIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        DeactivateUserApiV1UsersUserIdDeleteResponses,
+        DeactivateUserApiV1UsersUserIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -315,16 +618,22 @@ export const deactivateUserApiV1UsersUserIdDelete = <ThrowOnError extends boolea
  *
  * Get user information by ID with roles. Requires user.read permission.
  */
-export const getUserApiV1UsersUserIdGet = <ThrowOnError extends boolean = false>(options: Options<GetUserApiV1UsersUserIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetUserApiV1UsersUserIdGetResponses, GetUserApiV1UsersUserIdGetErrors, ThrowOnError>({
+export const getUserApiV1UsersUserIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetUserApiV1UsersUserIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetUserApiV1UsersUserIdGetResponses,
+        GetUserApiV1UsersUserIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -333,20 +642,26 @@ export const getUserApiV1UsersUserIdGet = <ThrowOnError extends boolean = false>
  *
  * Update user information. Requires user.edit permission.
  */
-export const updateUserApiV1UsersUserIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateUserApiV1UsersUserIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateUserApiV1UsersUserIdPatchResponses, UpdateUserApiV1UsersUserIdPatchErrors, ThrowOnError>({
+export const updateUserApiV1UsersUserIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateUserApiV1UsersUserIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateUserApiV1UsersUserIdPatchResponses,
+        UpdateUserApiV1UsersUserIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -355,16 +670,22 @@ export const updateUserApiV1UsersUserIdPatch = <ThrowOnError extends boolean = f
  *
  * Reactivate a deactivated user. Requires user.edit permission.
  */
-export const reactivateUserApiV1UsersUserIdReactivatePut = <ThrowOnError extends boolean = false>(options: Options<ReactivateUserApiV1UsersUserIdReactivatePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<ReactivateUserApiV1UsersUserIdReactivatePutResponses, ReactivateUserApiV1UsersUserIdReactivatePutErrors, ThrowOnError>({
+export const reactivateUserApiV1UsersUserIdReactivatePut = <ThrowOnError extends boolean = false>(
+    options: Options<ReactivateUserApiV1UsersUserIdReactivatePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        ReactivateUserApiV1UsersUserIdReactivatePutResponses,
+        ReactivateUserApiV1UsersUserIdReactivatePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}/reactivate',
-        ...options
+        ...options,
     });
 };
 
@@ -373,20 +694,26 @@ export const reactivateUserApiV1UsersUserIdReactivatePut = <ThrowOnError extends
  *
  * Change user password. Users can change their own password, or admins can change any password.
  */
-export const changePasswordApiV1UsersUserIdPasswordPatch = <ThrowOnError extends boolean = false>(options: Options<ChangePasswordApiV1UsersUserIdPasswordPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<ChangePasswordApiV1UsersUserIdPasswordPatchResponses, ChangePasswordApiV1UsersUserIdPasswordPatchErrors, ThrowOnError>({
+export const changePasswordApiV1UsersUserIdPasswordPatch = <ThrowOnError extends boolean = false>(
+    options: Options<ChangePasswordApiV1UsersUserIdPasswordPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        ChangePasswordApiV1UsersUserIdPasswordPatchResponses,
+        ChangePasswordApiV1UsersUserIdPasswordPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}/password',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -395,16 +722,22 @@ export const changePasswordApiV1UsersUserIdPasswordPatch = <ThrowOnError extends
  *
  * Get all roles assigned to a user.
  */
-export const listUserRolesApiV1UsersUserIdRolesGet = <ThrowOnError extends boolean = false>(options: Options<ListUserRolesApiV1UsersUserIdRolesGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<ListUserRolesApiV1UsersUserIdRolesGetResponses, ListUserRolesApiV1UsersUserIdRolesGetErrors, ThrowOnError>({
+export const listUserRolesApiV1UsersUserIdRolesGet = <ThrowOnError extends boolean = false>(
+    options: Options<ListUserRolesApiV1UsersUserIdRolesGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        ListUserRolesApiV1UsersUserIdRolesGetResponses,
+        ListUserRolesApiV1UsersUserIdRolesGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}/roles',
-        ...options
+        ...options,
     });
 };
 
@@ -413,16 +746,22 @@ export const listUserRolesApiV1UsersUserIdRolesGet = <ThrowOnError extends boole
  *
  * Remove a role from a user. Requires role.assign permission.
  */
-export const removeRoleApiV1UsersUserIdRolesRoleIdDelete = <ThrowOnError extends boolean = false>(options: Options<RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteResponses, RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteErrors, ThrowOnError>({
+export const removeRoleApiV1UsersUserIdRolesRoleIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteResponses,
+        RemoveRoleApiV1UsersUserIdRolesRoleIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}/roles/{role_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -431,16 +770,22 @@ export const removeRoleApiV1UsersUserIdRolesRoleIdDelete = <ThrowOnError extends
  *
  * Assign a role to a user. Requires role.assign permission.
  */
-export const assignRoleApiV1UsersUserIdRolesRoleIdPost = <ThrowOnError extends boolean = false>(options: Options<AssignRoleApiV1UsersUserIdRolesRoleIdPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AssignRoleApiV1UsersUserIdRolesRoleIdPostResponses, AssignRoleApiV1UsersUserIdRolesRoleIdPostErrors, ThrowOnError>({
+export const assignRoleApiV1UsersUserIdRolesRoleIdPost = <ThrowOnError extends boolean = false>(
+    options: Options<AssignRoleApiV1UsersUserIdRolesRoleIdPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        AssignRoleApiV1UsersUserIdRolesRoleIdPostResponses,
+        AssignRoleApiV1UsersUserIdRolesRoleIdPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/users/{user_id}/roles/{role_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -449,16 +794,22 @@ export const assignRoleApiV1UsersUserIdRolesRoleIdPost = <ThrowOnError extends b
  *
  * Get paginated list of roles. Requires role.list permission.
  */
-export const listRolesApiV1RolesGet = <ThrowOnError extends boolean = false>(options?: Options<ListRolesApiV1RolesGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListRolesApiV1RolesGetResponses, ListRolesApiV1RolesGetErrors, ThrowOnError>({
+export const listRolesApiV1RolesGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListRolesApiV1RolesGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListRolesApiV1RolesGetResponses,
+        ListRolesApiV1RolesGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/roles',
-        ...options
+        ...options,
     });
 };
 
@@ -467,20 +818,26 @@ export const listRolesApiV1RolesGet = <ThrowOnError extends boolean = false>(opt
  *
  * Create a new role. Requires role.create permission.
  */
-export const createRoleApiV1RolesPost = <ThrowOnError extends boolean = false>(options: Options<CreateRoleApiV1RolesPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateRoleApiV1RolesPostResponses, CreateRoleApiV1RolesPostErrors, ThrowOnError>({
+export const createRoleApiV1RolesPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateRoleApiV1RolesPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateRoleApiV1RolesPostResponses,
+        CreateRoleApiV1RolesPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/roles',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -489,16 +846,22 @@ export const createRoleApiV1RolesPost = <ThrowOnError extends boolean = false>(o
  *
  * Get role information by ID with permissions. Requires role.read permission.
  */
-export const getRoleApiV1RolesRoleIdGet = <ThrowOnError extends boolean = false>(options: Options<GetRoleApiV1RolesRoleIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetRoleApiV1RolesRoleIdGetResponses, GetRoleApiV1RolesRoleIdGetErrors, ThrowOnError>({
+export const getRoleApiV1RolesRoleIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetRoleApiV1RolesRoleIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetRoleApiV1RolesRoleIdGetResponses,
+        GetRoleApiV1RolesRoleIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/roles/{role_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -507,20 +870,26 @@ export const getRoleApiV1RolesRoleIdGet = <ThrowOnError extends boolean = false>
  *
  * Update role information. Requires role.edit permission.
  */
-export const updateRoleApiV1RolesRoleIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateRoleApiV1RolesRoleIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateRoleApiV1RolesRoleIdPatchResponses, UpdateRoleApiV1RolesRoleIdPatchErrors, ThrowOnError>({
+export const updateRoleApiV1RolesRoleIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateRoleApiV1RolesRoleIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateRoleApiV1RolesRoleIdPatchResponses,
+        UpdateRoleApiV1RolesRoleIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/roles/{role_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -529,16 +898,22 @@ export const updateRoleApiV1RolesRoleIdPatch = <ThrowOnError extends boolean = f
  *
  * Get paginated list of permissions. Requires permission.list permission.
  */
-export const listPermissionsApiV1PermissionsGet = <ThrowOnError extends boolean = false>(options?: Options<ListPermissionsApiV1PermissionsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListPermissionsApiV1PermissionsGetResponses, ListPermissionsApiV1PermissionsGetErrors, ThrowOnError>({
+export const listPermissionsApiV1PermissionsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListPermissionsApiV1PermissionsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListPermissionsApiV1PermissionsGetResponses,
+        ListPermissionsApiV1PermissionsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/permissions',
-        ...options
+        ...options,
     });
 };
 
@@ -547,20 +922,26 @@ export const listPermissionsApiV1PermissionsGet = <ThrowOnError extends boolean 
  *
  * Create a new permission. Requires permission.create permission.
  */
-export const createPermissionApiV1PermissionsPost = <ThrowOnError extends boolean = false>(options: Options<CreatePermissionApiV1PermissionsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreatePermissionApiV1PermissionsPostResponses, CreatePermissionApiV1PermissionsPostErrors, ThrowOnError>({
+export const createPermissionApiV1PermissionsPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreatePermissionApiV1PermissionsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreatePermissionApiV1PermissionsPostResponses,
+        CreatePermissionApiV1PermissionsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/permissions',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -569,16 +950,24 @@ export const createPermissionApiV1PermissionsPost = <ThrowOnError extends boolea
  *
  * Get all permissions grouped by module. Requires permission.list permission.
  */
-export const listPermissionsByModuleApiV1PermissionsByModuleGet = <ThrowOnError extends boolean = false>(options?: Options<ListPermissionsByModuleApiV1PermissionsByModuleGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListPermissionsByModuleApiV1PermissionsByModuleGetResponses, ListPermissionsByModuleApiV1PermissionsByModuleGetErrors, ThrowOnError>({
+export const listPermissionsByModuleApiV1PermissionsByModuleGet = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<ListPermissionsByModuleApiV1PermissionsByModuleGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListPermissionsByModuleApiV1PermissionsByModuleGetResponses,
+        ListPermissionsByModuleApiV1PermissionsByModuleGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/permissions/by-module',
-        ...options
+        ...options,
     });
 };
 
@@ -587,16 +976,22 @@ export const listPermissionsByModuleApiV1PermissionsByModuleGet = <ThrowOnError 
  *
  * Get paginated list of clients with optional filters. Requires client.view permission.
  */
-export const listClientsApiV1ClientsGet = <ThrowOnError extends boolean = false>(options?: Options<ListClientsApiV1ClientsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListClientsApiV1ClientsGetResponses, ListClientsApiV1ClientsGetErrors, ThrowOnError>({
+export const listClientsApiV1ClientsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListClientsApiV1ClientsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListClientsApiV1ClientsGetResponses,
+        ListClientsApiV1ClientsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients',
-        ...options
+        ...options,
     });
 };
 
@@ -605,20 +1000,26 @@ export const listClientsApiV1ClientsGet = <ThrowOnError extends boolean = false>
  *
  * Create a new client. Requires client.create permission.
  */
-export const createClientApiV1ClientsPost = <ThrowOnError extends boolean = false>(options: Options<CreateClientApiV1ClientsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateClientApiV1ClientsPostResponses, CreateClientApiV1ClientsPostErrors, ThrowOnError>({
+export const createClientApiV1ClientsPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateClientApiV1ClientsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateClientApiV1ClientsPostResponses,
+        CreateClientApiV1ClientsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -627,16 +1028,22 @@ export const createClientApiV1ClientsPost = <ThrowOnError extends boolean = fals
  *
  * Deactivate (soft delete) a client. Requires client.delete permission.
  */
-export const deactivateClientApiV1ClientsClientIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeactivateClientApiV1ClientsClientIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeactivateClientApiV1ClientsClientIdDeleteResponses, DeactivateClientApiV1ClientsClientIdDeleteErrors, ThrowOnError>({
+export const deactivateClientApiV1ClientsClientIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<DeactivateClientApiV1ClientsClientIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        DeactivateClientApiV1ClientsClientIdDeleteResponses,
+        DeactivateClientApiV1ClientsClientIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients/{client_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -645,16 +1052,22 @@ export const deactivateClientApiV1ClientsClientIdDelete = <ThrowOnError extends 
  *
  * Get client information by ID. Requires client.view permission.
  */
-export const getClientApiV1ClientsClientIdGet = <ThrowOnError extends boolean = false>(options: Options<GetClientApiV1ClientsClientIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetClientApiV1ClientsClientIdGetResponses, GetClientApiV1ClientsClientIdGetErrors, ThrowOnError>({
+export const getClientApiV1ClientsClientIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetClientApiV1ClientsClientIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetClientApiV1ClientsClientIdGetResponses,
+        GetClientApiV1ClientsClientIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients/{client_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -663,20 +1076,26 @@ export const getClientApiV1ClientsClientIdGet = <ThrowOnError extends boolean = 
  *
  * Update client information. Requires client.edit permission.
  */
-export const updateClientApiV1ClientsClientIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateClientApiV1ClientsClientIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateClientApiV1ClientsClientIdPatchResponses, UpdateClientApiV1ClientsClientIdPatchErrors, ThrowOnError>({
+export const updateClientApiV1ClientsClientIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateClientApiV1ClientsClientIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateClientApiV1ClientsClientIdPatchResponses,
+        UpdateClientApiV1ClientsClientIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients/{client_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -685,16 +1104,24 @@ export const updateClientApiV1ClientsClientIdPatch = <ThrowOnError extends boole
  *
  * Reactivate a deactivated client. Requires client.edit permission.
  */
-export const reactivateClientApiV1ClientsClientIdReactivatePut = <ThrowOnError extends boolean = false>(options: Options<ReactivateClientApiV1ClientsClientIdReactivatePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<ReactivateClientApiV1ClientsClientIdReactivatePutResponses, ReactivateClientApiV1ClientsClientIdReactivatePutErrors, ThrowOnError>({
+export const reactivateClientApiV1ClientsClientIdReactivatePut = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<ReactivateClientApiV1ClientsClientIdReactivatePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        ReactivateClientApiV1ClientsClientIdReactivatePutResponses,
+        ReactivateClientApiV1ClientsClientIdReactivatePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/clients/{client_id}/reactivate',
-        ...options
+        ...options,
     });
 };
 
@@ -703,16 +1130,22 @@ export const reactivateClientApiV1ClientsClientIdReactivatePut = <ThrowOnError e
  *
  * Get paginated list of items with optional filters. Requires item.view permission.
  */
-export const listItemsApiV1ItemsGet = <ThrowOnError extends boolean = false>(options?: Options<ListItemsApiV1ItemsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListItemsApiV1ItemsGetResponses, ListItemsApiV1ItemsGetErrors, ThrowOnError>({
+export const listItemsApiV1ItemsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListItemsApiV1ItemsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListItemsApiV1ItemsGetResponses,
+        ListItemsApiV1ItemsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items',
-        ...options
+        ...options,
     });
 };
 
@@ -721,20 +1154,26 @@ export const listItemsApiV1ItemsGet = <ThrowOnError extends boolean = false>(opt
  *
  * Create a new catalog item. Requires item.create permission.
  */
-export const createItemApiV1ItemsPost = <ThrowOnError extends boolean = false>(options: Options<CreateItemApiV1ItemsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateItemApiV1ItemsPostResponses, CreateItemApiV1ItemsPostErrors, ThrowOnError>({
+export const createItemApiV1ItemsPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateItemApiV1ItemsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateItemApiV1ItemsPostResponses,
+        CreateItemApiV1ItemsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -743,16 +1182,22 @@ export const createItemApiV1ItemsPost = <ThrowOnError extends boolean = false>(o
  *
  * Deactivate (soft delete) an item. Requires item.delete permission.
  */
-export const deactivateItemApiV1ItemsItemIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeactivateItemApiV1ItemsItemIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeactivateItemApiV1ItemsItemIdDeleteResponses, DeactivateItemApiV1ItemsItemIdDeleteErrors, ThrowOnError>({
+export const deactivateItemApiV1ItemsItemIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<DeactivateItemApiV1ItemsItemIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        DeactivateItemApiV1ItemsItemIdDeleteResponses,
+        DeactivateItemApiV1ItemsItemIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items/{item_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -761,16 +1206,22 @@ export const deactivateItemApiV1ItemsItemIdDelete = <ThrowOnError extends boolea
  *
  * Get item information by ID. Requires item.view permission.
  */
-export const getItemApiV1ItemsItemIdGet = <ThrowOnError extends boolean = false>(options: Options<GetItemApiV1ItemsItemIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetItemApiV1ItemsItemIdGetResponses, GetItemApiV1ItemsItemIdGetErrors, ThrowOnError>({
+export const getItemApiV1ItemsItemIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetItemApiV1ItemsItemIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetItemApiV1ItemsItemIdGetResponses,
+        GetItemApiV1ItemsItemIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items/{item_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -779,20 +1230,26 @@ export const getItemApiV1ItemsItemIdGet = <ThrowOnError extends boolean = false>
  *
  * Update item information. Requires item.edit permission.
  */
-export const updateItemApiV1ItemsItemIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateItemApiV1ItemsItemIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateItemApiV1ItemsItemIdPatchResponses, UpdateItemApiV1ItemsItemIdPatchErrors, ThrowOnError>({
+export const updateItemApiV1ItemsItemIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateItemApiV1ItemsItemIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateItemApiV1ItemsItemIdPatchResponses,
+        UpdateItemApiV1ItemsItemIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items/{item_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -801,16 +1258,22 @@ export const updateItemApiV1ItemsItemIdPatch = <ThrowOnError extends boolean = f
  *
  * Reactivate a deactivated item. Requires item.edit permission.
  */
-export const reactivateItemApiV1ItemsItemIdReactivatePut = <ThrowOnError extends boolean = false>(options: Options<ReactivateItemApiV1ItemsItemIdReactivatePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<ReactivateItemApiV1ItemsItemIdReactivatePutResponses, ReactivateItemApiV1ItemsItemIdReactivatePutErrors, ThrowOnError>({
+export const reactivateItemApiV1ItemsItemIdReactivatePut = <ThrowOnError extends boolean = false>(
+    options: Options<ReactivateItemApiV1ItemsItemIdReactivatePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        ReactivateItemApiV1ItemsItemIdReactivatePutResponses,
+        ReactivateItemApiV1ItemsItemIdReactivatePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/items/{item_id}/reactivate',
-        ...options
+        ...options,
     });
 };
 
@@ -819,16 +1282,22 @@ export const reactivateItemApiV1ItemsItemIdReactivatePut = <ThrowOnError extends
  *
  * Get paginated list of packages with optional filters. Requires package.view permission.
  */
-export const listPackagesApiV1PackagesGet = <ThrowOnError extends boolean = false>(options?: Options<ListPackagesApiV1PackagesGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListPackagesApiV1PackagesGetResponses, ListPackagesApiV1PackagesGetErrors, ThrowOnError>({
+export const listPackagesApiV1PackagesGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListPackagesApiV1PackagesGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListPackagesApiV1PackagesGetResponses,
+        ListPackagesApiV1PackagesGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages',
-        ...options
+        ...options,
     });
 };
 
@@ -837,20 +1306,26 @@ export const listPackagesApiV1PackagesGet = <ThrowOnError extends boolean = fals
  *
  * Create a new service package. Requires package.create permission.
  */
-export const createPackageApiV1PackagesPost = <ThrowOnError extends boolean = false>(options: Options<CreatePackageApiV1PackagesPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreatePackageApiV1PackagesPostResponses, CreatePackageApiV1PackagesPostErrors, ThrowOnError>({
+export const createPackageApiV1PackagesPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreatePackageApiV1PackagesPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreatePackageApiV1PackagesPostResponses,
+        CreatePackageApiV1PackagesPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -859,16 +1334,22 @@ export const createPackageApiV1PackagesPost = <ThrowOnError extends boolean = fa
  *
  * Deactivate (soft delete) a package. Requires package.delete permission.
  */
-export const deactivatePackageApiV1PackagesPackageIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeactivatePackageApiV1PackagesPackageIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeactivatePackageApiV1PackagesPackageIdDeleteResponses, DeactivatePackageApiV1PackagesPackageIdDeleteErrors, ThrowOnError>({
+export const deactivatePackageApiV1PackagesPackageIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<DeactivatePackageApiV1PackagesPackageIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        DeactivatePackageApiV1PackagesPackageIdDeleteResponses,
+        DeactivatePackageApiV1PackagesPackageIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -877,16 +1358,22 @@ export const deactivatePackageApiV1PackagesPackageIdDelete = <ThrowOnError exten
  *
  * Get package information by ID with included items. Requires package.view permission.
  */
-export const getPackageApiV1PackagesPackageIdGet = <ThrowOnError extends boolean = false>(options: Options<GetPackageApiV1PackagesPackageIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetPackageApiV1PackagesPackageIdGetResponses, GetPackageApiV1PackagesPackageIdGetErrors, ThrowOnError>({
+export const getPackageApiV1PackagesPackageIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetPackageApiV1PackagesPackageIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetPackageApiV1PackagesPackageIdGetResponses,
+        GetPackageApiV1PackagesPackageIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -895,20 +1382,26 @@ export const getPackageApiV1PackagesPackageIdGet = <ThrowOnError extends boolean
  *
  * Update package information. Requires package.edit permission.
  */
-export const updatePackageApiV1PackagesPackageIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdatePackageApiV1PackagesPackageIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdatePackageApiV1PackagesPackageIdPatchResponses, UpdatePackageApiV1PackagesPackageIdPatchErrors, ThrowOnError>({
+export const updatePackageApiV1PackagesPackageIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdatePackageApiV1PackagesPackageIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdatePackageApiV1PackagesPackageIdPatchResponses,
+        UpdatePackageApiV1PackagesPackageIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -917,16 +1410,24 @@ export const updatePackageApiV1PackagesPackageIdPatch = <ThrowOnError extends bo
  *
  * Reactivate a deactivated package. Requires package.edit permission.
  */
-export const reactivatePackageApiV1PackagesPackageIdReactivatePut = <ThrowOnError extends boolean = false>(options: Options<ReactivatePackageApiV1PackagesPackageIdReactivatePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<ReactivatePackageApiV1PackagesPackageIdReactivatePutResponses, ReactivatePackageApiV1PackagesPackageIdReactivatePutErrors, ThrowOnError>({
+export const reactivatePackageApiV1PackagesPackageIdReactivatePut = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<ReactivatePackageApiV1PackagesPackageIdReactivatePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        ReactivatePackageApiV1PackagesPackageIdReactivatePutResponses,
+        ReactivatePackageApiV1PackagesPackageIdReactivatePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}/reactivate',
-        ...options
+        ...options,
     });
 };
 
@@ -935,16 +1436,22 @@ export const reactivatePackageApiV1PackagesPackageIdReactivatePut = <ThrowOnErro
  *
  * Get all items in a package with details. Requires package.view permission.
  */
-export const getPackageItemsApiV1PackagesPackageIdItemsGet = <ThrowOnError extends boolean = false>(options: Options<GetPackageItemsApiV1PackagesPackageIdItemsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetPackageItemsApiV1PackagesPackageIdItemsGetResponses, GetPackageItemsApiV1PackagesPackageIdItemsGetErrors, ThrowOnError>({
+export const getPackageItemsApiV1PackagesPackageIdItemsGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetPackageItemsApiV1PackagesPackageIdItemsGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetPackageItemsApiV1PackagesPackageIdItemsGetResponses,
+        GetPackageItemsApiV1PackagesPackageIdItemsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}/items',
-        ...options
+        ...options,
     });
 };
 
@@ -953,20 +1460,28 @@ export const getPackageItemsApiV1PackagesPackageIdItemsGet = <ThrowOnError exten
  *
  * Add an item to a package. Requires package.edit permission.
  */
-export const addItemToPackageApiV1PackagesPackageIdItemsPost = <ThrowOnError extends boolean = false>(options: Options<AddItemToPackageApiV1PackagesPackageIdItemsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AddItemToPackageApiV1PackagesPackageIdItemsPostResponses, AddItemToPackageApiV1PackagesPackageIdItemsPostErrors, ThrowOnError>({
+export const addItemToPackageApiV1PackagesPackageIdItemsPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<AddItemToPackageApiV1PackagesPackageIdItemsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        AddItemToPackageApiV1PackagesPackageIdItemsPostResponses,
+        AddItemToPackageApiV1PackagesPackageIdItemsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}/items',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -975,16 +1490,24 @@ export const addItemToPackageApiV1PackagesPackageIdItemsPost = <ThrowOnError ext
  *
  * Remove an item from a package. Requires package.edit permission.
  */
-export const removeItemFromPackageApiV1PackagesPackageIdItemsItemIdDelete = <ThrowOnError extends boolean = false>(options: Options<RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteResponses, RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteErrors, ThrowOnError>({
+export const removeItemFromPackageApiV1PackagesPackageIdItemsItemIdDelete = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteResponses,
+        RemoveItemFromPackageApiV1PackagesPackageIdItemsItemIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/packages/{package_id}/items/{item_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -993,16 +1516,22 @@ export const removeItemFromPackageApiV1PackagesPackageIdItemsItemIdDelete = <Thr
  *
  * Get paginated list of rooms with optional filters. Requires room.view permission.
  */
-export const listRoomsApiV1RoomsGet = <ThrowOnError extends boolean = false>(options?: Options<ListRoomsApiV1RoomsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListRoomsApiV1RoomsGetResponses, ListRoomsApiV1RoomsGetErrors, ThrowOnError>({
+export const listRoomsApiV1RoomsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListRoomsApiV1RoomsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListRoomsApiV1RoomsGetResponses,
+        ListRoomsApiV1RoomsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms',
-        ...options
+        ...options,
     });
 };
 
@@ -1011,20 +1540,26 @@ export const listRoomsApiV1RoomsGet = <ThrowOnError extends boolean = false>(opt
  *
  * Create a new studio room. Requires room.create permission.
  */
-export const createRoomApiV1RoomsPost = <ThrowOnError extends boolean = false>(options: Options<CreateRoomApiV1RoomsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateRoomApiV1RoomsPostResponses, CreateRoomApiV1RoomsPostErrors, ThrowOnError>({
+export const createRoomApiV1RoomsPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateRoomApiV1RoomsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateRoomApiV1RoomsPostResponses,
+        CreateRoomApiV1RoomsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1033,16 +1568,22 @@ export const createRoomApiV1RoomsPost = <ThrowOnError extends boolean = false>(o
  *
  * Deactivate (soft delete) a room. Requires room.delete permission.
  */
-export const deactivateRoomApiV1RoomsRoomIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeactivateRoomApiV1RoomsRoomIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<DeactivateRoomApiV1RoomsRoomIdDeleteResponses, DeactivateRoomApiV1RoomsRoomIdDeleteErrors, ThrowOnError>({
+export const deactivateRoomApiV1RoomsRoomIdDelete = <ThrowOnError extends boolean = false>(
+    options: Options<DeactivateRoomApiV1RoomsRoomIdDeleteData, ThrowOnError>
+) => {
+    return (options.client ?? client).delete<
+        DeactivateRoomApiV1RoomsRoomIdDeleteResponses,
+        DeactivateRoomApiV1RoomsRoomIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms/{room_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1051,16 +1592,22 @@ export const deactivateRoomApiV1RoomsRoomIdDelete = <ThrowOnError extends boolea
  *
  * Get room information by ID. Requires room.view permission.
  */
-export const getRoomApiV1RoomsRoomIdGet = <ThrowOnError extends boolean = false>(options: Options<GetRoomApiV1RoomsRoomIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetRoomApiV1RoomsRoomIdGetResponses, GetRoomApiV1RoomsRoomIdGetErrors, ThrowOnError>({
+export const getRoomApiV1RoomsRoomIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetRoomApiV1RoomsRoomIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetRoomApiV1RoomsRoomIdGetResponses,
+        GetRoomApiV1RoomsRoomIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms/{room_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1069,20 +1616,26 @@ export const getRoomApiV1RoomsRoomIdGet = <ThrowOnError extends boolean = false>
  *
  * Update room information. Requires room.edit permission.
  */
-export const updateRoomApiV1RoomsRoomIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateRoomApiV1RoomsRoomIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateRoomApiV1RoomsRoomIdPatchResponses, UpdateRoomApiV1RoomsRoomIdPatchErrors, ThrowOnError>({
+export const updateRoomApiV1RoomsRoomIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateRoomApiV1RoomsRoomIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateRoomApiV1RoomsRoomIdPatchResponses,
+        UpdateRoomApiV1RoomsRoomIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms/{room_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1091,16 +1644,22 @@ export const updateRoomApiV1RoomsRoomIdPatch = <ThrowOnError extends boolean = f
  *
  * Reactivate a deactivated room. Requires room.edit permission.
  */
-export const reactivateRoomApiV1RoomsRoomIdReactivatePut = <ThrowOnError extends boolean = false>(options: Options<ReactivateRoomApiV1RoomsRoomIdReactivatePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<ReactivateRoomApiV1RoomsRoomIdReactivatePutResponses, ReactivateRoomApiV1RoomsRoomIdReactivatePutErrors, ThrowOnError>({
+export const reactivateRoomApiV1RoomsRoomIdReactivatePut = <ThrowOnError extends boolean = false>(
+    options: Options<ReactivateRoomApiV1RoomsRoomIdReactivatePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        ReactivateRoomApiV1RoomsRoomIdReactivatePutResponses,
+        ReactivateRoomApiV1RoomsRoomIdReactivatePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms/{room_id}/reactivate',
-        ...options
+        ...options,
     });
 };
 
@@ -1109,16 +1668,24 @@ export const reactivateRoomApiV1RoomsRoomIdReactivatePut = <ThrowOnError extends
  *
  * Set room status to MAINTENANCE. Requires room.edit permission.
  */
-export const setRoomMaintenanceApiV1RoomsRoomIdMaintenancePut = <ThrowOnError extends boolean = false>(options: Options<SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutData, ThrowOnError>) => {
-    return (options.client ?? client).put<SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutResponses, SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutErrors, ThrowOnError>({
+export const setRoomMaintenanceApiV1RoomsRoomIdMaintenancePut = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutData, ThrowOnError>
+) => {
+    return (options.client ?? client).put<
+        SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutResponses,
+        SetRoomMaintenanceApiV1RoomsRoomIdMaintenancePutErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/rooms/{room_id}/maintenance',
-        ...options
+        ...options,
     });
 };
 
@@ -1127,16 +1694,22 @@ export const setRoomMaintenanceApiV1RoomsRoomIdMaintenancePut = <ThrowOnError ex
  *
  * Get paginated list of sessions with optional filters. Requires session.view.all permission.
  */
-export const listSessionsApiV1SessionsGet = <ThrowOnError extends boolean = false>(options?: Options<ListSessionsApiV1SessionsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListSessionsApiV1SessionsGetResponses, ListSessionsApiV1SessionsGetErrors, ThrowOnError>({
+export const listSessionsApiV1SessionsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListSessionsApiV1SessionsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListSessionsApiV1SessionsGetResponses,
+        ListSessionsApiV1SessionsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions',
-        ...options
+        ...options,
     });
 };
 
@@ -1145,20 +1718,26 @@ export const listSessionsApiV1SessionsGet = <ThrowOnError extends boolean = fals
  *
  * Create a new session in REQUEST status. Requires session.create permission.
  */
-export const createSessionApiV1SessionsPost = <ThrowOnError extends boolean = false>(options: Options<CreateSessionApiV1SessionsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CreateSessionApiV1SessionsPostResponses, CreateSessionApiV1SessionsPostErrors, ThrowOnError>({
+export const createSessionApiV1SessionsPost = <ThrowOnError extends boolean = false>(
+    options: Options<CreateSessionApiV1SessionsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CreateSessionApiV1SessionsPostResponses,
+        CreateSessionApiV1SessionsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1167,16 +1746,24 @@ export const createSessionApiV1SessionsPost = <ThrowOnError extends boolean = fa
  *
  * Get sessions assigned to current photographer. Requires session.view.own permission.
  */
-export const listMyAssignmentsApiV1SessionsMyAssignmentsGet = <ThrowOnError extends boolean = false>(options?: Options<ListMyAssignmentsApiV1SessionsMyAssignmentsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListMyAssignmentsApiV1SessionsMyAssignmentsGetResponses, ListMyAssignmentsApiV1SessionsMyAssignmentsGetErrors, ThrowOnError>({
+export const listMyAssignmentsApiV1SessionsMyAssignmentsGet = <
+    ThrowOnError extends boolean = false
+>(
+    options?: Options<ListMyAssignmentsApiV1SessionsMyAssignmentsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListMyAssignmentsApiV1SessionsMyAssignmentsGetResponses,
+        ListMyAssignmentsApiV1SessionsMyAssignmentsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/my-assignments',
-        ...options
+        ...options,
     });
 };
 
@@ -1185,16 +1772,22 @@ export const listMyAssignmentsApiV1SessionsMyAssignmentsGet = <ThrowOnError exte
  *
  * Get sessions assigned to current editor. Requires session.view.own permission.
  */
-export const listMyEditingApiV1SessionsMyEditingGet = <ThrowOnError extends boolean = false>(options?: Options<ListMyEditingApiV1SessionsMyEditingGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListMyEditingApiV1SessionsMyEditingGetResponses, ListMyEditingApiV1SessionsMyEditingGetErrors, ThrowOnError>({
+export const listMyEditingApiV1SessionsMyEditingGet = <ThrowOnError extends boolean = false>(
+    options?: Options<ListMyEditingApiV1SessionsMyEditingGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        ListMyEditingApiV1SessionsMyEditingGetResponses,
+        ListMyEditingApiV1SessionsMyEditingGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/my-editing',
-        ...options
+        ...options,
     });
 };
 
@@ -1203,16 +1796,22 @@ export const listMyEditingApiV1SessionsMyEditingGet = <ThrowOnError extends bool
  *
  * Get detailed session information by ID. Requires session.view.all permission.
  */
-export const getSessionApiV1SessionsSessionIdGet = <ThrowOnError extends boolean = false>(options: Options<GetSessionApiV1SessionsSessionIdGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetSessionApiV1SessionsSessionIdGetResponses, GetSessionApiV1SessionsSessionIdGetErrors, ThrowOnError>({
+export const getSessionApiV1SessionsSessionIdGet = <ThrowOnError extends boolean = false>(
+    options: Options<GetSessionApiV1SessionsSessionIdGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetSessionApiV1SessionsSessionIdGetResponses,
+        GetSessionApiV1SessionsSessionIdGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1221,20 +1820,26 @@ export const getSessionApiV1SessionsSessionIdGet = <ThrowOnError extends boolean
  *
  * Update session information. Requires session.edit.pre-assigned permission.
  */
-export const updateSessionApiV1SessionsSessionIdPatch = <ThrowOnError extends boolean = false>(options: Options<UpdateSessionApiV1SessionsSessionIdPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<UpdateSessionApiV1SessionsSessionIdPatchResponses, UpdateSessionApiV1SessionsSessionIdPatchErrors, ThrowOnError>({
+export const updateSessionApiV1SessionsSessionIdPatch = <ThrowOnError extends boolean = false>(
+    options: Options<UpdateSessionApiV1SessionsSessionIdPatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        UpdateSessionApiV1SessionsSessionIdPatchResponses,
+        UpdateSessionApiV1SessionsSessionIdPatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1243,20 +1848,28 @@ export const updateSessionApiV1SessionsSessionIdPatch = <ThrowOnError extends bo
  *
  * Transition session to a new status. Requires session.transition permission.
  */
-export const transitionStatusApiV1SessionsSessionIdTransitionPost = <ThrowOnError extends boolean = false>(options: Options<TransitionStatusApiV1SessionsSessionIdTransitionPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<TransitionStatusApiV1SessionsSessionIdTransitionPostResponses, TransitionStatusApiV1SessionsSessionIdTransitionPostErrors, ThrowOnError>({
+export const transitionStatusApiV1SessionsSessionIdTransitionPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<TransitionStatusApiV1SessionsSessionIdTransitionPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        TransitionStatusApiV1SessionsSessionIdTransitionPostResponses,
+        TransitionStatusApiV1SessionsSessionIdTransitionPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/transition',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1265,20 +1878,26 @@ export const transitionStatusApiV1SessionsSessionIdTransitionPost = <ThrowOnErro
  *
  * Cancel session with refund calculation. Requires session.cancel permission.
  */
-export const cancelSessionApiV1SessionsSessionIdCancelPost = <ThrowOnError extends boolean = false>(options: Options<CancelSessionApiV1SessionsSessionIdCancelPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<CancelSessionApiV1SessionsSessionIdCancelPostResponses, CancelSessionApiV1SessionsSessionIdCancelPostErrors, ThrowOnError>({
+export const cancelSessionApiV1SessionsSessionIdCancelPost = <ThrowOnError extends boolean = false>(
+    options: Options<CancelSessionApiV1SessionsSessionIdCancelPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        CancelSessionApiV1SessionsSessionIdCancelPostResponses,
+        CancelSessionApiV1SessionsSessionIdCancelPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/cancel',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1287,20 +1906,28 @@ export const cancelSessionApiV1SessionsSessionIdCancelPost = <ThrowOnError exten
  *
  * Mark session as ready for delivery (editor completed editing). Requires session.mark-ready permission.
  */
-export const markSessionReadyApiV1SessionsSessionIdMarkReadyPost = <ThrowOnError extends boolean = false>(options: Options<MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostResponses, MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostErrors, ThrowOnError>({
+export const markSessionReadyApiV1SessionsSessionIdMarkReadyPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostResponses,
+        MarkSessionReadyApiV1SessionsSessionIdMarkReadyPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/mark-ready',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1309,20 +1936,28 @@ export const markSessionReadyApiV1SessionsSessionIdMarkReadyPost = <ThrowOnError
  *
  * Assign an editor to a session for editing phase. Requires session.assign-resources permission.
  */
-export const assignEditorToSessionApiV1SessionsSessionIdAssignEditorPost = <ThrowOnError extends boolean = false>(options: Options<AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostResponses, AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostErrors, ThrowOnError>({
+export const assignEditorToSessionApiV1SessionsSessionIdAssignEditorPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostResponses,
+        AssignEditorToSessionApiV1SessionsSessionIdAssignEditorPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/assign-editor',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1331,16 +1966,24 @@ export const assignEditorToSessionApiV1SessionsSessionIdAssignEditorPost = <Thro
  *
  * Add an individual item to session. Requires session.edit permission.
  */
-export const addItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPost = <ThrowOnError extends boolean = false>(options: Options<AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostResponses, AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostErrors, ThrowOnError>({
+export const addItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostResponses,
+        AddItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/details/items/{item_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1349,16 +1992,27 @@ export const addItemToSessionApiV1SessionsSessionIdDetailsItemsItemIdPost = <Thr
  *
  * Add a package to session (package explosion). Requires session.edit.all permission.
  */
-export const addPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPost = <ThrowOnError extends boolean = false>(options: Options<AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostResponses, AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostErrors, ThrowOnError>({
+export const addPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<
+        AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostData,
+        ThrowOnError
+    >
+) => {
+    return (options.client ?? client).post<
+        AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostResponses,
+        AddPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/details/packages/{package_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1367,16 +2021,24 @@ export const addPackageToSessionApiV1SessionsSessionIdDetailsPackagesPackageIdPo
  *
  * Get all line items for a session. Requires session.view permission.
  */
-export const listSessionDetailsApiV1SessionsSessionIdDetailsGet = <ThrowOnError extends boolean = false>(options: Options<ListSessionDetailsApiV1SessionsSessionIdDetailsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<ListSessionDetailsApiV1SessionsSessionIdDetailsGetResponses, ListSessionDetailsApiV1SessionsSessionIdDetailsGetErrors, ThrowOnError>({
+export const listSessionDetailsApiV1SessionsSessionIdDetailsGet = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<ListSessionDetailsApiV1SessionsSessionIdDetailsGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        ListSessionDetailsApiV1SessionsSessionIdDetailsGetResponses,
+        ListSessionDetailsApiV1SessionsSessionIdDetailsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/details',
-        ...options
+        ...options,
     });
 };
 
@@ -1385,16 +2047,27 @@ export const listSessionDetailsApiV1SessionsSessionIdDetailsGet = <ThrowOnError 
  *
  * Remove a line item from session. Requires session.edit permission.
  */
-export const removeSessionDetailApiV1SessionsSessionIdDetailsDetailIdDelete = <ThrowOnError extends boolean = false>(options: Options<RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteResponses, RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteErrors, ThrowOnError>({
+export const removeSessionDetailApiV1SessionsSessionIdDetailsDetailIdDelete = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<
+        RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteData,
+        ThrowOnError
+    >
+) => {
+    return (options.client ?? client).delete<
+        RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteResponses,
+        RemoveSessionDetailApiV1SessionsSessionIdDetailsDetailIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/details/{detail_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1403,16 +2076,27 @@ export const removeSessionDetailApiV1SessionsSessionIdDetailsDetailIdDelete = <T
  *
  * Recalculate all financial totals from details. Requires session.edit permission.
  */
-export const recalculateSessionTotalsApiV1SessionsSessionIdRecalculatePost = <ThrowOnError extends boolean = false>(options: Options<RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostData, ThrowOnError>) => {
-    return (options.client ?? client).post<RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostResponses, RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostErrors, ThrowOnError>({
+export const recalculateSessionTotalsApiV1SessionsSessionIdRecalculatePost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<
+        RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostData,
+        ThrowOnError
+    >
+) => {
+    return (options.client ?? client).post<
+        RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostResponses,
+        RecalculateSessionTotalsApiV1SessionsSessionIdRecalculatePostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/recalculate',
-        ...options
+        ...options,
     });
 };
 
@@ -1421,16 +2105,24 @@ export const recalculateSessionTotalsApiV1SessionsSessionIdRecalculatePost = <Th
  *
  * Get all payments for a session. Requires session.view permission.
  */
-export const listSessionPaymentsApiV1SessionsSessionIdPaymentsGet = <ThrowOnError extends boolean = false>(options: Options<ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetResponses, ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetErrors, ThrowOnError>({
+export const listSessionPaymentsApiV1SessionsSessionIdPaymentsGet = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetResponses,
+        ListSessionPaymentsApiV1SessionsSessionIdPaymentsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/payments',
-        ...options
+        ...options,
     });
 };
 
@@ -1439,20 +2131,28 @@ export const listSessionPaymentsApiV1SessionsSessionIdPaymentsGet = <ThrowOnErro
  *
  * Record a payment for a session. Requires session.payment permission.
  */
-export const recordPaymentApiV1SessionsSessionIdPaymentsPost = <ThrowOnError extends boolean = false>(options: Options<RecordPaymentApiV1SessionsSessionIdPaymentsPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<RecordPaymentApiV1SessionsSessionIdPaymentsPostResponses, RecordPaymentApiV1SessionsSessionIdPaymentsPostErrors, ThrowOnError>({
+export const recordPaymentApiV1SessionsSessionIdPaymentsPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<RecordPaymentApiV1SessionsSessionIdPaymentsPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        RecordPaymentApiV1SessionsSessionIdPaymentsPostResponses,
+        RecordPaymentApiV1SessionsSessionIdPaymentsPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/payments',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1461,16 +2161,27 @@ export const recordPaymentApiV1SessionsSessionIdPaymentsPost = <ThrowOnError ext
  *
  * Get all photographer assignments for a session. Requires session.view permission.
  */
-export const listSessionPhotographersApiV1SessionsSessionIdPhotographersGet = <ThrowOnError extends boolean = false>(options: Options<ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetResponses, ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetErrors, ThrowOnError>({
+export const listSessionPhotographersApiV1SessionsSessionIdPhotographersGet = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<
+        ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetData,
+        ThrowOnError
+    >
+) => {
+    return (options.client ?? client).get<
+        ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetResponses,
+        ListSessionPhotographersApiV1SessionsSessionIdPhotographersGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/photographers',
-        ...options
+        ...options,
     });
 };
 
@@ -1479,20 +2190,28 @@ export const listSessionPhotographersApiV1SessionsSessionIdPhotographersGet = <T
  *
  * Assign a photographer to a session. Requires session.assign-resources permission.
  */
-export const assignPhotographerApiV1SessionsSessionIdPhotographersPost = <ThrowOnError extends boolean = false>(options: Options<AssignPhotographerApiV1SessionsSessionIdPhotographersPostData, ThrowOnError>) => {
-    return (options.client ?? client).post<AssignPhotographerApiV1SessionsSessionIdPhotographersPostResponses, AssignPhotographerApiV1SessionsSessionIdPhotographersPostErrors, ThrowOnError>({
+export const assignPhotographerApiV1SessionsSessionIdPhotographersPost = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<AssignPhotographerApiV1SessionsSessionIdPhotographersPostData, ThrowOnError>
+) => {
+    return (options.client ?? client).post<
+        AssignPhotographerApiV1SessionsSessionIdPhotographersPostResponses,
+        AssignPhotographerApiV1SessionsSessionIdPhotographersPostErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/photographers',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1501,42 +2220,60 @@ export const assignPhotographerApiV1SessionsSessionIdPhotographersPost = <ThrowO
  *
  * Mark photographer as attended and auto-transition session to ATTENDED. Requires session.mark-attended permission.
  */
-export const markPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatch = <ThrowOnError extends boolean = false>(options: Options<MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchResponses, MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchErrors, ThrowOnError>({
-        security: [
-            {
-                scheme: 'bearer',
-                type: 'http'
-            }
-        ],
-        url: '/api/v1/sessions/{session_id}/photographers/{assignment_id}/attended',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const markPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatch =
+    <ThrowOnError extends boolean = false>(
+        options: Options<
+            MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchData,
+            ThrowOnError
+        >
+    ) => {
+        return (options.client ?? client).patch<
+            MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchResponses,
+            MarkPhotographerAttendedApiV1SessionsSessionIdPhotographersAssignmentIdAttendedPatchErrors,
+            ThrowOnError
+        >({
+            security: [
+                {
+                    scheme: 'bearer',
+                    type: 'http',
+                },
+            ],
+            url: '/api/v1/sessions/{session_id}/photographers/{assignment_id}/attended',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            },
+        });
+    };
 
 /**
  * Mark my attendance (Photographer - Simplified)
  *
  * Mark attendance for current photographer without needing assignment_id. Requires session.mark-attended permission.
  */
-export const markMyAttendanceApiV1SessionsSessionIdMyAttendancePatch = <ThrowOnError extends boolean = false>(options: Options<MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchData, ThrowOnError>) => {
-    return (options.client ?? client).patch<MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchResponses, MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchErrors, ThrowOnError>({
+export const markMyAttendanceApiV1SessionsSessionIdMyAttendancePatch = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchData, ThrowOnError>
+) => {
+    return (options.client ?? client).patch<
+        MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchResponses,
+        MarkMyAttendanceApiV1SessionsSessionIdMyAttendancePatchErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/my-attendance',
         ...options,
         headers: {
             'Content-Type': 'application/json',
-            ...options.headers
-        }
+            ...options.headers,
+        },
     });
 };
 
@@ -1545,16 +2282,27 @@ export const markMyAttendanceApiV1SessionsSessionIdMyAttendancePatch = <ThrowOnE
  *
  * Remove a photographer from a session. Requires session.assign-resources permission.
  */
-export const removePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDelete = <ThrowOnError extends boolean = false>(options: Options<RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteResponses, RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteErrors, ThrowOnError>({
+export const removePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDelete = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<
+        RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteData,
+        ThrowOnError
+    >
+) => {
+    return (options.client ?? client).delete<
+        RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteResponses,
+        RemovePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssignmentIdDeleteErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/photographers/{assignment_id}',
-        ...options
+        ...options,
     });
 };
 
@@ -1563,16 +2311,24 @@ export const removePhotographerAssignmentApiV1SessionsSessionIdPhotographersAssi
  *
  * Get status change history for a session. Requires session.view.all permission.
  */
-export const getSessionStatusHistoryApiV1SessionsSessionIdHistoryGet = <ThrowOnError extends boolean = false>(options: Options<GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetResponses, GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetErrors, ThrowOnError>({
+export const getSessionStatusHistoryApiV1SessionsSessionIdHistoryGet = <
+    ThrowOnError extends boolean = false
+>(
+    options: Options<GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetData, ThrowOnError>
+) => {
+    return (options.client ?? client).get<
+        GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetResponses,
+        GetSessionStatusHistoryApiV1SessionsSessionIdHistoryGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/sessions/{session_id}/history',
-        ...options
+        ...options,
     });
 };
 
@@ -1581,15 +2337,21 @@ export const getSessionStatusHistoryApiV1SessionsSessionIdHistoryGet = <ThrowOnE
  *
  * Get aggregated statistics for the photography studio dashboard. Requires session.view.all permission.
  */
-export const getDashboardStatsApiV1DashboardStatsGet = <ThrowOnError extends boolean = false>(options?: Options<GetDashboardStatsApiV1DashboardStatsGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetDashboardStatsApiV1DashboardStatsGetResponses, GetDashboardStatsApiV1DashboardStatsGetErrors, ThrowOnError>({
+export const getDashboardStatsApiV1DashboardStatsGet = <ThrowOnError extends boolean = false>(
+    options?: Options<GetDashboardStatsApiV1DashboardStatsGetData, ThrowOnError>
+) => {
+    return (options?.client ?? client).get<
+        GetDashboardStatsApiV1DashboardStatsGetResponses,
+        GetDashboardStatsApiV1DashboardStatsGetErrors,
+        ThrowOnError
+    >({
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
-            }
+                type: 'http',
+            },
         ],
         url: '/api/v1/dashboard/stats',
-        ...options
+        ...options,
     });
 };

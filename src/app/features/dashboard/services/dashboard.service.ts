@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
-import { DashbordAPIResponse, SessionsByStatus } from '../interfaces/interfaces';
+import type { DashboardStats, SessionsByStatus } from '@generated/types';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,7 @@ export class DashboardService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrl}/dashboard`;
 
-    private readonly _stats = signal<DashbordAPIResponse | null>(null);
+    private readonly _stats = signal<DashboardStats | null>(null);
     private readonly _loading = signal(false);
     private readonly _error = signal<string | null>(null);
 
@@ -89,7 +89,7 @@ export class DashboardService {
         }));
     });
 
-    getStats(year?: number, month?: number): Observable<DashbordAPIResponse> {
+    getStats(year?: number, month?: number): Observable<DashboardStats> {
         this._loading.set(true);
         this._error.set(null);
 
@@ -97,7 +97,7 @@ export class DashboardService {
         if (year) params = params.set('year', year.toString());
         if (month) params = params.set('month', month.toString());
 
-        return this.http.get<DashbordAPIResponse>(`${this.baseUrl}/stats`, { params }).pipe(
+        return this.http.get<DashboardStats>(`${this.baseUrl}/stats`, { params }).pipe(
             tap({
                 next: (stats) => {
                     this._stats.set(stats);
