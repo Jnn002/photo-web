@@ -1,0 +1,179 @@
+<div class="clients-container">
+    <div class="header">
+        <div class="title-section">
+            <h1>Clientes</h1>
+            <p class="subtitle">Gestión de clientes del estudio</p>
+        </div>
+        <div class="actions">
+            <p-button
+                label="Nuevo Cliente"
+                icon="pi pi-plus"
+                (click)="createClient()"
+                styleClass="p-button-primary"
+            />
+        </div>
+    </div>
+
+    <div class="filters-section">
+        <div class="filter-row">
+            <div class="search-filter">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input
+                        pInputText
+                        type="text"
+                        placeholder="Buscar por nombre o email..."
+                        [value]="searchTerm()"
+                        (input)="onSearchChange($any($event.target).value)"
+                    />
+                </span>
+            </div>
+
+            <div class="type-filter">
+                <p-select
+                    [options]="clientTypeOptions"
+                    [(ngModel)]="selectedClientType"
+                    (onChange)="onClientTypeChange($event.value)"
+                    placeholder="Tipo"
+                    optionLabel="label"
+                    optionValue="value"
+                />
+            </div>
+
+            <div class="filter-buttons">
+                <p-button
+                    label="Activos"
+                    [outlined]="!showActiveOnly()"
+                    [severity]="showActiveOnly() ? 'success' : 'secondary'"
+                    (click)="onActiveOnlyChange(!showActiveOnly())"
+                />
+                <p-button
+                    label="Limpiar"
+                    icon="pi pi-filter-slash"
+                    severity="secondary"
+                    [outlined]="true"
+                    (click)="resetFilters()"
+                />
+                <p-button
+                    icon="pi pi-refresh"
+                    severity="secondary"
+                    [outlined]="true"
+                    (click)="refresh()"
+                />
+            </div>
+        </div>
+    </div>
+
+    <div class="table-section">
+        <p-table
+            [value]="clients()"
+            [loading]="loading()"
+            [paginator]="true"
+            [rows]="50"
+            [totalRecords]="total()"
+            [lazy]="true"
+            (onLazyLoad)="onPageChange($event)"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
+            [rowsPerPageOptions]="[10, 25, 50, 100]"
+            styleClass="p-datatable-striped"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 60px">ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th style="width: 140px">Tipo</th>
+                    <th style="width: 120px">Estado</th>
+                    <th style="width: 200px">Acciones</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-client>
+                <tr>
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.full_name }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.primary_phone }}</td>
+                    <td>
+                        <p-tag
+                            [value]="getClientTypeLabel(client.client_type)"
+                            [severity]="getClientTypeSeverity(client.client_type)"
+                        />
+                    </td>
+                    <td>
+                        <p-tag
+                            [value]="getStatusLabel(client.status)"
+                            [severity]="getStatusSeverity(client.status)"
+                        />
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <p-button
+                                icon="pi pi-eye"
+                                severity="info"
+                                [text]="true"
+                                [rounded]="true"
+                                (click)="viewClient(client)"
+                                pTooltip="Ver detalles"
+                                tooltipPosition="top"
+                            />
+                            <p-button
+                                icon="pi pi-pencil"
+                                severity="warn"
+                                [text]="true"
+                                [rounded]="true"
+                                (click)="editClient(client)"
+                                pTooltip="Editar"
+                                tooltipPosition="top"
+                            />
+                            @if (client.status === 'Active') {
+                                <p-button
+                                    icon="pi pi-ban"
+                                    severity="danger"
+                                    [text]="true"
+                                    [rounded]="true"
+                                    (click)="deleteClient(client)"
+                                    pTooltip="Desactivar"
+                                    tooltipPosition="top"
+                                />
+                            } @else {
+                                <p-button
+                                    icon="pi pi-check-circle"
+                                    severity="success"
+                                    [text]="true"
+                                    [rounded]="true"
+                                    (click)="reactivateClient(client)"
+                                    pTooltip="Reactivar"
+                                    tooltipPosition="top"
+                                />
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="empty-message">
+                        @if (loading()) {
+                            <div class="loading-message">
+                                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+                                <p>Cargando clientes...</p>
+                            </div>
+                        } @else {
+                            <div class="no-data-message">
+                                <i class="pi pi-users" style="font-size: 3rem"></i>
+                                <p>No se encontraron clientes</p>
+                                <small>Intenta ajustar los filtros o crear un nuevo cliente</small>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-confirmDialog />

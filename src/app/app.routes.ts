@@ -21,6 +21,10 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/dashboard/dashboard').then((m) => m.DashboardComponent),
             },
+            {
+                path: 'clients',
+                loadChildren: () => import('./features/clients/clients.routes'),
+            },
             /*{
         path: 'sessions',
         loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsComponent)
@@ -28,10 +32,6 @@ export const routes: Routes = [
       {
         path: 'my-sessions',
         loadComponent: () => import('./features/sessions/my-sessions').then(m => m.MySessionsComponent)
-      },
-      {
-        path: 'clients',
-        loadComponent: () => import('./features/clients/clients').then(m => m.ClientsComponent)
       },
       {
         path: 'items',

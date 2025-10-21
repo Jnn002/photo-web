@@ -1,0 +1,185 @@
+<div class="client-form-container">
+    <div class="header">
+        <h1>{{ isEditMode() ? 'Editar Cliente' : 'Nuevo Cliente' }}</h1>
+        <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            [outlined]="true"
+            (click)="onCancel()"
+        />
+    </div>
+
+    @if (loading()) {
+        <div class="loading-container">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            <p>Cargando datos del cliente...</p>
+        </div>
+    } @else {
+        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="form-content">
+            <p-card>
+                <ng-template pTemplate="title">Información del Cliente</ng-template>
+                <ng-template pTemplate="content">
+                    <div class="form-grid">
+                        <!-- Full Name -->
+                        <div class="form-field">
+                            <label for="full_name">
+                                Nombre Completo <span class="required">*</span>
+                            </label>
+                            <input
+                                pInputText
+                                id="full_name"
+                                formControlName="full_name"
+                                placeholder="Ej: Juan Pérez"
+                                [class.p-invalid]="hasError('full_name')"
+                            />
+                            @if (hasError('full_name')) {
+                                <small class="p-error">{{ getErrorMessage('full_name') }}</small>
+                            }
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-field">
+                            <label for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <input
+                                pInputText
+                                id="email"
+                                type="email"
+                                formControlName="email"
+                                placeholder="Ej: juan.perez@example.com"
+                                [class.p-invalid]="hasError('email')"
+                            />
+                            @if (hasError('email')) {
+                                <small class="p-error">{{ getErrorMessage('email') }}</small>
+                            }
+                        </div>
+
+                        <!-- Primary Phone -->
+                        <div class="form-field">
+                            <label for="primary_phone">
+                                Teléfono Principal <span class="required">*</span>
+                            </label>
+                            <input
+                                pInputText
+                                id="primary_phone"
+                                formControlName="primary_phone"
+                                placeholder="Ej: +502 5555-1234"
+                                [class.p-invalid]="hasError('primary_phone')"
+                            />
+                            @if (hasError('primary_phone')) {
+                                <small class="p-error">{{ getErrorMessage('primary_phone') }}</small>
+                            }
+                        </div>
+
+                        <!-- Secondary Phone -->
+                        <div class="form-field">
+                            <label for="secondary_phone">Teléfono Secundario</label>
+                            <input
+                                pInputText
+                                id="secondary_phone"
+                                formControlName="secondary_phone"
+                                placeholder="Ej: +502 2345-6789"
+                                [class.p-invalid]="hasError('secondary_phone')"
+                            />
+                            @if (hasError('secondary_phone')) {
+                                <small class="p-error">{{ getErrorMessage('secondary_phone') }}</small>
+                            }
+                        </div>
+
+                        <!-- Client Type -->
+                        <div class="form-field">
+                            <label for="client_type">
+                                Tipo de Cliente <span class="required">*</span>
+                            </label>
+                            <p-select
+                                id="client_type"
+                                formControlName="client_type"
+                                [options]="clientTypeOptions"
+                                optionLabel="label"
+                                optionValue="value"
+                                placeholder="Selecciona un tipo"
+                                [class.p-invalid]="hasError('client_type')"
+                            />
+                            @if (hasError('client_type')) {
+                                <small class="p-error">{{ getErrorMessage('client_type') }}</small>
+                            }
+                        </div>
+
+                        <!-- Status (only for edit mode) -->
+                        @if (isEditMode()) {
+                            <div class="form-field">
+                                <label for="status">
+                                    Estado <span class="required">*</span>
+                                </label>
+                                <p-select
+                                    id="status"
+                                    formControlName="status"
+                                    [options]="statusOptions"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Selecciona un estado"
+                                    [class.p-invalid]="hasError('status')"
+                                />
+                                @if (hasError('status')) {
+                                    <small class="p-error">{{ getErrorMessage('status') }}</small>
+                                }
+                            </div>
+                        }
+
+                        <!-- Delivery Address -->
+                        <div class="form-field full-width">
+                            <label for="delivery_address">Dirección de Entrega</label>
+                            <input
+                                pInputText
+                                id="delivery_address"
+                                formControlName="delivery_address"
+                                placeholder="Ej: Zona 10, Ciudad de Guatemala"
+                                [class.p-invalid]="hasError('delivery_address')"
+                            />
+                            @if (hasError('delivery_address')) {
+                                <small class="p-error">{{ getErrorMessage('delivery_address') }}</small>
+                            }
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="form-field full-width">
+                            <label for="notes">Notas</label>
+                            <textarea
+                                pInputTextarea
+                                id="notes"
+                                formControlName="notes"
+                                rows="4"
+                                placeholder="Notas adicionales sobre el cliente..."
+                                [class.p-invalid]="hasError('notes')"
+                            ></textarea>
+                            @if (hasError('notes')) {
+                                <small class="p-error">{{ getErrorMessage('notes') }}</small>
+                            }
+                        </div>
+                    </div>
+                </ng-template>
+            </p-card>
+
+            <div class="form-actions">
+                <p-button
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    severity="secondary"
+                    [outlined]="true"
+                    (click)="onCancel()"
+                    type="button"
+                />
+                <p-button
+                    [label]="isEditMode() ? 'Actualizar' : 'Crear'"
+                    icon="pi pi-check"
+                    severity="primary"
+                    [loading]="submitting()"
+                    [disabled]="clientForm.invalid"
+                    type="submit"
+                />
+            </div>
+        </form>
+    }
+</div>

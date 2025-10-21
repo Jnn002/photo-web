@@ -1,0 +1,126 @@
+.clients-container {
+    padding: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.title-section h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.subtitle {
+    margin: 0.5rem 0 0 0;
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+}
+
+.filters-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--surface-card);
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-filter {
+    width: 100%;
+}
+
+.search-filter input {
+    width: 100%;
+}
+
+.type-filter {
+    min-width: 200px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.table-section {
+    background: var(--surface-card);
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+    overflow: hidden;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-start;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.loading-message,
+.no-data-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-color-secondary);
+}
+
+.no-data-message i {
+    color: var(--surface-400);
+}
+
+.no-data-message p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.no-data-message small {
+    color: var(--text-color-secondary);
+}
+
+@media (max-width: 768px) {
+    .clients-container {
+        padding: 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .type-filter {
+        width: 100%;
+    }
+
+    .filter-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
