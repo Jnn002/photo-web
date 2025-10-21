@@ -1,0 +1,170 @@
+<p-dialog
+  [header]="formTitle"
+  [modal]="true"
+  [visible]="visible()"
+  (onHide)="onHide()"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="item-form">
+    <!-- Code and Name Row -->
+    <div class="form-row">
+      <div class="form-field">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="code"
+            formControlName="code"
+            [class.p-invalid]="hasError('code')"
+            class="w-full"
+          />
+          <label for="code"
+            >Código <span class="text-danger">*</span></label
+          >
+        </p-floatlabel>
+        @if (hasError('code')) {
+        <small class="p-error">{{ getErrorMessage('code') }}</small>
+        } @else {
+        <small class="text-muted">Código único del item (alfanumérico)</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="name"
+            formControlName="name"
+            [class.p-invalid]="hasError('name')"
+            class="w-full"
+          />
+          <label for="name"
+            >Nombre <span class="text-danger">*</span></label
+          >
+        </p-floatlabel>
+        @if (hasError('name')) {
+        <small class="p-error">{{ getErrorMessage('name') }}</small>
+        }
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-field">
+      <p-floatlabel>
+        <textarea
+          pTextarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          class="w-full"
+        ></textarea>
+        <label for="description">Descripción</label>
+      </p-floatlabel>
+      <small class="text-muted">Descripción detallada del item</small>
+    </div>
+
+    <!-- Category and Unit Price Row -->
+    <div class="form-row">
+      <div class="form-field">
+        <p-floatlabel>
+          <p-select
+            inputId="item_type"
+            formControlName="item_type"
+            [options]="itemTypeOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccionar"
+            [class.p-invalid]="hasError('item_type')"
+            styleClass="w-full"
+          />
+          <label for="item_type"
+            >Categoría <span class="text-danger">*</span></label
+          >
+        </p-floatlabel>
+        @if (hasError('item_type')) {
+        <small class="p-error">{{ getErrorMessage('item_type') }}</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <p-floatlabel>
+          <p-inputnumber
+            inputId="unit_price"
+            formControlName="unit_price"
+            mode="currency"
+            currency="GTQ"
+            locale="es-GT"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            [min]="0"
+            [class.p-invalid]="hasError('unit_price')"
+            inputStyleClass="w-full"
+          />
+          <label for="unit_price"
+            >Precio Unitario (Q) <span class="text-danger">*</span></label
+          >
+        </p-floatlabel>
+        @if (hasError('unit_price')) {
+        <small class="p-error">{{ getErrorMessage('unit_price') }}</small>
+        }
+      </div>
+    </div>
+
+    <!-- Unit Measure and Default Quantity Row -->
+    <div class="form-row">
+      <div class="form-field">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="unit_measure"
+            formControlName="unit_measure"
+            [class.p-invalid]="hasError('unit_measure')"
+            class="w-full"
+          />
+          <label for="unit_measure"
+            >Unidad de Medida <span class="text-danger">*</span></label
+          >
+        </p-floatlabel>
+        @if (hasError('unit_measure')) {
+        <small class="p-error">{{ getErrorMessage('unit_measure') }}</small>
+        } @else {
+        <small class="text-muted">Ej: unidad, foto, impresión, etc.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <p-floatlabel>
+          <p-inputnumber
+            inputId="default_quantity"
+            formControlName="default_quantity"
+            [min]="1"
+            [showButtons]="true"
+            inputStyleClass="w-full"
+          />
+          <label for="default_quantity">Cantidad por Defecto</label>
+        </p-floatlabel>
+        <small class="text-muted">Cantidad sugerida al agregar</small>
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="onCancel()"
+        severity="secondary"
+        [text]="true"
+      />
+      <p-button
+        [label]="item() ? 'Actualizar' : 'Crear Item'"
+        icon="pi pi-check"
+        (onClick)="onSubmit()"
+        [loading]="saving()"
+        [disabled]="form.invalid"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

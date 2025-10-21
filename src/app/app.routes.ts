@@ -25,6 +25,21 @@ export const routes: Routes = [
                 path: 'clients',
                 loadChildren: () => import('./features/clients/clients.routes'),
             },
+            {
+                path: 'items',
+                loadComponent: () =>
+                    import('./features/catalog/items/items').then((m) => m.ItemsComponent),
+            },
+            {
+                path: 'packages',
+                loadComponent: () =>
+                    import('./features/catalog/packages/packages').then((m) => m.PackagesComponent),
+            },
+            {
+                path: 'rooms',
+                loadComponent: () =>
+                    import('./features/catalog/rooms/rooms').then((m) => m.RoomsComponent),
+            },
             /*{
         path: 'sessions',
         loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsComponent)

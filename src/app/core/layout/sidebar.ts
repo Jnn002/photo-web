@@ -30,8 +30,8 @@ export class SidebarComponent {
   ];
 
   readonly catalogMenuItems: MenuItem[] = [
-    { label: 'Items', icon: 'pi pi-box', route: '/items', section: 'CATÁLOGO' },
-    { label: 'Paquetes', icon: 'pi pi-gift', route: '/packages', section: 'CATÁLOGO' },
+    { label: 'Items', icon: 'pi pi-camera', route: '/items', section: 'CATÁLOGO' },
+    { label: 'Paquetes', icon: 'pi pi-box', route: '/packages', section: 'CATÁLOGO' },
     { label: 'Salas', icon: 'pi pi-building', route: '/rooms', section: 'CATÁLOGO' }
   ];
 

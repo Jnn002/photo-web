@@ -1,0 +1,218 @@
+<div class="item-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="header-info">
+      <h2>Items del Catálogo</h2>
+      <p class="text-muted">Gestión de items fotográficos y servicios</p>
+    </div>
+
+    <div class="header-actions">
+      <p-button
+        label="Nuevo Item"
+        icon="pi pi-plus"
+        (onClick)="onCreate()"
+        styleClass="p-button-primary"
+      />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <span class="p-input-icon-left flex-1">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Buscar por código o nombre..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
+          class="w-full"
+        />
+      </span>
+    </div>
+
+    <div class="filter-group">
+      <label>Categoría</label>
+      <p-select
+        [options]="itemTypeOptions"
+        [ngModel]="selectedItemType()"
+        (ngModelChange)="onItemTypeChange($event)"
+        placeholder="Todas"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Estado</label>
+      <p-select
+        [options]="[
+          { label: 'Todos', value: false },
+          { label: 'Solo Activos', value: true }
+        ]"
+        [ngModel]="showActiveOnly()"
+        (ngModelChange)="onActiveOnlyChange($event)"
+        placeholder="Todos"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="filter-actions">
+      <p-button
+        icon="pi pi-filter-slash"
+        (onClick)="resetFilters()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Limpiar filtros"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        (onClick)="refresh()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Refrescar"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    @if (loading()) {
+    <div class="loading-overlay">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <p>Cargando items...</p>
+    </div>
+    } @else {
+    <p-table
+      [value]="items()"
+      [rows]="filters().limit ?? 50"
+      [totalRecords]="total()"
+      [paginator]="true"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} items"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="code">
+            Código <p-sortIcon field="code" />
+          </th>
+          <th pSortableColumn="name">
+            Nombre <p-sortIcon field="name" />
+          </th>
+          <th>Descripción</th>
+          <th pSortableColumn="item_type">
+            Categoría <p-sortIcon field="item_type" />
+          </th>
+          <th pSortableColumn="unit_price" style="text-align: right">
+            Precio <p-sortIcon field="unit_price" />
+          </th>
+          <th pSortableColumn="status">
+            Estado <p-sortIcon field="status" />
+          </th>
+          <th style="width: 250px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>
+            <span class="font-semibold">{{ item.code }}</span>
+          </td>
+          <td>{{ item.name }}</td>
+          <td>
+            <span class="text-sm text-muted">{{
+              item.description || 'Sin descripción'
+            }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="getItemTypeLabel(item.item_type)"
+              [severity]="getItemTypeSeverity(item.item_type)"
+            />
+          </td>
+          <td style="text-align: right">
+            <span class="font-semibold">{{ formatCurrency(item.unit_price) }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="getStatusLabel(item.status)"
+              [severity]="getStatusSeverity(item.status)"
+            />
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-eye"
+                (onClick)="onView(item)"
+                [text]="true"
+                [rounded]="true"
+                severity="info"
+                pTooltip="Ver detalles"
+              />
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="onEdit(item)"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                pTooltip="Editar"
+              />
+              @if (item.status === 'Active') {
+              <p-button
+                icon="pi pi-times"
+                (onClick)="onDelete(item)"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                pTooltip="Eliminar"
+              />
+              } @else {
+              <p-button
+                icon="pi pi-check"
+                (onClick)="onReactivate(item)"
+                [text]="true"
+                [rounded]="true"
+                severity="success"
+                pTooltip="Reactivar"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-inbox" style="font-size: 3rem"></i>
+              <p>No se encontraron items</p>
+              @if (searchTerm() || selectedItemType() || showActiveOnly()) {
+              <p-button
+                label="Limpiar filtros"
+                icon="pi pi-filter-slash"
+                (onClick)="resetFilters()"
+                [text]="true"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    }
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <p-confirmDialog />
+</div>
