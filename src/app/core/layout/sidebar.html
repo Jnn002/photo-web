@@ -1,0 +1,72 @@
+<aside class="sidebar" [class.collapsed]="collapsed()">
+  <div class="sidebar-header">
+    @if (!collapsed()) {
+      <div class="brand">
+        <i class="pi pi-camera brand-icon"></i>
+        <span class="brand-text">Photo Studio</span>
+      </div>
+      <span class="badge-admin">ADMIN</span>
+    } @else {
+      <i class="pi pi-camera brand-icon-collapsed"></i>
+    }
+  </div>
+
+  <nav class="sidebar-nav">
+    <!-- Main Menu -->
+    <div class="menu-section">
+      @for (item of mainMenuItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="menu-item"
+          [title]="collapsed() ? item.label : ''"
+        >
+          <i [class]="item.icon"></i>
+          @if (!collapsed()) {
+            <span class="menu-label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </div>
+
+    <!-- Catalog Section -->
+    <div class="menu-section">
+      @if (!collapsed()) {
+        <div class="section-title">CATÁLOGO</div>
+      }
+      @for (item of catalogMenuItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="menu-item"
+          [title]="collapsed() ? item.label : ''"
+        >
+          <i [class]="item.icon"></i>
+          @if (!collapsed()) {
+            <span class="menu-label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </div>
+
+    <!-- System Section -->
+    <div class="menu-section">
+      @if (!collapsed()) {
+        <div class="section-title">SISTEMA</div>
+      }
+      @for (item of systemMenuItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="menu-item"
+          [title]="collapsed() ? item.label : ''"
+        >
+          <i [class]="item.icon"></i>
+          @if (!collapsed()) {
+            <span class="menu-label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </div>
+  </nav>
+</aside>

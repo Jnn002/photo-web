@@ -1,0 +1,22 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button
+      pButton
+      type="button"
+      icon="pi pi-bars"
+      class="p-button-text p-button-plain menu-button"
+      (click)="onMenuToggle()"
+    ></button>
+  </div>
+
+  <div class="topbar-right">
+    <div class="user-section">
+      <span class="user-name">Admin User</span>
+      <p-avatar
+        [label]="getUserInitials()"
+        shape="circle"
+        styleClass="user-avatar"
+      />
+    </div>
+  </div>
+</header>
