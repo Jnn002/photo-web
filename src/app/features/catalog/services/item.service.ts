@@ -153,7 +153,7 @@ export class ItemService {
         this._loading.set(true);
 
         try {
-            await this.http.patch<ItemPublic>(`${this.apiUrl}/${id}/deactivate`, {}).toPromise();
+            await this.http.patch<ItemPublic>(`${this.apiUrl}/${id}`, {}).toPromise();
 
             // Reload items to reflect changes
             await this.loadItems();
