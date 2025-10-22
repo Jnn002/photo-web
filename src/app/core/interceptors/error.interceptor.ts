@@ -4,21 +4,32 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '@core/services/auth';
 import { NotificationService } from '@core/services/notification';
+import { TokenRefreshService } from '@core/services/token-refresh';
 
 /**
  * Error Interceptor
- * 
+ *
  * Maneja errores HTTP globales y muestra notificaciones al usuario.
  * NO maneja errores 401 de requests normales (eso lo hace tokenRefreshInterceptor).
  * SOLO maneja errores 401 del endpoint /auth/refresh (refresh token expirado).
+ * HACE logout automático cuando se alcanzan límites de intentos.
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
   const notificationService = inject(NotificationService);
+  const tokenRefreshService = inject(TokenRefreshService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // ❌ Si se alcanzó el límite de intentos de refresh, hacer logout inmediato
+      if (tokenRefreshService.failedAttempts() >= 2) {
+        console.error('Refresh attempts limit exceeded. Forcing logout.');
+        authService.logout();
+        notificationService.showError('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        return throwError(() => error);
+      }
+
       let errorMessage = 'An error occurred';
       let shouldShowError = true;
 

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -64,26 +64,16 @@ export class SessionDetailsComponent {
     // Current client information
     readonly currentClient = signal<ClientPublic | null>(null);
 
-    // Session ID from route
-    private readonly sessionId = signal<number | null>(null);
-
     dialogRef: DynamicDialogRef | null = null;
 
     constructor() {
         // Get session ID from route and load data
         const id = this.route.snapshot.params['id'];
         if (id) {
-            this.sessionId.set(parseInt(id, 10));
+            const sessionId = parseInt(id, 10);
+            this.loadSessionData(sessionId);
         }
     }
-
-    // Load session data effect - runs automatically when sessionId changes
-    private loadDataEffect = effect(() => {
-        const id = this.sessionId();
-        if (id) {
-            this.loadSessionData(id);
-        }
-    });
 
     loadSessionData(sessionId: number) {
         this.loading.set(true);

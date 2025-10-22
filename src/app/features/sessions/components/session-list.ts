@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -81,17 +81,12 @@ export class SessionListComponent {
     ];
 
     constructor() {
-        // Effect will load data automatically
-    }
-
-    // Load clients and sessions effect - runs automatically
-    private loadDataEffect = effect(() => {
         // Load clients for display
         this.clientService.loadClients();
 
         // Load initial sessions
         this.loadInitialSessions();
-    });
+    }
 
     loadInitialSessions() {
         this.loading.set(true);
@@ -179,7 +174,7 @@ export class SessionListComponent {
     }
 
     formatCurrency(amount: number): string {
-        return amount.toFixed(2);
+        return amount.toString();
     }
 
     getClientName(clientId: number): string {

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -94,14 +94,11 @@ export class SessionFormComponent {
             room_id: [null],
             client_requirements: [null],
         });
-    }
 
-    // Load clients and rooms effect - runs automatically
-    private loadDataEffect = effect(() => {
         // Load clients and rooms when component is initialized
         this.clientService.loadClients();
         this.roomService.loadRooms();
-    });
+    }
 
     onSessionTypeChange() {
         const sessionType = this.sessionForm.get('session_type')?.value;
