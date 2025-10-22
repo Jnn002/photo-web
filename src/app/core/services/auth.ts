@@ -5,7 +5,7 @@ import { catchError, tap, of, forkJoin } from 'rxjs';
 import { environment } from '@environments/environment';
 import { StorageService } from './storage';
 import { isTokenValid } from '@core/utils/jwt.utils';
-import type { UserLogin, TokenResponse, UserPublic, UserWithRoles } from '@generated/types';
+import type { UserLogin, TokenResponse, UserPublic, UserWithRoles } from '@generated/types.gen';
 
 @Injectable({
     providedIn: 'root',
@@ -35,7 +35,7 @@ export class AuthService {
     readonly userEmail = computed(() => this._currentUser()?.email ?? '');
     readonly userRoles = computed(() => this._userWithRoles()?.roles ?? []);
     readonly isAdmin = computed(() =>
-        this.userRoles().some((role) => role.name === 'Admin')
+        this.userRoles().some((role: { name: string }) => role.name === 'Admin')
     );
 
     // ✅ Inicialización síncrona en el constructor
@@ -191,7 +191,7 @@ export class AuthService {
 
     hasRole(roleName: string): boolean {
         const roles = this.userRoles();
-        return roles.some((role) => role.name === roleName);
+        return roles.some((role: { name: string }) => role.name === roleName);
     }
 
     hasAnyPermission(permissions: string[]): boolean {

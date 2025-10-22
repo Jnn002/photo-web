@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import type { UserPublic, UserWithRoles } from '@generated/types';
+import type { UserPublic, UserWithRoles } from '@generated/types.gen';
 
 @Injectable({
     providedIn: 'root',

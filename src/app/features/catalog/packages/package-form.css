@@ -1,0 +1,80 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field-full {
+  grid-column: 1 / -1;
+}
+
+.p-error {
+  display: block;
+  color: var(--red-500);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.field-hint {
+  display: block;
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.embedded-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Ensure float labels work correctly */
+:host ::ng-deep {
+  .p-floatlabel {
+    display: block;
+  }
+
+  .p-floatlabel input,
+  .p-floatlabel textarea,
+  .p-floatlabel .p-select,
+  .p-floatlabel .p-inputnumber {
+    width: 100%;
+  }
+
+  .p-inputnumber {
+    width: 100%;
+  }
+
+  .p-inputnumber input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-field-full {
+    grid-column: 1;
+  }
+}

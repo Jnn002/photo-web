@@ -1,0 +1,131 @@
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.item-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 1rem;
+}
+
+.item-option-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-code {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  font-family: monospace;
+}
+
+.item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.item-price {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.item-details {
+  background: var(--surface-50);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.subtotal-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--primary-50);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--primary-100);
+}
+
+.subtotal-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.subtotal-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.w-full {
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .p-select {
+    width: 100%;
+  }
+
+  .p-inputnumber {
+    width: 100%;
+  }
+
+  .p-inputnumber input {
+    width: 100%;
+  }
+
+  /* Ensure dropdown panel appears above dialog */
+  .p-select-overlay {
+    z-index: 1101 !important; /* Higher than p-dialog which is 1100 */
+  }
+}

@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
-import type { DashboardStats, SessionsByStatus } from '@generated/types';
+import type { DashboardStats, SessionsByStatus } from '@generated/types.gen';
 
 @Injectable({
     providedIn: 'root',

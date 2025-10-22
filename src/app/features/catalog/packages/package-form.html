@@ -1,0 +1,259 @@
+<!-- Dialog Mode -->
+@if (!embedded()) {
+<p-dialog
+  [header]="getTitle()"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '50rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Code -->
+      <div class="form-field">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="code"
+            formControlName="code"
+            class="w-full"
+            [class.p-invalid]="hasError('code')"
+          />
+          <label for="code">Código *</label>
+        </p-floatlabel>
+        @if (hasError('code')) {
+        <small class="p-error">{{ getErrorMessage('code') }}</small>
+        }
+      </div>
+
+      <!-- Name -->
+      <div class="form-field">
+        <p-floatlabel>
+          <input
+            pInputText
+            id="name"
+            formControlName="name"
+            class="w-full"
+            [class.p-invalid]="hasError('name')"
+          />
+          <label for="name">Nombre del Paquete *</label>
+        </p-floatlabel>
+        @if (hasError('name')) {
+        <small class="p-error">{{ getErrorMessage('name') }}</small>
+        }
+      </div>
+
+      <!-- Description (full width) -->
+      <div class="form-field form-field-full">
+        <p-floatlabel>
+          <textarea
+            pTextarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            class="w-full"
+          ></textarea>
+          <label for="description">Descripción</label>
+        </p-floatlabel>
+      </div>
+
+      <!-- Session Type -->
+      <div class="form-field">
+        <p-floatlabel>
+          <p-select
+            id="session_type"
+            formControlName="session_type"
+            [options]="sessionTypeOptions"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+            [class.p-invalid]="hasError('session_type')"
+          />
+          <label for="session_type">Tipo de Sesión *</label>
+        </p-floatlabel>
+        @if (hasError('session_type')) {
+        <small class="p-error">{{ getErrorMessage('session_type') }}</small>
+        }
+      </div>
+
+      <!-- Base Price -->
+      <div class="form-field">
+        <p-floatlabel>
+          <p-inputnumber
+            id="base_price"
+            formControlName="base_price"
+            mode="currency"
+            currency="GTQ"
+            locale="es-GT"
+            [minFractionDigits]="2"
+            class="w-full"
+            [class.p-invalid]="hasError('base_price')"
+          />
+          <label for="base_price">Precio Base *</label>
+        </p-floatlabel>
+        @if (hasError('base_price')) {
+        <small class="p-error">{{ getErrorMessage('base_price') }}</small>
+        }
+        <small class="field-hint"
+          >Precio especial del paquete (puede ser menor que la suma de items)</small
+        >
+      </div>
+
+      <!-- Estimated Editing Days -->
+      <div class="form-field form-field-full">
+        <p-floatlabel>
+          <p-inputnumber
+            id="estimated_editing_days"
+            formControlName="estimated_editing_days"
+            [showButtons]="true"
+            [min]="1"
+            [max]="365"
+            class="w-full"
+            [class.p-invalid]="hasError('estimated_editing_days')"
+          />
+          <label for="estimated_editing_days">Días Estimados de Edición *</label>
+        </p-floatlabel>
+        @if (hasError('estimated_editing_days')) {
+        <small class="p-error">{{ getErrorMessage('estimated_editing_days') }}</small>
+        }
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="dialog-footer">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        (onClick)="onCancel()"
+        [disabled]="saving()"
+        [text]="true"
+      />
+      <p-button
+        label="Guardar"
+        type="submit"
+        [loading]="saving()"
+        [disabled]="form.invalid"
+      />
+    </div>
+  </form>
+</p-dialog>
+}
+
+<!-- Embedded Mode (no dialog) -->
+@if (embedded()) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-grid">
+    <!-- Code -->
+    <div class="form-field">
+      <p-floatlabel>
+        <input
+          pInputText
+          id="code-embedded"
+          formControlName="code"
+          class="w-full"
+          [class.p-invalid]="hasError('code')"
+        />
+        <label for="code-embedded">Código *</label>
+      </p-floatlabel>
+      @if (hasError('code')) {
+      <small class="p-error">{{ getErrorMessage('code') }}</small>
+      }
+    </div>
+
+    <!-- Name -->
+    <div class="form-field">
+      <p-floatlabel>
+        <input
+          pInputText
+          id="name-embedded"
+          formControlName="name"
+          class="w-full"
+          [class.p-invalid]="hasError('name')"
+        />
+        <label for="name-embedded">Nombre del Paquete *</label>
+      </p-floatlabel>
+      @if (hasError('name')) {
+      <small class="p-error">{{ getErrorMessage('name') }}</small>
+      }
+    </div>
+
+    <!-- Description (full width) -->
+    <div class="form-field form-field-full">
+      <p-floatlabel>
+        <textarea
+          pTextarea
+          id="description-embedded"
+          formControlName="description"
+          rows="3"
+          class="w-full"
+        ></textarea>
+        <label for="description-embedded">Descripción</label>
+      </p-floatlabel>
+    </div>
+
+    <!-- Session Type -->
+    <div class="form-field">
+      <p-floatlabel>
+        <p-select
+          id="session_type-embedded"
+          formControlName="session_type"
+          [options]="sessionTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+          [class.p-invalid]="hasError('session_type')"
+        />
+        <label for="session_type-embedded">Tipo de Sesión *</label>
+      </p-floatlabel>
+      @if (hasError('session_type')) {
+      <small class="p-error">{{ getErrorMessage('session_type') }}</small>
+      }
+    </div>
+
+    <!-- Base Price -->
+    <div class="form-field">
+      <p-floatlabel>
+        <p-inputnumber
+          id="base_price-embedded"
+          formControlName="base_price"
+          mode="currency"
+          currency="GTQ"
+          locale="es-GT"
+          [minFractionDigits]="2"
+          class="w-full"
+          [class.p-invalid]="hasError('base_price')"
+        />
+        <label for="base_price-embedded">Precio Base *</label>
+      </p-floatlabel>
+      @if (hasError('base_price')) {
+      <small class="p-error">{{ getErrorMessage('base_price') }}</small>
+      }
+      <small class="field-hint"
+        >Precio especial del paquete (puede ser menor que la suma de items)</small
+      >
+    </div>
+
+    <!-- Estimated Editing Days -->
+    <div class="form-field form-field-full">
+      <p-floatlabel>
+        <p-inputnumber
+          id="estimated_editing_days-embedded"
+          formControlName="estimated_editing_days"
+          [showButtons]="true"
+          [min]="1"
+          [max]="365"
+          class="w-full"
+          [class.p-invalid]="hasError('estimated_editing_days')"
+        />
+        <label for="estimated_editing_days-embedded">Días Estimados de Edición *</label>
+      </p-floatlabel>
+      @if (hasError('estimated_editing_days')) {
+      <small class="p-error">{{ getErrorMessage('estimated_editing_days') }}</small>
+      }
+    </div>
+  </div>
+
+</form>
+}

@@ -450,6 +450,11 @@ export type PackageItemDetail = {
      * Item Name
      */
     item_name: string;
+    item_type: ItemType;
+    /**
+     * Item Unit Price
+     */
+    item_unit_price: string;
     /**
      * Quantity
      */

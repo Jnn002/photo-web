@@ -1,0 +1,143 @@
+.detail-content {
+  padding: 1rem 0;
+}
+
+.info-section h3,
+.items-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color-secondary);
+}
+
+.field-value {
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.item-code {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  font-family: monospace;
+}
+
+.quantity-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  background: var(--surface-100);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.subtotal-value {
+  font-size: 1.125rem;
+  color: var(--primary-color);
+}
+
+.price-comparison {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--surface-50);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--surface-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comparison-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.comparison-row.savings {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--surface-border);
+  font-weight: 600;
+  color: var(--green-600);
+}
+
+.comparison-value {
+  font-weight: 600;
+}
+
+.comparison-value.highlight {
+  font-size: 1.125rem;
+  color: var(--primary-color);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 1rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--text-color-secondary);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+:host ::ng-deep {
+  .p-datatable .p-datatable-footer {
+    background: var(--surface-50);
+    font-weight: 600;
+  }
+
+  .p-datatable .p-datatable-footer td {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-field.full-width {
+    grid-column: 1;
+  }
+}

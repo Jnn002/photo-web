@@ -1,0 +1,209 @@
+<p-confirmDialog />
+
+<div class="package-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="header-info">
+      <h2>Paquetes</h2>
+      <p class="text-muted">Gestión de paquetes fotográficos predefinidos</p>
+    </div>
+
+    <div class="header-actions">
+      <p-button
+        label="+ Nuevo Paquete"
+        icon="pi pi-plus"
+        (onClick)="onCreate()"
+        styleClass="p-button-primary"
+      />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <span class="p-input-icon-left flex-1">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Buscar por nombre..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
+          class="w-full"
+        />
+      </span>
+    </div>
+
+    <div class="filter-group">
+      <label>Tipo de Sesión</label>
+      <p-select
+        [options]="sessionTypeOptions"
+        [ngModel]="selectedSessionType()"
+        (ngModelChange)="onSessionTypeChange($event)"
+        placeholder="Todos"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Estado</label>
+      <p-select
+        [options]="[
+          { label: 'Todos', value: false },
+          { label: 'Solo Activos', value: true }
+        ]"
+        [ngModel]="showActiveOnly()"
+        (ngModelChange)="onActiveOnlyChange($event)"
+        placeholder="Todos"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="filter-actions">
+      <p-button
+        icon="pi pi-filter-slash"
+        (onClick)="resetFilters()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Limpiar filtros"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        (onClick)="refresh()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Refrescar"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    @if (loading()) {
+    <div class="loading-overlay">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <p>Cargando paquetes...</p>
+    </div>
+    } @else {
+    <p-table
+      [value]="packages()"
+      [rows]="filters().limit ?? 50"
+      [totalRecords]="total()"
+      [paginator]="true"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} paquetes"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+      [tableStyle]="{ 'min-width': '70rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            Nombre <p-sortIcon field="name" />
+          </th>
+          <th>Descripción</th>
+          <th pSortableColumn="session_type">
+            Tipo de Sesión <p-sortIcon field="session_type" />
+          </th>
+          <th style="text-align: center">Items</th>
+          <th pSortableColumn="base_price" style="text-align: right">
+            Precio Total <p-sortIcon field="base_price" />
+          </th>
+          <th pSortableColumn="status">
+            Estado <p-sortIcon field="status" />
+          </th>
+          <th style="width: 280px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-pkg>
+        <tr>
+          <td>
+            <div class="package-name">
+              <span class="font-semibold">{{ pkg.name }}</span>
+              <span class="package-code">{{ pkg.code }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="text-sm text-muted">{{ pkg.description || 'Sin descripción' }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="getSessionTypeLabel(pkg.session_type)"
+              [severity]="getSessionTypeSeverity(pkg.session_type)"
+            />
+          </td>
+          <td style="text-align: center">
+            <span class="item-count-badge">0</span>
+          </td>
+          <td style="text-align: right">
+            <span class="font-semibold">{{ formatCurrency(pkg.base_price) }}</span>
+          </td>
+          <td>
+            <p-tag [value]="getStatusLabel(pkg.status)" [severity]="getStatusSeverity(pkg.status)" />
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-box"
+                (onClick)="onViewItems(pkg)"
+                [text]="true"
+                [rounded]="true"
+                severity="info"
+                pTooltip="Ver Items"
+              />
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="onEdit(pkg)"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                pTooltip="Editar"
+              />
+              @if (pkg.status === 'Active') {
+              <p-button
+                icon="pi pi-trash"
+                (onClick)="onDeactivate(pkg)"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                pTooltip="Desactivar"
+              />
+              } @else {
+              <p-button
+                icon="pi pi-check-circle"
+                (onClick)="onReactivate(pkg)"
+                [text]="true"
+                [rounded]="true"
+                severity="success"
+                pTooltip="Reactivar"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-inbox" style="font-size: 3rem; color: var(--text-color-secondary)"></i>
+              <p>No se encontraron paquetes</p>
+              <p-button label="Crear Primer Paquete" icon="pi pi-plus" (onClick)="onCreate()" />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    }
+  </div>
+</div>

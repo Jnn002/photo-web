@@ -25,9 +25,9 @@ export type {
   PaginatedResponseItemPublic,
   PaginatedResponsePackagePublic,
   PaginatedResponseRoomPublic,
-} from '@generated/types';
+} from '@generated/types.gen';
 
-import type { ItemType, Status } from '@generated/types';
+import type { ItemType, SessionType, Status } from '@generated/types.gen';
 
 /**
  * Item Type Options for Select component
@@ -38,6 +38,15 @@ export const ITEM_TYPE_OPTIONS = [
   { label: 'Álbum', value: 'Album' as ItemType },
   { label: 'Video', value: 'Video' as ItemType },
   { label: 'Otro', value: 'Other' as ItemType },
+];
+
+/**
+ * Session Type Options for Select component
+ */
+export const SESSION_TYPE_OPTIONS = [
+  { label: 'Estudio', value: 'Studio' as SessionType },
+  { label: 'Externo', value: 'External' as SessionType },
+  { label: 'Ambos', value: 'Both' as SessionType },
 ];
 
 /**
@@ -112,12 +121,34 @@ export function getRoomStatusSeverity(
 }
 
 /**
+ * Get label for Session Type
+ */
+export function getSessionTypeLabel(type: SessionType): string {
+  const option = SESSION_TYPE_OPTIONS.find((opt) => opt.value === type);
+  return option?.label ?? type;
+}
+
+/**
+ * Get PrimeNG severity for Session Type tag
+ */
+export function getSessionTypeSeverity(
+  type: SessionType
+): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | null {
+  const severityMap: Record<SessionType, 'info' | 'success' | 'warn'> = {
+    Studio: 'info',
+    External: 'success',
+    Both: 'warn',
+  };
+  return severityMap[type] ?? null;
+}
+
+/**
  * Filters state for catalog lists
  */
 export interface CatalogFilters {
   search?: string;
   itemType?: ItemType | null;
-  sessionType?: string | null;
+  sessionType?: SessionType | null;
   activeOnly?: boolean;
   skip?: number;
   limit?: number;

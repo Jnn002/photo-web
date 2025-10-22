@@ -1,0 +1,99 @@
+<p-dialog
+  header="Agregar Item al Paquete"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '40rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-content">
+      <!-- Item Selection -->
+      <div class="form-field">
+        <label for="item_id">Seleccionar Item *</label>
+        <p-select
+          id="item_id"
+          formControlName="item_id"
+          [options]="availableItems()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Seleccione un item"
+          [filter]="true"
+          filterBy="name,code"
+          [showClear]="true"
+          class="w-full"
+        >
+          <ng-template let-item pTemplate="item">
+            <div class="item-option">
+              <div class="item-option-main">
+                <span class="item-code">{{ item.code }}</span>
+                <span class="item-name">{{ item.name }}</span>
+              </div>
+              <span class="item-price">{{ formatCurrency(item.unit_price) }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+      </div>
+
+      <!-- Item Details (shown when item is selected) -->
+      @if (selectedItem()) {
+      <div class="item-details">
+        <div class="detail-row">
+          <span class="detail-label">Código:</span>
+          <span class="detail-value">{{ selectedItem()!.code }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Nombre:</span>
+          <span class="detail-value">{{ selectedItem()!.name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Categoría:</span>
+          <p-tag
+            [value]="getItemTypeLabel(selectedItem()!.item_type)"
+            [severity]="getItemTypeSeverity(selectedItem()!.item_type)"
+          />
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Precio Unitario:</span>
+          <span class="detail-value font-semibold">{{
+            formatCurrency(selectedItem()!.unit_price)
+          }}</span>
+        </div>
+      </div>
+      }
+
+      <!-- Quantity -->
+      <div class="form-field">
+        <label for="quantity">Cantidad *</label>
+        <p-inputnumber
+          id="quantity"
+          formControlName="quantity"
+          [showButtons]="true"
+          [min]="1"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Subtotal -->
+      @if (selectedItem()) {
+      <div class="subtotal-section">
+        <div class="subtotal-label">Subtotal:</div>
+        <div class="subtotal-value">{{ formatCurrency(subtotal()) }}</div>
+      </div>
+      }
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="dialog-footer">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        (onClick)="onCancel()"
+        [disabled]="adding()"
+        [text]="true"
+      />
+      <p-button label="Agregar" type="submit" [loading]="adding()" [disabled]="form.invalid" />
+    </div>
+  </form>
+</p-dialog>

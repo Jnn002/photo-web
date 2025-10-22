@@ -1,0 +1,75 @@
+<!-- Package List -->
+<app-package-list
+    (createPackage)="onCreatePackage()"
+    (editPackage)="onEditPackage($event)"
+    (viewItems)="onViewItems($event)"
+/>
+
+<!-- Package Form Dialog (Create/Edit) -->
+<app-package-form
+    [visible]="showPackageForm()"
+    [package]="selectedPackage()"
+    (visibleChange)="showPackageForm.set($event)"
+    (saved)="onPackageSaved()"
+/>
+
+<!-- Package Detail Dialog (Read-only) -->
+<app-package-detail-dialog
+    [visible]="showDetailDialog()"
+    [package]="packageService.currentPackage()"
+    (visibleChange)="showDetailDialog.set($event)"
+/>
+
+<!-- Edit Package with Items Dialog -->
+@if (showEditWithItemsDialog() && selectedPackage()) {
+<p-dialog
+    header="Editar Paquete y Items"
+    [visible]="showEditWithItemsDialog()"
+    (visibleChange)="onCloseEditWithItems()"
+    [modal]="true"
+    [style]="{ width: '75rem' }"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <div class="edit-with-items-content">
+        <!-- Package Information Form (embedded, no dialog) -->
+        <div class="embedded-package-form">
+            <h3>Información del Paquete</h3>
+            <app-package-form
+                #embeddedForm
+                [visible]="false"
+                [package]="selectedPackage()"
+                [embedded]="true"
+                (saved)="onPackageSaved()"
+            />
+        </div>
+
+        <!-- Items Manager -->
+        <app-package-items-manager
+            [packageId]="selectedPackage()!.id"
+            (addItem)="onAddItemToPackage()"
+        />
+
+        <!-- Save Button -->
+        <div class="save-button-container">
+            <p-button
+                label="Guardar Cambios"
+                icon="pi pi-save"
+                (onClick)="onSavePackageChanges()"
+                [loading]="savingPackage()"
+                [disabled]="!embeddedForm?.isFormValid()"
+            />
+        </div>
+    </div>
+</p-dialog>
+}
+
+<!-- Add Item to Package Dialog -->
+@if (selectedPackage()) {
+<app-add-item-to-package-dialog
+    [visible]="showAddItemDialog()"
+    [packageId]="selectedPackage()!.id"
+    (visibleChange)="showAddItemDialog.set($event)"
+    (itemAdded)="onItemAdded()"
+/>
+}

@@ -1,0 +1,29 @@
+:host {
+    display: block;
+}
+
+.edit-with-items-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.embedded-package-form {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.embedded-package-form h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.save-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--surface-border);
+}

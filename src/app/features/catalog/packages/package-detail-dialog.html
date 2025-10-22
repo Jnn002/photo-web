@@ -1,0 +1,156 @@
+<p-dialog
+  header="Detalles del Paquete"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '60rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  @if (package()) {
+  <div class="detail-content">
+    <!-- Package Information -->
+    <div class="info-section">
+      <h3>Información del Paquete</h3>
+
+      <div class="info-grid">
+        <div class="info-field">
+          <span class="field-label">Código:</span>
+          <span class="field-value">{{ package()!.code }}</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Estado:</span>
+          <p-tag
+            [value]="getStatusLabel(package()!.status)"
+            [severity]="getStatusSeverity(package()!.status)"
+          />
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Nombre:</span>
+          <span class="field-value">{{ package()!.name }}</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Tipo de Sesión:</span>
+          <p-tag
+            [value]="getSessionTypeLabel(package()!.session_type)"
+            [severity]="getSessionTypeSeverity(package()!.session_type)"
+          />
+        </div>
+
+        <div class="info-field full-width">
+          <span class="field-label">Descripción:</span>
+          <span class="field-value">{{ package()!.description || 'Sin descripción' }}</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Precio Base:</span>
+          <span class="field-value font-semibold">{{ formatCurrency(package()!.base_price) }}</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Días de Edición:</span>
+          <span class="field-value">{{ package()!.estimated_editing_days }} días</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Creado:</span>
+          <span class="field-value">{{ formatDate(package()!.created_at) }}</span>
+        </div>
+
+        <div class="info-field">
+          <span class="field-label">Última Actualización:</span>
+          <span class="field-value">{{ formatDate(package()!.updated_at) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <p-divider />
+
+    <!-- Items Section -->
+    <div class="items-section">
+      <h3>Items Incluidos ({{ itemsCount() }})</h3>
+
+      @if (itemsCount() === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox" style="font-size: 2rem; color: var(--text-color-secondary)"></i>
+        <p>Este paquete no tiene items incluidos</p>
+      </div>
+      } @else {
+      <p-table [value]="items()" styleClass="p-datatable-sm" [tableStyle]="{ 'min-width': '100%' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th style="text-align: right">Precio Unit.</th>
+            <th style="text-align: center">Cantidad</th>
+            <th style="text-align: right">Subtotal</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>
+              <span class="item-code">{{ item.item_code }}</span>
+            </td>
+            <td>{{ item.item_name }}</td>
+            <td>
+              <p-tag
+                [value]="getItemTypeLabel(item.item_type)"
+                [severity]="getItemTypeSeverity(item.item_type)"
+              />
+            </td>
+            <td style="text-align: right">{{ formatCurrency(item.item_unit_price) }}</td>
+            <td style="text-align: center">
+              <span class="quantity-badge">{{ item.quantity }}</span>
+            </td>
+            <td style="text-align: right">
+              <span class="font-semibold">{{ formatCurrency(getItemSubtotal(item)) }}</span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="5" style="text-align: right">
+              <strong>Subtotal Items:</strong>
+            </td>
+            <td style="text-align: right">
+              <strong class="subtotal-value">{{ formatCurrency(itemsSubtotal()) }}</strong>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Price Comparison -->
+      <div class="price-comparison">
+        <div class="comparison-row">
+          <span>Suma de Items:</span>
+          <span class="comparison-value">{{ formatCurrency(itemsSubtotal()) }}</span>
+        </div>
+        <div class="comparison-row">
+          <span>Precio del Paquete:</span>
+          <span class="comparison-value highlight">{{ formatCurrency(package()!.base_price) }}</span>
+        </div>
+        @if (itemsSubtotal() > parseFloat(package()!.base_price)) {
+        <div class="comparison-row savings">
+          <span>Ahorro:</span>
+          <span class="comparison-value">{{
+            formatCurrency(itemsSubtotal() - parseFloat(package()!.base_price))
+          }}</span>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dialog-footer">
+    <p-button label="Cerrar" (onClick)="onClose()" />
+  </div>
+  }
+</p-dialog>

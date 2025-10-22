@@ -13,7 +13,7 @@ import type {
     ClientType as GeneratedClientType,
     Status as GeneratedStatus,
     PaginatedResponseClientPublic as GeneratedPaginatedResponseClientPublic,
-} from '@generated/types';
+} from '@generated/types.gen';
 
 export type ClientPublic = GeneratedClientPublic;
 export type ClientCreate = GeneratedClientCreate;
