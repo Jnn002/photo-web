@@ -1,9 +1,10 @@
-import { Injectable, signal, computed, inject, effect } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap, of, forkJoin } from 'rxjs';
 import { environment } from '@environments/environment';
 import { StorageService } from './storage';
+import { isTokenValid } from '@core/utils/jwt.utils';
 import type { UserLogin, TokenResponse, UserPublic, UserWithRoles } from '@generated/types';
 
 @Injectable({
@@ -37,26 +38,46 @@ export class AuthService {
         this.userRoles().some((role) => role.name === 'Admin')
     );
 
-    // ✅ Use effect for initialization
+    // ✅ Inicialización síncrona en el constructor
     constructor() {
-        effect(
-            () => {
-                this.initializeAuth();
-            },
-            { allowSignalWrites: true }
-        );
+        this.initializeAuth();
     }
 
+    /**
+     * Inicializa el estado de autenticación desde localStorage
+     * Se ejecuta síncronamente al crear el servicio para garantizar
+     * que el estado esté disponible antes del routing
+     */
     private initializeAuth(): void {
         const token = this.storage.getAccessToken();
         const user = this.storage.getCurrentUser();
 
-        if (token && user) {
+        // Validar que existe token, usuario y que el token no haya expirado
+        if (token && user && isTokenValid(token)) {
             this._currentUser.set(user);
             this._isAuthenticated.set(true);
 
-            // Cargar roles y permisos del usuario
-            this.loadUserRolesAndPermissions().subscribe();
+            // Cargar roles/permisos desde localStorage (sin HTTP)
+            const userWithRoles = this.storage.getUserWithRoles();
+            const permissions = this.storage.getPermissions();
+
+            if (userWithRoles) {
+                this._userWithRoles.set(userWithRoles);
+            }
+
+            if (permissions.length > 0) {
+                this._permissions.set(permissions);
+            }
+
+            // Refrescar roles/permisos en segundo plano (lazy)
+            // Se hace después de que la app ya esté inicializada
+            setTimeout(() => {
+                this.loadUserRolesAndPermissions().subscribe();
+            }, 0);
+        } else if (token || user) {
+            // Si hay datos pero el token expiró, limpiar localStorage
+            console.warn('Token expired or invalid, clearing auth data');
+            this.storage.clearAuth();
         }
     }
 
@@ -68,6 +89,10 @@ export class AuthService {
             tap(({ userWithRoles, permissions }) => {
                 this._userWithRoles.set(userWithRoles);
                 this._permissions.set(permissions);
+
+                // Persistir en localStorage para próxima sesión
+                this.storage.setUserWithRoles(userWithRoles);
+                this.storage.setPermissions(permissions);
             }),
             catchError((error) => {
                 console.error('Failed to load user roles/permissions:', error);
@@ -117,10 +142,7 @@ export class AuthService {
     logout(): void {
         const refreshToken = this.storage.getRefreshToken();
 
-        // Limpiar estado local inmediatamente
-        this.clearAuth();
-
-        // Intentar revocar token en el backend (fire and forget)
+        // Si hay token, intentar revocar en backend ANTES de limpiar estado local
         if (refreshToken) {
             this.http
                 .post(`${environment.apiUrl}/auth/logout`, { refresh_token: refreshToken })
@@ -131,11 +153,16 @@ export class AuthService {
                         return of(null);
                     })
                 )
-                .subscribe();
+                .subscribe(() => {
+                    // Limpiar estado local después de logout en backend (éxito o fallo)
+                    this.clearAuth();
+                    this.router.navigate(['/auth/login']);
+                });
+        } else {
+            // Si no hay refresh token, solo limpiar estado local
+            this.clearAuth();
+            this.router.navigate(['/auth/login']);
         }
-
-        // Redirigir a login
-        this.router.navigate(['/auth/login']);
     }
 
     private handleAuthSuccess(response: TokenResponse): void {
