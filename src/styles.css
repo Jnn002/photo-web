@@ -1,79 +1,81 @@
 /* Global styles for Photography Studio Management System */
 
+/* PrimeIcons - Iconos de PrimeNG */
+@import 'primeicons/primeicons.css';
+
 /* Reset básico */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: var(--font-family);
-  font-size: 14px;
-  background-color: var(--p-surface-ground);
-  color: var(--p-text-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background-color: var(--p-surface-ground);
+    color: var(--p-text-color);
 }
 
 /* Utility classes */
 .card {
-  background: var(--p-surface-card);
-  padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),
-              0 1px 1px 0 rgba(0,0,0,.14),
-              0 1px 3px 0 rgba(0,0,0,.12);
+    background: var(--p-surface-card);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+        0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
 
 .field {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .field label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--p-text-color);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--p-text-color);
 }
 
 .w-full {
-  width: 100%;
+    width: 100%;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 /* Estilos globales para el menú de usuario */
 .p-menu.p-menu-overlay {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 0.5rem !important;
-  min-width: 12rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.5rem !important;
+    min-width: 12rem !important;
 }
 
 .p-menu .p-menuitem-link {
-  padding: 0.75rem 1rem !important;
-  transition: background-color 0.2s !important;
+    padding: 0.75rem 1rem !important;
+    transition: background-color 0.2s !important;
 }
 
 .p-menu .p-menuitem-link:hover {
-  background-color: #f3f4f6 !important;
+    background-color: #f3f4f6 !important;
 }
 
 .p-menu .p-menuitem-icon {
-  color: #6b7280 !important;
-  margin-right: 0.75rem !important;
-  font-size: 1rem !important;
+    color: #6b7280 !important;
+    margin-right: 0.75rem !important;
+    font-size: 1rem !important;
 }
 
 .p-menu .p-menuitem-text {
-  color: #1f2937 !important;
-  font-size: 0.95rem !important;
-  font-weight: 500 !important;
+    color: #1f2937 !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
 }
 
 .p-menu .p-menuitem-separator {
-  margin: 0.25rem 0 !important;
-  border-top: 1px solid #e5e7eb !important;
+    margin: 0.25rem 0 !important;
+    border-top: 1px solid #e5e7eb !important;
 }

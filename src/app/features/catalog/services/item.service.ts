@@ -153,7 +153,7 @@ export class ItemService {
         this._loading.set(true);
 
         try {
-            await this.http.patch<ItemPublic>(`${this.apiUrl}/${id}`, {}).toPromise();
+            await this.http.delete<ItemPublic>(`${this.apiUrl}/${id}`, {}).toPromise();
 
             // Reload items to reflect changes
             await this.loadItems();
@@ -173,7 +173,7 @@ export class ItemService {
         this._loading.set(true);
 
         try {
-            await this.http.patch<ItemPublic>(`${this.apiUrl}/${id}/reactivate`, {}).toPromise();
+            await this.http.put<ItemPublic>(`${this.apiUrl}/${id}/reactivate`, {}).toPromise();
 
             // Reload items to reflect changes
             await this.loadItems();

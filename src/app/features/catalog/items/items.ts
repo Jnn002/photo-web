@@ -7,11 +7,12 @@
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ItemListComponent } from './item-list';
 import { ItemFormComponent } from './item-form';
+import { ItemDetailDialogComponent } from './item-detail-dialog';
 import type { ItemPublic } from '../models/catalog.models';
 
 @Component({
   selector: 'app-items',
-  imports: [ItemListComponent, ItemFormComponent],
+  imports: [ItemListComponent, ItemFormComponent, ItemDetailDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-item-list
@@ -26,11 +27,19 @@ import type { ItemPublic } from '../models/catalog.models';
       (visibleChange)="onFormVisibleChange($event)"
       (saved)="onItemSaved($event)"
     />
+
+    <app-item-detail-dialog
+      [visible]="detailDialogVisible()"
+      [item]="viewedItem()"
+      (visibleChange)="onDetailDialogVisibleChange($event)"
+    />
   `,
 })
 export class ItemsComponent {
   readonly formVisible = signal(false);
   readonly selectedItem = signal<ItemPublic | null>(null);
+  readonly detailDialogVisible = signal(false);
+  readonly viewedItem = signal<ItemPublic | null>(null);
 
   onCreateItem(): void {
     this.selectedItem.set(null);
@@ -43,14 +52,21 @@ export class ItemsComponent {
   }
 
   onViewItem(item: ItemPublic): void {
-    // TODO: Implement view details dialog
-    console.log('View item:', item);
+    this.viewedItem.set(item);
+    this.detailDialogVisible.set(true);
   }
 
   onFormVisibleChange(visible: boolean): void {
     this.formVisible.set(visible);
     if (!visible) {
       this.selectedItem.set(null);
+    }
+  }
+
+  onDetailDialogVisibleChange(visible: boolean): void {
+    this.detailDialogVisible.set(visible);
+    if (!visible) {
+      this.viewedItem.set(null);
     }
   }
 

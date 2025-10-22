@@ -1,0 +1,91 @@
+<p-dialog
+  [header]="'Detalles del Item'"
+  [visible]="visible()"
+  (visibleChange)="onHide()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  @if (item(); as currentItem) {
+  <div class="item-detail-content">
+    <!-- Header Section -->
+    <div class="detail-section">
+      <div class="detail-header">
+        <h3>{{ currentItem.name }}</h3>
+        <p-tag
+          [value]="getStatusLabel(currentItem.status)"
+          [severity]="getStatusSeverity(currentItem.status)"
+        />
+      </div>
+      <p class="item-code">Código: {{ currentItem.code }}</p>
+    </div>
+
+    <!-- Description Section -->
+    @if (currentItem.description) {
+    <div class="detail-section">
+      <h4>Descripción</h4>
+      <p class="description-text">{{ currentItem.description }}</p>
+    </div>
+    }
+
+    <!-- Details Grid -->
+    <div class="detail-section">
+      <h4>Información General</h4>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Categoría</label>
+          <div>
+            <p-tag
+              [value]="getItemTypeLabel(currentItem.item_type)"
+              [severity]="getItemTypeSeverity(currentItem.item_type)"
+            />
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <label>Precio Unitario</label>
+          <p class="value-text">{{ formatCurrency(currentItem.unit_price) }}</p>
+        </div>
+
+        <div class="detail-item">
+          <label>Unidad de Medida</label>
+          <p class="value-text">{{ currentItem.unit_measure }}</p>
+        </div>
+
+        @if (currentItem.default_quantity !== null) {
+        <div class="detail-item">
+          <label>Cantidad por Defecto</label>
+          <p class="value-text">{{ currentItem.default_quantity }}</p>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Timestamps Section -->
+    <div class="detail-section">
+      <h4>Fechas</h4>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Creado</label>
+          <p class="value-text timestamp">{{ formatDate(currentItem.created_at) }}</p>
+        </div>
+
+        <div class="detail-item">
+          <label>Última Actualización</label>
+          <p class="value-text timestamp">{{ formatDate(currentItem.updated_at) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cerrar"
+      icon="pi pi-times"
+      (onClick)="onHide()"
+      styleClass="p-button-secondary"
+    />
+  </ng-template>
+</p-dialog>
