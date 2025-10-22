@@ -1,0 +1,215 @@
+<div class="room-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="header-info">
+      <h2>Salas del Estudio</h2>
+      <p class="text-muted">Gestión de salas fotográficas</p>
+    </div>
+
+    <div class="header-actions">
+      <p-button
+        label="Nueva Sala"
+        icon="pi pi-plus"
+        (onClick)="onCreate()"
+        styleClass="p-button-primary"
+      />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <span class="p-input-icon-left flex-1">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Buscar por nombre..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
+          class="w-full"
+        />
+      </span>
+    </div>
+
+    <div class="filter-group">
+      <label>Estado</label>
+      <p-select
+        [options]="[
+          { label: 'Todos', value: false },
+          { label: 'Solo Activos', value: true }
+        ]"
+        [ngModel]="showActiveOnly()"
+        (ngModelChange)="onActiveOnlyChange($event)"
+        placeholder="Todos"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="filter-actions">
+      <p-button
+        icon="pi pi-filter-slash"
+        (onClick)="resetFilters()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Limpiar filtros"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        (onClick)="refresh()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Refrescar"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    @if (loading()) {
+    <div class="loading-overlay">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <p>Cargando salas...</p>
+    </div>
+    } @else {
+    <p-table
+      [value]="rooms()"
+      [rows]="filters().limit ?? 50"
+      [totalRecords]="total()"
+      [paginator]="true"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} salas"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            Nombre <p-sortIcon field="name" />
+          </th>
+          <th>Descripción</th>
+          <th pSortableColumn="capacity" style="text-align: center">
+            Capacidad <p-sortIcon field="capacity" />
+          </th>
+          <th pSortableColumn="status">
+            Estado <p-sortIcon field="status" />
+          </th>
+          <th style="width: 300px">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-room>
+        <tr>
+          <td>
+            <div class="room-name">
+              <i class="pi pi-building"></i>
+              <span class="font-semibold">{{ room.name }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="text-sm text-muted">{{
+              room.description || 'Sin descripción'
+            }}</span>
+          </td>
+          <td style="text-align: center">
+            <span class="capacity-badge">
+              <i class="pi pi-users"></i>
+              {{ room.capacity || 'N/A' }}
+            </span>
+          </td>
+          <td>
+            <p-tag
+              [value]="getRoomStatusLabel(room.status)"
+              [severity]="getRoomStatusSeverity(room.status)"
+            />
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-calendar"
+                (onClick)="onViewAvailability(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="info"
+                pTooltip="Ver disponibilidad"
+              />
+              <p-button
+                icon="pi pi-pencil"
+                (onClick)="onEdit(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                pTooltip="Editar"
+              />
+              @if (room.status === 'Active') {
+              <p-button
+                icon="pi pi-wrench"
+                (onClick)="onSetMaintenance(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="warn"
+                pTooltip="Mantenimiento"
+              />
+              <p-button
+                icon="pi pi-times"
+                (onClick)="onDelete(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                pTooltip="Desactivar"
+              />
+              } @else if (room.status === 'Inactive') {
+              <p-button
+                icon="pi pi-check"
+                (onClick)="onReactivate(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="success"
+                pTooltip="Reactivar"
+              />
+              } @else if (room.status === 'Maintenance') {
+              <p-button
+                icon="pi pi-check"
+                (onClick)="onReactivate(room)"
+                [text]="true"
+                [rounded]="true"
+                severity="success"
+                pTooltip="Reactivar"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-inbox" style="font-size: 3rem"></i>
+              <p>No se encontraron salas</p>
+              @if (searchTerm() || showActiveOnly()) {
+              <p-button
+                label="Limpiar filtros"
+                icon="pi pi-filter-slash"
+                (onClick)="resetFilters()"
+                [text]="true"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    }
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <p-confirmDialog />
+</div>

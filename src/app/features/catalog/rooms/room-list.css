@@ -1,0 +1,159 @@
+.room-list-container {
+  padding: 1.5rem;
+}
+
+/* Header */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.header-info h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.text-muted {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Filters */
+.filters-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color-secondary);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Table */
+.table-container {
+  position: relative;
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  color: var(--text-color-secondary);
+}
+
+/* Room Name Column */
+.room-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.room-name i {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+}
+
+/* Capacity Badge */
+.capacity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--surface-100);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.capacity-badge i {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+/* Actions */
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-start;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  color: var(--text-color-secondary);
+}
+
+.empty-state i {
+  color: var(--text-color-secondary);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Text utilities */
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filters-section {
+    flex-direction: column;
+  }
+
+  .list-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+}

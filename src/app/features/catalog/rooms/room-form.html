@@ -1,0 +1,102 @@
+<p-dialog
+  [header]="formTitle"
+  [visible]="visible()"
+  (onHide)="onHide()"
+  [modal]="true"
+  [style]="{ width: '550px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="room-form">
+    <!-- Name -->
+    <div class="form-field">
+      <p-floatlabel>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          class="w-full"
+          [class.p-invalid]="hasError('name')"
+        />
+        <label for="name">Nombre *</label>
+      </p-floatlabel>
+      @if (hasError('name')) {
+      <small class="p-error">{{ getErrorMessage('name') }}</small>
+      }
+    </div>
+
+    <!-- Description -->
+    <div class="form-field">
+      <p-floatlabel>
+        <textarea
+          pTextarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          class="w-full"
+        ></textarea>
+        <label for="description">Descripción</label>
+      </p-floatlabel>
+    </div>
+
+    <!-- Capacity -->
+    <div class="form-field">
+      <p-floatlabel>
+        <p-inputnumber
+          inputId="capacity"
+          formControlName="capacity"
+          [min]="1"
+          [showButtons]="true"
+          buttonLayout="horizontal"
+          incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus"
+          suffix=" personas"
+          class="w-full"
+          [inputStyleClass]="hasError('capacity') ? 'p-invalid' : ''"
+        />
+        <label for="capacity">Capacidad (personas)</label>
+      </p-floatlabel>
+      @if (hasError('capacity')) {
+      <small class="p-error">{{ getErrorMessage('capacity') }}</small>
+      }
+    </div>
+
+    <!-- Hourly Rate -->
+    <div class="form-field">
+      <p-floatlabel>
+        <p-inputnumber
+          inputId="hourly_rate"
+          formControlName="hourly_rate"
+          mode="currency"
+          currency="GTQ"
+          locale="es-GT"
+          [min]="0"
+          class="w-full"
+          [inputStyleClass]="hasError('hourly_rate') ? 'p-invalid' : ''"
+        />
+        <label for="hourly_rate">Tarifa por Hora</label>
+      </p-floatlabel>
+      @if (hasError('hourly_rate')) {
+      <small class="p-error">{{ getErrorMessage('hourly_rate') }}</small>
+      }
+      <small class="field-hint">Opcional. Dejar vacío si no aplica.</small>
+    </div>
+
+    <div class="form-actions">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="onCancel()"
+        [text]="true"
+        severity="secondary"
+      />
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        type="submit"
+        [loading]="saving()"
+        [disabled]="form.invalid"
+      />
+    </div>
+  </form>
+</p-dialog>

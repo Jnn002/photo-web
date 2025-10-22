@@ -1,0 +1,52 @@
+.room-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-hint {
+  display: block;
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.p-error {
+  color: var(--red-500);
+  font-size: 0.75rem;
+}
+
+.p-invalid {
+  border-color: var(--red-500);
+}
+
+/* PrimeNG InputNumber full width override */
+:host ::ng-deep {
+  .p-inputnumber.w-full {
+    width: 100%;
+  }
+
+  .p-inputnumber.w-full .p-inputnumber-input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,94 @@
+<p-dialog
+  [header]="'Disponibilidad: ' + (room()?.name || '')"
+  [visible]="visible()"
+  (onHide)="onHide()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  @if (room()) {
+  <div class="availability-content">
+    <!-- Room Details -->
+    <div class="room-details">
+      <div class="detail-row">
+        <span class="detail-label">
+          <i class="pi pi-users"></i>
+          Capacidad:
+        </span>
+        <span class="detail-value">
+          {{ room()!.capacity || 'No especificada' }}
+          @if (room()!.capacity) { personas }
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">
+          <i class="pi pi-info-circle"></i>
+          Descripción:
+        </span>
+        <span class="detail-value">
+          {{ room()!.description || 'Sin descripción' }}
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">
+          <i class="pi pi-clock"></i>
+          Tarifa por Hora:
+        </span>
+        <span class="detail-value">
+          {{ formatCurrency(room()!.hourly_rate) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Upcoming Sessions Section -->
+    <div class="sessions-section">
+      <h3>Sesiones Próximas en esta Sala</h3>
+
+      @if (upcomingSessions.length > 0) {
+      <div class="sessions-list">
+        @for (session of upcomingSessions; track session.id) {
+        <div class="session-card">
+          <div class="session-header">
+            <span class="client-name">
+              <i class="pi pi-user"></i>
+              {{ session.clientName }}
+            </span>
+            <p-tag [value]="session.status" [severity]="getSessionStatusSeverity(session.status)" />
+          </div>
+          <div class="session-details">
+            <span class="session-info">
+              <i class="pi pi-calendar"></i>
+              {{ session.date }}
+            </span>
+            <span class="session-info">
+              <i class="pi pi-clock"></i>
+              {{ session.time }}
+            </span>
+            <span class="session-info">
+              <i class="pi pi-hourglass"></i>
+              {{ session.duration }}
+            </span>
+          </div>
+          <div class="session-actions">
+            <a href="#" class="session-link">Ver sesión →</a>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="empty-sessions">
+        <i class="pi pi-calendar-times"></i>
+        <p>No hay sesiones próximas programadas en esta sala</p>
+      </div>
+      }
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cerrar" icon="pi pi-times" (onClick)="onHide()" [text]="true" />
+    </div>
+  </div>
+  }
+</p-dialog>

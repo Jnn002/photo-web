@@ -81,6 +81,37 @@ export function getStatusSeverity(
 }
 
 /**
+ * Room Status type (extends Status with Maintenance)
+ */
+export type RoomStatus = Status | 'Maintenance';
+
+/**
+ * Get room status label in Spanish
+ */
+export function getRoomStatusLabel(status: string): string {
+  const statusMap: Record<string, string> = {
+    Active: 'Activo',
+    Inactive: 'Inactivo',
+    Maintenance: 'Mantenimiento',
+  };
+  return statusMap[status] ?? status;
+}
+
+/**
+ * Get PrimeNG severity for room status tag
+ */
+export function getRoomStatusSeverity(
+  status: string
+): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | null {
+  const severityMap: Record<string, 'success' | 'secondary' | 'warn'> = {
+    Active: 'success',
+    Inactive: 'secondary',
+    Maintenance: 'warn',
+  };
+  return severityMap[status] ?? null;
+}
+
+/**
  * Filters state for catalog lists
  */
 export interface CatalogFilters {

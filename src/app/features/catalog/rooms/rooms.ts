@@ -1,57 +1,77 @@
 /**
- * Rooms Component (Placeholder)
+ * Rooms Container Component
  *
- * Main component for studio rooms management.
- * TODO: Implement full CRUD functionality similar to Items
+ * Main component for studio rooms management, integrating list, form, and availability dialog.
  */
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { RoomListComponent } from './room-list';
+import { RoomFormComponent } from './room-form';
+import { RoomAvailabilityDialogComponent } from './room-availability-dialog';
+import type { RoomPublic } from '../models/catalog.models';
 
 @Component({
   selector: 'app-rooms',
-  imports: [CommonModule, ButtonModule],
+  imports: [RoomListComponent, RoomFormComponent, RoomAvailabilityDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div style="padding: 1.5rem;">
-      <div style="margin-bottom: 1.5rem;">
-        <h2>Salas del Estudio</h2>
-        <p class="text-muted">Gestión de salas fotográficas</p>
-      </div>
+    <app-room-list
+      (createClicked)="onCreateRoom()"
+      (editClicked)="onEditRoom($event)"
+      (availabilityClicked)="onViewAvailability($event)"
+    />
 
-      <p-button label="+ Nueva Sala" icon="pi pi-plus" />
+    <app-room-form
+      [visible]="formVisible()"
+      [room]="selectedRoom()"
+      (visibleChange)="onFormVisibleChange($event)"
+      (saved)="onRoomSaved($event)"
+    />
 
-      <div
-        style="margin-top: 2rem; padding: 3rem; text-align: center; border: 2px dashed var(--surface-border); border-radius: var(--border-radius);"
-      >
-        <i
-          class="pi pi-building"
-          style="font-size: 3rem; color: var(--text-color-secondary);"
-        ></i>
-        <p style="margin-top: 1rem; color: var(--text-color-secondary);">
-          Funcionalidad de salas en desarrollo
-        </p>
-        <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-color-secondary);">
-          Próximamente: gestión de salas con disponibilidad y capacidad
-        </p>
-      </div>
-    </div>
+    <app-room-availability-dialog
+      [visible]="availabilityDialogVisible()"
+      [room]="viewedRoom()"
+      (visibleChange)="onAvailabilityDialogVisibleChange($event)"
+    />
   `,
-  styles: [
-    `
-      .text-muted {
-        color: var(--text-color-secondary);
-        font-size: 0.875rem;
-        margin: 0;
-      }
-
-      h2 {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-      }
-    `,
-  ],
 })
-export class RoomsComponent {}
+export class RoomsComponent {
+  readonly formVisible = signal(false);
+  readonly selectedRoom = signal<RoomPublic | null>(null);
+  readonly availabilityDialogVisible = signal(false);
+  readonly viewedRoom = signal<RoomPublic | null>(null);
+
+  onCreateRoom(): void {
+    this.selectedRoom.set(null);
+    this.formVisible.set(true);
+  }
+
+  onEditRoom(room: RoomPublic): void {
+    this.selectedRoom.set(room);
+    this.formVisible.set(true);
+  }
+
+  onViewAvailability(room: RoomPublic): void {
+    this.viewedRoom.set(room);
+    this.availabilityDialogVisible.set(true);
+  }
+
+  onFormVisibleChange(visible: boolean): void {
+    this.formVisible.set(visible);
+    if (!visible) {
+      this.selectedRoom.set(null);
+    }
+  }
+
+  onAvailabilityDialogVisibleChange(visible: boolean): void {
+    this.availabilityDialogVisible.set(visible);
+    if (!visible) {
+      this.viewedRoom.set(null);
+    }
+  }
+
+  onRoomSaved(room: RoomPublic): void {
+    this.formVisible.set(false);
+    this.selectedRoom.set(null);
+  }
+}
