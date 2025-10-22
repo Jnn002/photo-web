@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap, of, forkJoin } from 'rxjs';
 import { environment } from '@environments/environment';
 import { StorageService } from './storage';
+import { TokenRefreshService } from './token-refresh';
 import { isTokenValid } from '@core/utils/jwt.utils';
 import type { UserLogin, TokenResponse, UserPublic, UserWithRoles } from '@generated/types.gen';
 
@@ -15,6 +16,7 @@ export class AuthService {
     private readonly http = inject(HttpClient);
     private readonly storage = inject(StorageService);
     private readonly router = inject(Router);
+    private readonly tokenRefreshService = inject(TokenRefreshService);
 
     // ✅ Private writable signals
     private readonly _currentUser = signal<UserPublic | null>(null);
@@ -113,30 +115,18 @@ export class AuthService {
         );
     }
 
+    /**
+     * Delega al TokenRefreshService para refrescar el token
+     * El TokenRefreshService gestiona el estado y evita múltiples refreshes simultáneos
+     */
     refreshToken() {
-        const refreshToken = this.storage.getRefreshToken();
-
-        if (!refreshToken) {
-            this.logout();
-            return of(null);
-        }
-
-        return this.http
-            .post<TokenResponse>(`${environment.apiUrl}/auth/refresh`, {
-                refresh_token: refreshToken,
+        return this.tokenRefreshService.refreshAccessToken().pipe(
+            catchError((error) => {
+                console.error('Token refresh failed:', error);
+                this.logout();
+                return of(null);
             })
-            .pipe(
-                tap((response) => {
-                    // Actualizar tokens sin recargar roles/permisos (ya los tenemos)
-                    this.storage.setAccessToken(response.access_token);
-                    this.storage.setRefreshToken(response.refresh_token);
-                }),
-                catchError((error) => {
-                    console.error('Token refresh failed:', error);
-                    this.logout();
-                    return of(null);
-                })
-            );
+        );
     }
 
     logout(): void {
@@ -183,6 +173,9 @@ export class AuthService {
         this._userWithRoles.set(null);
         this._permissions.set([]);
         this._isAuthenticated.set(false);
+        
+        // ✅ Resetear estado del refresh token
+        this.tokenRefreshService.resetState();
     }
 
     hasPermission(permission: string): boolean {

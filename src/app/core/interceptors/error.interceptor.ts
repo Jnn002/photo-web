@@ -5,6 +5,13 @@ import { catchError, throwError } from 'rxjs';
 import { AuthService } from '@core/services/auth';
 import { NotificationService } from '@core/services/notification';
 
+/**
+ * Error Interceptor
+ * 
+ * Maneja errores HTTP globales y muestra notificaciones al usuario.
+ * NO maneja errores 401 de requests normales (eso lo hace tokenRefreshInterceptor).
+ * SOLO maneja errores 401 del endpoint /auth/refresh (refresh token expirado).
+ */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
@@ -13,6 +20,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An error occurred';
+      let shouldShowError = true;
 
       if (error.error instanceof ErrorEvent) {
         // Client-side error
@@ -21,8 +29,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         // Server-side error
         switch (error.status) {
           case 401:
-            authService.logout();
-            errorMessage = 'Session expired. Please login again.';
+            // ✅ SOLO hacer logout si el refresh token ha fallado
+            if (req.url.includes('/auth/refresh')) {
+              authService.logout();
+              errorMessage = 'Session expired. Please login again.';
+            } else {
+              // ❌ NO mostrar error ni hacer logout
+              // El tokenRefreshInterceptor está manejando este 401
+              shouldShowError = false;
+            }
             break;
           case 403:
             errorMessage = 'You do not have permission to perform this action.';
@@ -41,7 +56,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         }
       }
 
-      notificationService.showError(errorMessage);
+      // ✅ Solo mostrar error si no es un 401 que está siendo manejado por tokenRefreshInterceptor
+      if (shouldShowError) {
+        notificationService.showError(errorMessage);
+      }
+      
       return throwError(() => error);
     })
   );
