@@ -173,8 +173,10 @@ export class SessionListComponent {
         });
     }
 
-    formatCurrency(amount: number): string {
-        return amount.toString();
+    formatCurrency(amount: number | string): string {
+        // Handle both string and number from backend
+        const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+        return isNaN(numAmount) ? '0.00' : numAmount.toFixed(2);
     }
 
     getClientName(clientId: number): string {

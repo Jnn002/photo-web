@@ -5,7 +5,14 @@
  * Uses reactive forms with signals for modern Angular 20+ patterns.
  */
 
-import { Component, ChangeDetectionStrategy, inject, effect, signal, computed } from '@angular/core';
+import {
+    Component,
+    ChangeDetectionStrategy,
+    inject,
+    effect,
+    signal,
+    computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -62,7 +69,10 @@ export class ClientFormComponent {
     constructor() {
         // Initialize form with validators
         this.clientForm = this.formBuilder.group({
-            full_name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+            full_name: [
+                '',
+                [Validators.required, Validators.minLength(1), Validators.maxLength(100)],
+            ],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
             primary_phone: [
                 '',
@@ -76,23 +86,20 @@ export class ClientFormComponent {
         });
 
         // Load client data if in edit mode
-        effect(
-            () => {
-                const params = this.route.snapshot.paramMap;
-                const id = params.get('id');
+        effect(() => {
+            const params = this.route.snapshot.paramMap;
+            const id = params.get('id');
 
-                if (id && id !== 'new') {
-                    const clientIdNum = parseInt(id, 10);
-                    if (!isNaN(clientIdNum)) {
-                        this.clientId.set(clientIdNum);
-                        this.loadClient(clientIdNum);
-                    }
-                } else {
-                    this.clientId.set(null);
+            if (id && id !== 'new') {
+                const clientIdNum = parseInt(id, 10);
+                if (!isNaN(clientIdNum)) {
+                    this.clientId.set(clientIdNum);
+                    this.loadClient(clientIdNum);
                 }
-            },
-            { allowSignalWrites: true },
-        );
+            } else {
+                this.clientId.set(null);
+            }
+        });
     }
 
     /**

@@ -1,4 +1,7 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -64,73 +67,77 @@ export class SessionDetailsComponent {
     // Current client information
     readonly currentClient = signal<ClientPublic | null>(null);
 
+    // Reactive route params (Angular 20+ pattern)
+    private readonly paramMap = toSignal(this.route.paramMap, { requireSync: true });
+    readonly sessionId = computed(() => {
+        const idStr = this.paramMap().get('id');
+        return idStr ? parseInt(idStr, 10) : null;
+    });
+
     dialogRef: DynamicDialogRef | null = null;
 
     constructor() {
-        // Get session ID from route and load data
-        const id = this.route.snapshot.params['id'];
-        if (id) {
-            const sessionId = parseInt(id, 10);
-            this.loadSessionData(sessionId);
-        }
+        // Reactive data loading with effect (Angular 20+ zoneless pattern)
+        effect(() => {
+            const id = this.sessionId();
+            if (id) {
+                this.loadSessionData(id);
+            }
+        });
     }
 
     loadSessionData(sessionId: number) {
         this.loading.set(true);
 
-        // Load session details
-        this.sessionService.getSession(sessionId).subscribe({
-            next: (session) => {
+        // Optimize: Load all data in parallel using forkJoin
+        // Use catchError to handle individual failures gracefully
+        forkJoin({
+            session: this.sessionService.getSession(sessionId),
+            details: this.sessionService.listSessionDetails(sessionId).pipe(
+                catchError((error) => {
+                    console.error('Error loading session details:', error);
+                    return of([]);
+                })
+            ),
+            payments: this.sessionService.listSessionPayments(sessionId).pipe(
+                catchError((error) => {
+                    // Handle 403 gracefully - user might not have permission
+                    if (error.status === 403) {
+                        console.warn('No permission to view payments');
+                    } else {
+                        console.error('Error loading payments:', error);
+                    }
+                    return of([]);
+                })
+            ),
+            photographers: this.sessionService.listSessionPhotographers(sessionId).pipe(
+                catchError((error) => {
+                    console.error('Error loading photographers:', error);
+                    return of([]);
+                })
+            ),
+            history: this.sessionService.getSessionStatusHistory(sessionId).pipe(
+                catchError((error) => {
+                    console.error('Error loading status history:', error);
+                    return of([]);
+                })
+            ),
+        }).subscribe({
+            next: ({ session, details, payments, photographers, history }) => {
                 this.session.set(session);
+                this.sessionDetails.set(details);
+                this.payments.set(payments);
+                this.photographers.set(photographers);
+                this.statusHistory.set(history.reverse()); // Most recent first
                 this.loading.set(false);
 
-                // Load client information
+                // Load client information after session is loaded
                 this.loadClientInfo(session.client_id);
             },
             error: (error) => {
                 console.error('Error loading session:', error);
                 this.notificationService.showError('Error al cargar la sesión');
                 this.loading.set(false);
-            },
-        });
-
-        // Load session line items
-        this.sessionService.listSessionDetails(sessionId).subscribe({
-            next: (details) => {
-                this.sessionDetails.set(details);
-            },
-            error: (error) => {
-                console.error('Error loading session details:', error);
-            },
-        });
-
-        // Load payments
-        this.sessionService.listSessionPayments(sessionId).subscribe({
-            next: (payments) => {
-                this.payments.set(payments);
-            },
-            error: (error) => {
-                console.error('Error loading payments:', error);
-            },
-        });
-
-        // Load photographers
-        this.sessionService.listSessionPhotographers(sessionId).subscribe({
-            next: (photographers) => {
-                this.photographers.set(photographers);
-            },
-            error: (error) => {
-                console.error('Error loading photographers:', error);
-            },
-        });
-
-        // Load status history
-        this.sessionService.getSessionStatusHistory(sessionId).subscribe({
-            next: (history) => {
-                this.statusHistory.set(history.reverse()); // Most recent first
-            },
-            error: (error) => {
-                console.error('Error loading status history:', error);
             },
         });
     }
@@ -243,10 +250,16 @@ export class SessionDetailsComponent {
         }
     }
 
-    loadClientInfo(clientId: number) {
-        this.clientService.loadClient(clientId).then(() => {
-            this.currentClient.set(this.clientService.currentClient());
-        });
+    async loadClientInfo(clientId: number): Promise<void> {
+        try {
+            await this.clientService.loadClient(clientId);
+            // ClientService updates its internal signal, we read from it
+            const client = this.clientService.currentClient();
+            this.currentClient.set(client);
+        } catch (error) {
+            console.error('Error loading client info:', error);
+            this.currentClient.set(null);
+        }
     }
 
     editSession() {
@@ -281,8 +294,10 @@ export class SessionDetailsComponent {
         });
     }
 
-    formatCurrency(amount: number): string {
-        return amount.toFixed(2);
+    formatCurrency(amount: number | string): string {
+        // Handle both string and number from backend
+        const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+        return isNaN(numAmount) ? '0.00' : numAmount.toFixed(2);
     }
 
     getClientName(clientId: number): string {

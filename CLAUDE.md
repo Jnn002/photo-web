@@ -464,6 +464,16 @@ Valida permisos específicos para acceder a rutas.
 -   No implicit returns
 -   No fallthrough cases
 
+#### ⚠️ Deprecated `allowSignalWrites` Warning
+
+**Problema:** Uso del antipatrón `route.snapshot` en constructor, incompatible con Angular 20+ zoneless.
+
+**Solución:**
+
+-   Migrado a patrón reactivo usando `toSignal()` de `@angular/core/rxjs-interop`
+-   Implementado `computed()` para extraer ID de la ruta
+-   Usar `effect()` sin `allowSignalWrites` para carga reactiva de datos
+
 ## Consideraciones de Rendimiento
 
 1. **OnPush Change Detection**: Todos los componentes deben usar `ChangeDetectionStrategy.OnPush`

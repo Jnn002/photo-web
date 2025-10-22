@@ -26,14 +26,7 @@ import {
 
 @Component({
     selector: 'app-client-details',
-    imports: [
-        CommonModule,
-        CardModule,
-        ButtonModule,
-        TagModule,
-        DividerModule,
-        SkeletonModule,
-    ],
+    imports: [CommonModule, CardModule, ButtonModule, TagModule, DividerModule, SkeletonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './client-details.html',
     styleUrl: './client-details.css',
@@ -56,21 +49,18 @@ export class ClientDetailsComponent {
     readonly getStatusSeverity = getStatusSeverity;
 
     constructor() {
-        effect(
-            () => {
-                const params = this.route.snapshot.paramMap;
-                const id = params.get('id');
+        effect(() => {
+            const params = this.route.snapshot.paramMap;
+            const id = params.get('id');
 
-                if (id) {
-                    const clientIdNum = parseInt(id, 10);
-                    if (!isNaN(clientIdNum)) {
-                        this.clientId.set(clientIdNum);
-                        this.clientService.loadClient(clientIdNum);
-                    }
+            if (id) {
+                const clientIdNum = parseInt(id, 10);
+                if (!isNaN(clientIdNum)) {
+                    this.clientId.set(clientIdNum);
+                    this.clientService.loadClient(clientIdNum);
                 }
-            },
-            { allowSignalWrites: true },
-        );
+            }
+        });
     }
 
     /**
