@@ -1,0 +1,94 @@
+<div class="flex flex-column gap-4">
+  <!-- Package Selection -->
+  <div>
+    <label for="package" class="block text-900 font-medium mb-2">
+      Package <span class="text-red-500">*</span>
+    </label>
+    <p-select
+      inputId="package"
+      formControlName="package_id"
+      [options]="packageOptions()"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Seleccionar package"
+      [filter]="true"
+      filterBy="label"
+      [showClear]="true"
+      [loading]="loading()"
+      styleClass="w-full"
+      [formGroup]="form"
+    />
+    @if (form.get('package_id')?.invalid && form.get('package_id')?.touched) {
+    <small class="p-error">El package es requerido</small>
+    }
+  </div>
+
+  <!-- Package Details -->
+  @if (selectedPackage()) {
+  <p-message severity="info" styleClass="w-full">
+    <div class="flex flex-column gap-2">
+      <div class="flex justify-content-between">
+        <span class="font-medium">Precio del Package:</span>
+        <span class="text-xl font-bold text-primary"
+          >Q {{ formatCurrency(parseFloat(selectedPackage()!.base_price)) }}</span
+        >
+      </div>
+      @if (selectedPackage()!.description) {
+      <div>
+        <span class="font-medium">Descripción:</span>
+        <p class="mt-1 mb-0">{{ selectedPackage()!.description }}</p>
+      </div>
+      }
+    </div>
+  </p-message>
+
+  <!-- Package Items Preview -->
+  <div>
+    <h4 class="mt-0 mb-2">Items incluidos en el package:</h4>
+    <p-message severity="warn" styleClass="w-full mb-2">
+      <span class="text-sm"
+        >Los items del package serán agregados individualmente a la sesión</span
+      >
+    </p-message>
+
+    <div class="border-1 border-200 border-round">
+      <table class="w-full">
+        <thead class="bg-gray-50">
+          <tr class="border-bottom-1 border-200">
+            <th class="text-left p-2 font-medium text-600">Item</th>
+            <th class="text-center p-2 font-medium text-600">Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Note: Package items would come from package details -->
+          <!-- For now showing placeholder as we'd need to load package details -->
+          <tr class="border-bottom-1 border-200">
+            <td colspan="2" class="text-center p-3 text-600">
+              <i class="pi pi-info-circle mr-2"></i>
+              Los items se mostrarán al seleccionar un package
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  <!-- Actions -->
+  <div class="flex justify-content-end gap-2 mt-3">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      [text]="true"
+      (onClick)="cancel()"
+      [disabled]="submitting()"
+    />
+    <p-button
+      label="Agregar Package"
+      icon="pi pi-box"
+      (onClick)="onSubmit()"
+      [disabled]="form.invalid || submitting()"
+      [loading]="submitting()"
+    />
+  </div>
+</div>

@@ -1,0 +1,180 @@
+<div class="card">
+  <div class="flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="text-2xl font-bold m-0">Nueva Sesión</h2>
+      <p class="text-600 mt-1 mb-0">Crear una nueva sesión fotográfica</p>
+    </div>
+    <p-button label="Cancelar" [text]="true" (onClick)="cancel()" />
+  </div>
+
+  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+    <div class="grid">
+      <!-- Cliente -->
+      <div class="col-12 md:col-6">
+        <label for="client" class="block text-900 font-medium mb-2">
+          Cliente <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          inputId="client"
+          formControlName="client_id"
+          [options]="clientOptions()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccionar cliente"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="true"
+          [loading]="loadingClients()"
+          styleClass="w-full"
+        />
+        @if (sessionForm.get('client_id')?.invalid && sessionForm.get('client_id')?.touched) {
+          <small class="p-error">El cliente es requerido</small>
+        }
+      </div>
+
+      <!-- Tipo de Sesión -->
+      <div class="col-12 md:col-6">
+        <label for="sessionType" class="block text-900 font-medium mb-2">
+          Tipo de Sesión <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          inputId="sessionType"
+          formControlName="session_type"
+          [options]="sessionTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccionar tipo"
+          styleClass="w-full"
+          (onChange)="onSessionTypeChange()"
+        />
+        @if (sessionForm.get('session_type')?.invalid && sessionForm.get('session_type')?.touched) {
+          <small class="p-error">El tipo de sesión es requerido</small>
+        }
+      </div>
+
+      <!-- Fecha de Sesión -->
+      <div class="col-12 md:col-6">
+        <label for="sessionDate" class="block text-900 font-medium mb-2">
+          Fecha de Sesión <span class="text-red-500">*</span>
+        </label>
+        <p-datepicker
+          inputId="sessionDate"
+          formControlName="session_date"
+          [showIcon]="true"
+          dateFormat="dd/mm/yy"
+          [minDate]="minDate"
+          placeholder="Seleccionar fecha"
+          styleClass="w-full"
+        />
+        @if (sessionForm.get('session_date')?.invalid && sessionForm.get('session_date')?.touched) {
+          <small class="p-error">La fecha de sesión es requerida y debe ser futura</small>
+        }
+      </div>
+
+      <!-- Hora -->
+      <div class="col-12 md:col-6">
+        <label for="sessionTime" class="block text-900 font-medium mb-2">Hora</label>
+        <input
+          pInputText
+          id="sessionTime"
+          type="time"
+          formControlName="session_time"
+          class="w-full"
+        />
+        @if (sessionForm.get('session_time')?.invalid && sessionForm.get('session_time')?.touched) {
+          <small class="p-error">Formato de hora inválido (HH:MM)</small>
+        }
+      </div>
+
+      <!-- Duración -->
+      <div class="col-12 md:col-6">
+        <label for="duration" class="block text-900 font-medium mb-2">Duración (horas)</label>
+        <p-inputnumber
+          inputId="duration"
+          formControlName="estimated_duration_hours"
+          [min]="1"
+          [max]="24"
+          [showButtons]="true"
+          styleClass="w-full"
+        />
+      </div>
+
+      <!-- Sala (solo para sesiones en estudio) -->
+      @if (isStudioSession()) {
+        <div class="col-12 md:col-6">
+          <label for="room" class="block text-900 font-medium mb-2">
+            Sala <span class="text-red-500">*</span>
+          </label>
+          <p-select
+            inputId="room"
+            formControlName="room_id"
+            [options]="roomOptions()"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccionar sala"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="true"
+            [loading]="loadingRooms()"
+            styleClass="w-full"
+          />
+          <small class="text-600">Solo para sesiones en estudio</small>
+          @if (sessionForm.get('room_id')?.invalid && sessionForm.get('room_id')?.touched) {
+            <small class="p-error">La sala es requerida para sesiones en estudio</small>
+          }
+        </div>
+      }
+
+      <!-- Ubicación (solo para sesiones externas) -->
+      @if (isExternalSession()) {
+        <div class="col-12 md:col-6">
+          <label for="location" class="block text-900 font-medium mb-2">
+            Ubicación <span class="text-red-500">*</span>
+          </label>
+          <input
+            pInputText
+            id="location"
+            formControlName="location"
+            placeholder="Ciudad de Guatemala"
+            class="w-full"
+          />
+          <small class="text-600">Dirección o lugar del evento</small>
+          @if (sessionForm.get('location')?.invalid && sessionForm.get('location')?.touched) {
+            <small class="p-error">La ubicación es requerida para sesiones externas</small>
+          }
+        </div>
+      }
+
+      <!-- Requerimientos del Cliente -->
+      <div class="col-12">
+        <label for="requirements" class="block text-900 font-medium mb-2">
+          Requerimientos del Cliente
+        </label>
+        <textarea
+          pTextarea
+          id="requirements"
+          formControlName="client_requirements"
+          rows="4"
+          placeholder="Requerimientos especiales del cliente..."
+          class="w-full"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex justify-content-end gap-2 mt-4">
+      <p-button
+        label="Cancelar"
+        type="button"
+        [text]="true"
+        (onClick)="cancel()"
+      />
+      <p-button
+        label="Crear Sesión"
+        type="submit"
+        [disabled]="sessionForm.invalid || submitting()"
+        [loading]="submitting()"
+      />
+    </div>
+  </form>
+</div>

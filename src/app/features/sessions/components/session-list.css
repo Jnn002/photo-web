@@ -1,0 +1,12 @@
+/* Session List Styles */
+
+.card {
+  background: var(--p-content-background);
+  border-radius: var(--p-content-border-radius);
+  padding: 1.5rem;
+}
+
+.pi-inbox {
+  display: block;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,76 @@
+<div class="p-fluid">
+    <p-message
+        severity="warn"
+        text="Este cambio de estado afectará el flujo de trabajo de la sesión."
+        styleClass="mb-3"
+    ></p-message>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Estado Actual -->
+        <div class="field">
+            <label class="block text-900 font-medium mb-2"> Estado Actual </label>
+            <div class="p-3 border-1 border-200 border-round">
+                <span class="font-bold">{{ getCurrentStatusLabel() }}</span>
+            </div>
+        </div>
+
+        <!-- Nuevo Estado -->
+        <div class="field">
+            <label for="newStatus" class="block text-900 font-medium mb-2">
+                Nuevo Estado <span class="text-red-500">*</span>
+            </label>
+            <p-select
+                id="newStatus"
+                formControlName="to_status"
+                [options]="statusOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="-- Seleccionar --"
+            ></p-select>
+            @if ( form.get('to_status')?.invalid && form.get('to_status')?.touched ) {
+            <small class="p-error">El nuevo estado es requerido</small>
+            }
+        </div>
+
+        <!-- Razón -->
+        <div class="field">
+            <label for="reason" class="block text-900 font-medium mb-2"> Razón </label>
+            <textarea
+                pInputTextarea
+                id="reason"
+                formControlName="reason"
+                rows="2"
+                placeholder="Motivo del cambio de estado..."
+            ></textarea>
+        </div>
+
+        <!-- Notas -->
+        <div class="field">
+            <label for="notes" class="block text-900 font-medium mb-2"> Notas </label>
+            <textarea
+                pInputTextarea
+                id="notes"
+                formControlName="notes"
+                rows="3"
+                placeholder="Notas adicionales..."
+            ></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-content-end gap-2 mt-4">
+            <p-button
+                label="Cancelar"
+                type="button"
+                severity="secondary"
+                [text]="true"
+                (onClick)="cancel()"
+            />
+            <p-button
+                label="Cambiar Estado"
+                type="submit"
+                [disabled]="form.invalid || submitting()"
+                [loading]="submitting()"
+            />
+        </div>
+    </form>
+</div>

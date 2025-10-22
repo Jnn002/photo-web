@@ -40,6 +40,10 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/catalog/rooms/rooms').then((m) => m.RoomsComponent),
             },
+            {
+                path: 'sessions',
+                loadChildren: () => import('./features/sessions/sessions.routes').then(m => m.SESSIONS_ROUTES),
+            },
             /*{
         path: 'sessions',
         loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsComponent)

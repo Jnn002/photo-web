@@ -1,0 +1,368 @@
+<div class="card">
+    @if (loading()) {
+    <div class="flex justify-content-center align-items-center p-5">
+        <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" />
+    </div>
+    } @else if (session()) {
+    <!-- Header -->
+    <div class="flex justify-content-between align-items-start mb-4">
+        <div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <h2 class="text-2xl font-bold m-0">Sesión #{{ session()!.id }}</h2>
+                <p-tag
+                    [value]="getStatusBadge(session()!.status).label"
+                    [severity]="getStatusBadge(session()!.status).severity"
+                />
+            </div>
+            <p class="text-600 m-0">
+                {{ getClientName(session()!.client_id) }} -
+                {{ formatDate(session()!.session_date) }}
+            </p>
+        </div>
+        <div class="flex gap-2">
+            <p-button
+                label="Editar"
+                icon="pi pi-pencil"
+                [outlined]="true"
+                (onClick)="editSession()"
+                [disabled]="!canEditSession()"
+            />
+            <p-button
+                label="Cambiar Estado"
+                icon="pi pi-sync"
+                (onClick)="openChangeStatusDialog()"
+                [disabled]="!canChangeStatus()"
+            />
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- Información del Cliente -->
+        <div class="col-12">
+            <p-panel header="Información del Cliente">
+                @if (currentClient()) {
+                <div class="grid">
+                    <div class="col-12 md:col-4">
+                        <p class="text-600 mb-1">Nombre</p>
+                        <p class="text-900 font-medium">{{ currentClient()!.full_name }}</p>
+                    </div>
+                    <div class="col-12 md:col-4">
+                        <p class="text-600 mb-1">Email</p>
+                        <p class="text-900">{{ currentClient()!.email }}</p>
+                    </div>
+                    <div class="col-12 md:col-4">
+                        <p class="text-600 mb-1">Teléfono</p>
+                        <p class="text-900">{{ currentClient()!.primary_phone || '-' }}</p>
+                    </div>
+                </div>
+                } @else {
+                <p class="text-center text-600">Cargando información del cliente...</p>
+                }
+            </p-panel>
+        </div>
+
+        <!-- Información General -->
+        <div class="col-12 lg:col-6">
+            <p-panel header="Información General de la Sesión">
+                <div class="grid">
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Estado</p>
+                        <p-tag
+                            [value]="getStatusBadge(session()!.status).label"
+                            [severity]="getStatusBadge(session()!.status).severity"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Tipo</p>
+                        <p class="text-900 font-medium">
+                            {{ getSessionTypeLabel(session()!.session_type) }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Fecha</p>
+                        <p class="text-900 font-medium">
+                            {{ formatDate(session()!.session_date) }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Hora</p>
+                        <p class="text-900 font-medium">
+                            {{ session()!.session_time || 'No especificada' }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Duración</p>
+                        <p class="text-900 font-medium">
+                            {{ session()!.estimated_duration_hours || '-' }} horas
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Ubicación</p>
+                        <p class="text-900 font-medium">{{ session()!.location || '-' }}</p>
+                    </div>
+                </div>
+
+                @if (session()!.client_requirements) {
+                <div class="mt-3">
+                    <p class="text-600 mb-1">Requerimientos</p>
+                    <p class="text-900">{{ session()!.client_requirements }}</p>
+                </div>
+                } @if (session()!.internal_notes) {
+                <div class="mt-3">
+                    <p class="text-600 mb-1">Notas Internas</p>
+                    <p class="text-900">{{ session()!.internal_notes }}</p>
+                </div>
+                }
+            </p-panel>
+        </div>
+
+        <!-- Información Financiera -->
+        <div class="col-12 lg:col-6">
+            <p-panel header="Información Financiera">
+                <div class="grid">
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Total</p>
+                        <p class="text-900 font-bold text-2xl">
+                            Q {{ formatCurrency(session()!.total_amount) }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Depósito</p>
+                        <p class="text-900 font-medium">
+                            Q {{ formatCurrency(session()!.deposit_amount) }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Pagado</p>
+                        <p class="text-900 font-medium text-green-600">
+                            Q {{ formatCurrency(session()!.paid_amount) }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-600 mb-1">Balance</p>
+                        <p class="text-900 font-medium">
+                            Q {{ formatCurrency(session()!.balance_amount) }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Payment Progress Bar -->
+                <div class="mt-3">
+                    <p class="text-600 mb-2">Progreso de Pago</p>
+                    <p-progressBar [value]="getPaymentProgress()" [showValue]="false" />
+                    <small class="text-600">{{ getPaymentProgress() }}% pagado</small>
+                </div>
+
+                <p-button
+                    label="Registrar Pago"
+                    icon="pi pi-dollar"
+                    styleClass="w-full mt-3"
+                    severity="success"
+                    (onClick)="openRecordPaymentDialog()"
+                />
+
+                @if (payments().length > 0) {
+                <div class="mt-3">
+                    <p class="text-600 mb-2 font-medium">Historial de Pagos</p>
+                    @for (payment of payments(); track payment.id) {
+                    <div
+                        class="flex justify-content-between align-items-center p-2 border-bottom-1 border-200"
+                    >
+                        <div>
+                            <p class="m-0 font-medium">{{ payment.payment_type }}</p>
+                            <small class="text-600">{{ formatDate(payment.payment_date) }}</small>
+                        </div>
+                        <p class="m-0 font-bold">Q {{ formatCurrency(payment.amount) }}</p>
+                    </div>
+                    }
+                </div>
+                }
+            </p-panel>
+        </div>
+
+        <!-- Items Contratados -->
+        <div class="col-12">
+            <p-panel header="Items Contratados">
+                <div class="flex justify-content-between align-items-center mb-3">
+                    <h3 class="m-0">Lista de Items</h3>
+                    <div class="flex gap-2">
+                        <p-button
+                            label="+ Agregar Item"
+                            icon="pi pi-plus"
+                            severity="secondary"
+                            [outlined]="true"
+                            (onClick)="openAddItemDialog()"
+                        />
+                        <p-button
+                            label="+ Agregar Package"
+                            icon="pi pi-box"
+                            severity="secondary"
+                            [outlined]="true"
+                            (onClick)="openAddPackageDialog()"
+                        />
+                    </div>
+                </div>
+
+                @if (sessionDetails().length === 0) {
+                <p class="text-center text-600 p-4">No hay items contratados</p>
+                } @else {
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-bottom-1 border-200">
+                                <th class="text-left p-2">Código</th>
+                                <th class="text-left p-2">Item</th>
+                                <th class="text-center p-2">Cant.</th>
+                                <th class="text-right p-2">Precio Unit.</th>
+                                <th class="text-right p-2">Subtotal</th>
+                                <th class="text-center p-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (detail of sessionDetails(); track detail.id) {
+                            <tr class="border-bottom-1 border-200">
+                                <td class="p-2">{{ detail.item_code }}</td>
+                                <td class="p-2">
+                                    <p class="m-0 font-medium">{{ detail.item_name }}</p>
+                                    @if (detail.item_description) {
+                                    <small class="text-600">{{ detail.item_description }}</small>
+                                    }
+                                </td>
+                                <td class="text-center p-2">{{ detail.quantity }}</td>
+                                <td class="text-right p-2">
+                                    Q {{ formatCurrency(detail.unit_price) }}
+                                </td>
+                                <td class="text-right p-2 font-bold">
+                                    Q {{ formatCurrency(detail.line_subtotal) }}
+                                </td>
+                                <td class="text-center p-2">
+                                    <p-button
+                                        icon="pi pi-trash"
+                                        severity="danger"
+                                        [text]="true"
+                                        [rounded]="true"
+                                        (onClick)="removeSessionDetail(detail.id)"
+                                        pTooltip="Eliminar item"
+                                        tooltipPosition="top"
+                                    />
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-right p-2 font-bold">Total:</td>
+                                <td class="text-right p-2 font-bold text-xl" colspan="1">
+                                    Q {{ formatCurrency(session()!.total_amount) }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                }
+            </p-panel>
+        </div>
+
+        <!-- Fotógrafos Asignados -->
+        <div class="col-12 lg:col-6">
+            <p-panel header="Fotógrafos Asignados">
+                @if (photographers().length === 0) {
+                <p class="text-center text-600 mb-3">No hay fotógrafos asignados</p>
+                } @else { @for (photographer of photographers(); track photographer.id) {
+                <div
+                    class="flex justify-content-between align-items-center p-2 border-bottom-1 border-200"
+                >
+                    <div>
+                        <p class="m-0 font-medium">Fotógrafo #{{ photographer.photographer_id }}</p>
+                        <small class="text-600">{{
+                            photographer.role || 'Sin rol especificado'
+                        }}</small>
+                    </div>
+                    @if (photographer.attended) {
+                    <p-tag value="Asistió" severity="success" />
+                    } @else {
+                    <p-tag value="Asignado" severity="info" />
+                    }
+                </div>
+                } }
+                <p-button
+                    label="Asignar Fotógrafo"
+                    icon="pi pi-user-plus"
+                    styleClass="w-full mt-3"
+                    (onClick)="openAssignPhotographerDialog()"
+                />
+            </p-panel>
+        </div>
+
+        <!-- Editor Asignado -->
+        <div class="col-12 lg:col-6">
+            <p-panel header="Editor Asignado">
+                @if (!session()!.editing_assigned_to) {
+                <p class="text-center text-600 mb-3">No hay editor asignado</p>
+                } @else {
+                <div class="p-2">
+                    <p class="m-0 font-medium">Editor #{{ session()!.editing_assigned_to }}</p>
+                    @if (session()!.editing_started_at) {
+                    <small class="text-600"
+                        >Inicio: {{ formatDateTime(session()!.editing_started_at!) }}</small
+                    >
+                    } @if (session()!.editing_completed_at) {
+                    <div class="mt-2">
+                        <p-tag value="Completado" severity="success" />
+                        <small class="text-600 ml-2">{{
+                            formatDateTime(session()!.editing_completed_at!)
+                        }}</small>
+                    </div>
+                    }
+                </div>
+                }
+                <p-button
+                    label="Asignar Editor"
+                    icon="pi pi-user-plus"
+                    styleClass="w-full mt-3"
+                    (onClick)="openAssignEditorDialog()"
+                    [disabled]="!!session()!.editing_assigned_to"
+                />
+            </p-panel>
+        </div>
+
+        <!-- Timeline de Estado -->
+        <div class="col-12">
+            <p-panel header="Timeline de Estado">
+                @if (statusHistory().length === 0) {
+                <p class="text-center text-600 p-4">No hay historial de cambios</p>
+                } @else {
+                <p-timeline [value]="statusHistory()" align="left">
+                    <ng-template pTemplate="marker" let-history>
+                        <span
+                            class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1"
+                            [style.background-color]="getStatusColor(history.to_status)"
+                        >
+                            <i class="pi pi-circle-fill"></i>
+                        </span>
+                    </ng-template>
+                    <ng-template pTemplate="content" let-history>
+                        <div class="p-2">
+                            <div class="flex align-items-center gap-2 mb-1">
+                                <span class="font-bold">{{ history.to_status }}</span>
+                                @if (history.from_status) {
+                                <span class="text-600 text-sm"
+                                    >desde {{ history.from_status }}</span
+                                >
+                                }
+                            </div>
+                            <small class="text-600">{{ formatDateTime(history.changed_at) }}</small>
+                            @if (history.reason) {
+                            <p class="mt-2 mb-0 text-sm">{{ history.reason }}</p>
+                            } @if (history.notes) {
+                            <p class="mt-1 mb-0 text-sm text-600">{{ history.notes }}</p>
+                            }
+                        </div>
+                    </ng-template>
+                </p-timeline>
+                }
+            </p-panel>
+        </div>
+    </div>
+    }
+</div>

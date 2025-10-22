@@ -1,0 +1,55 @@
+<div class="p-fluid">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Fotógrafo -->
+        <div class="field">
+            <label for="photographer" class="block text-900 font-medium mb-2">
+                Fotógrafo <span class="text-red-500">*</span>
+            </label>
+            <p-select
+                id="photographer"
+                formControlName="photographer_id"
+                [options]="photographerOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="-- Seleccionar --"
+                [filter]="true"
+                filterBy="label"
+                [loading]="loading()"
+            ></p-select>
+            @if ( form.get('photographer_id')?.invalid && form.get('photographer_id')?.touched ) {
+            <small class="p-error">El fotógrafo es requerido</small>
+            }
+        </div>
+
+        <!-- Rol -->
+        <div class="field">
+            <label for="role" class="block text-900 font-medium mb-2"> Rol </label>
+            <p-select
+                id="role"
+                formControlName="role"
+                [options]="roleOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="-- Seleccionar --"
+                [showClear]="true"
+            ></p-select>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-content-end gap-2 mt-4">
+            <p-button
+                label="Cancelar"
+                type="button"
+                severity="secondary"
+                [text]="true"
+                (onClick)="cancel()"
+            />
+            <p-button
+                label="Asignar"
+                type="submit"
+                [disabled]="form.invalid || submitting()"
+                [loading]="submitting()"
+            />
+        </div>
+    </form>
+</div>

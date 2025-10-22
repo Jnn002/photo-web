@@ -1,0 +1,47 @@
+<div class="p-fluid">
+    <p-message
+        severity="info"
+        text="El editor será responsable de procesar y entregar el material de esta sesión."
+        styleClass="mb-3"
+    ></p-message>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Editor -->
+        <div class="field">
+            <label for="editor" class="block text-900 font-medium mb-2">
+                Editor <span class="text-red-500">*</span>
+            </label>
+            <p-select
+                id="editor"
+                formControlName="editor_id"
+                [options]="editorOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="-- Seleccionar --"
+                [filter]="true"
+                filterBy="label"
+                [loading]="loading()"
+            ></p-select>
+            @if ( form.get('editor_id')?.invalid && form.get('editor_id')?.touched ) {
+            <small class="p-error">El editor es requerido</small>
+            }
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-content-end gap-2 mt-4">
+            <p-button
+                label="Cancelar"
+                type="button"
+                severity="secondary"
+                [text]="true"
+                (onClick)="cancel()"
+            />
+            <p-button
+                label="Asignar y Comenzar Edición"
+                type="submit"
+                [disabled]="form.invalid || submitting()"
+                [loading]="submitting()"
+            />
+        </div>
+    </form>
+</div>
