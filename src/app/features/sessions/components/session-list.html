@@ -1,20 +1,25 @@
-<div class="card">
-  <div class="flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="text-2xl font-bold m-0">Sesiones</h2>
-      <p class="text-600 mt-1 mb-0">Gestión de sesiones fotográficas</p>
+<div class="session-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="header-info">
+      <h2>Sesiones</h2>
+      <p class="text-muted">Gestión de sesiones fotográficas</p>
     </div>
-    <p-button
-      label="+ Nueva Sesión"
-      severity="primary"
-      (onClick)="navigateToCreate()"
-    />
+
+    <div class="header-actions">
+      <p-button
+        label="Nueva Sesión"
+        icon="pi pi-plus"
+        (onClick)="navigateToCreate()"
+        styleClass="p-button-primary"
+      />
+    </div>
   </div>
 
   <!-- Filters -->
-  <div class="grid mb-3">
-    <div class="col-12 md:col-4">
-      <span class="p-input-icon-left w-full">
+  <div class="filters-section">
+    <div class="filter-group">
+      <span class="p-input-icon-left flex-1">
         <i class="pi pi-search"></i>
         <input
           pInputText
@@ -26,107 +31,151 @@
         />
       </span>
     </div>
-    <div class="col-12 md:col-4">
+
+    <div class="filter-group">
+      <label>Estado</label>
       <p-select
         [options]="statusOptions"
         [(ngModel)]="selectedStatus"
         (onChange)="onFilterChange()"
-        placeholder="Todos los estados"
+        placeholder="Todos"
         optionLabel="label"
         optionValue="value"
         [showClear]="true"
         styleClass="w-full"
       />
     </div>
-    <div class="col-12 md:col-4">
+
+    <div class="filter-group">
+      <label>Tipo</label>
       <p-select
         [options]="typeOptions"
         [(ngModel)]="selectedType"
         (onChange)="onFilterChange()"
-        placeholder="Todos los tipos"
+        placeholder="Todos"
         optionLabel="label"
         optionValue="value"
         [showClear]="true"
         styleClass="w-full"
       />
     </div>
+
+    <div class="filter-actions">
+      <p-button
+        icon="pi pi-filter-slash"
+        (onClick)="resetFilters()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Limpiar filtros"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        (onClick)="refresh()"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Refrescar"
+      />
+    </div>
   </div>
 
-  <!-- Sessions Table -->
-  <p-table
-    [value]="sessions()"
-    [loading]="loading()"
-    [paginator]="true"
-    [rows]="pageSize"
-    [totalRecords]="totalRecords()"
-    [lazy]="true"
-    (onLazyLoad)="loadSessions($event)"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    responsiveLayout="scroll"
-    styleClass="p-datatable-gridlines"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="id">
-          ID <p-sortIcon field="id" />
-        </th>
-        <th>Cliente</th>
-        <th pSortableColumn="session_type">
-          Tipo <p-sortIcon field="session_type" />
-        </th>
-        <th pSortableColumn="session_date">
-          Fecha <p-sortIcon field="session_date" />
-        </th>
-        <th pSortableColumn="status">
-          Estado <p-sortIcon field="status" />
-        </th>
-        <th>Total</th>
-        <th class="text-center">Acciones</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-session>
-      <tr>
-        <td>{{ session.id }}</td>
-        <td>{{ getClientName(session.client_id) }}</td>
-        <td>{{ getSessionTypeLabel(session.session_type) }}</td>
-        <td>{{ formatDate(session.session_date) }}</td>
-        <td>
-          <p-tag
-            [value]="getStatusBadge(session.status).label"
-            [severity]="getStatusBadge(session.status).severity"
-          />
-        </td>
-        <td>Q {{ formatCurrency(session.total_amount) }}</td>
-        <td class="text-center">
-          <p-button
-            icon="pi pi-eye"
-            [rounded]="true"
-            [text]="true"
-            severity="info"
-            class="mr-2"
-            pTooltip="Ver detalles"
-            tooltipPosition="top"
-            (onClick)="navigateToDetails(session.id)"
-          />
-          <p-button
-            icon="pi pi-pencil"
-            [rounded]="true"
-            [text]="true"
-            pTooltip="Editar"
-            tooltipPosition="top"
-            (onClick)="navigateToEdit(session.id)"
-            [disabled]="!canEditSession(session)"
-          />
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="7" class="text-center p-4">
-          <i class="pi pi-inbox text-4xl text-400 mb-3"></i>
-          <p class="text-600">No se encontraron sesiones</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <!-- Table -->
+  <div class="table-container">
+    <p-table
+      [value]="sessions()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="pageSize"
+      [totalRecords]="totalRecords()"
+      [lazy]="true"
+      (onLazyLoad)="loadSessions($event)"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} sesiones"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">
+            ID <p-sortIcon field="id" />
+          </th>
+          <th>Cliente</th>
+          <th pSortableColumn="session_type">
+            Tipo <p-sortIcon field="session_type" />
+          </th>
+          <th pSortableColumn="session_date">
+            Fecha <p-sortIcon field="session_date" />
+          </th>
+          <th pSortableColumn="status">
+            Estado <p-sortIcon field="status" />
+          </th>
+          <th style="text-align: right">Total</th>
+          <th style="width: 200px">Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-session>
+        <tr>
+          <td>
+            <span class="font-semibold">{{ session.id }}</span>
+          </td>
+          <td>{{ getClientName(session.client_id) }}</td>
+          <td>{{ getSessionTypeLabel(session.session_type) }}</td>
+          <td>{{ formatDate(session.session_date) }}</td>
+          <td>
+            <p-tag
+              [value]="getStatusBadge(session.status).label"
+              [severity]="getStatusBadge(session.status).severity"
+            />
+          </td>
+          <td style="text-align: right">
+            <span class="font-semibold">Q {{ formatCurrency(session.total_amount) }}</span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-eye"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                pTooltip="Ver detalles"
+                tooltipPosition="top"
+                (onClick)="navigateToDetails(session.id)"
+              />
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                pTooltip="Editar"
+                tooltipPosition="top"
+                (onClick)="navigateToEdit(session.id)"
+                [disabled]="!canEditSession(session)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-inbox" style="font-size: 3rem"></i>
+              <p>No se encontraron sesiones</p>
+              @if (searchTerm || selectedStatus || selectedType) {
+              <p-button
+                label="Limpiar filtros"
+                icon="pi pi-filter-slash"
+                (onClick)="resetFilters()"
+                [text]="true"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

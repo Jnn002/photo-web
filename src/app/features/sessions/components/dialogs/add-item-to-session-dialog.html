@@ -1,90 +1,92 @@
-<div [formGroup]="form" class="flex flex-column gap-4">
-  <!-- Item Selection -->
-  <div>
-    <label for="item" class="block text-900 font-medium mb-2">
-      Item <span class="text-red-500">*</span>
-    </label>
-    <p-select
-      inputId="item"
-      formControlName="item_id"
-      [options]="itemOptions()"
-      optionLabel="label"
-      optionValue="value"
-      placeholder="Seleccionar item"
-      [filter]="true"
-      filterBy="label"
-      [showClear]="true"
-      [loading]="loading()"
-      styleClass="w-full"
-    />
-    @if (form.get('item_id')?.invalid && form.get('item_id')?.touched) {
-    <small class="p-error">El item es requerido</small>
-    }
-  </div>
-
-  <!-- Item Details -->
-  @if (selectedItem()) {
-  <p-message severity="info" styleClass="w-full">
-    <div class="flex flex-column gap-2">
-      <div class="flex justify-content-between">
-        <span class="font-medium">Precio Unitario:</span>
-        <span>Q {{ formatCurrency(parseFloat(selectedItem()!.unit_price)) }}</span>
-      </div>
-      @if (selectedItem()!.description) {
-      <div>
-        <span class="font-medium">Descripción:</span>
-        <p class="mt-1 mb-0">{{ selectedItem()!.description }}</p>
-      </div>
-      }
+<form [formGroup]="form" class="dialog-form">
+    <!-- Item Selection -->
+    <div class="form-field">
+        <label for="item">
+            Item <span class="required">*</span>
+        </label>
+        <p-select
+            inputId="item"
+            formControlName="item_id"
+            [options]="itemOptions()"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccionar item"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="true"
+            [loading]="loading()"
+            appendTo="body"
+            styleClass="w-full"
+        />
+        @if (form.get('item_id')?.invalid && form.get('item_id')?.touched) {
+        <small class="error-message">El item es requerido</small>
+        }
     </div>
-  </p-message>
-  }
 
-  <!-- Quantity -->
-  <div>
-    <label for="quantity" class="block text-900 font-medium mb-2">
-      Cantidad <span class="text-red-500">*</span>
-    </label>
-    <p-inputnumber
-      inputId="quantity"
-      formControlName="quantity"
-      [min]="1"
-      [max]="100"
-      [showButtons]="true"
-      styleClass="w-full"
-    />
-    @if (form.get('quantity')?.invalid && form.get('quantity')?.touched) {
-    <small class="p-error">La cantidad debe ser al menos 1</small>
-    }
-  </div>
+    <!-- Item Details -->
+    @if (selectedItem()) {
+    <div class="item-details">
+        <div class="detail-row">
+            <span class="detail-label">Precio Unitario:</span>
+            <span class="unit-price-value">Q {{ formatCurrency(parseFloat(selectedItem()!.unit_price)) }}</span>
+        </div>
 
-  <!-- Subtotal -->
-  @if (subtotal() > 0) {
-  <div class="bg-primary-50 border-round p-3">
-    <div class="flex justify-content-between align-items-center">
-      <span class="text-900 font-bold text-lg">Subtotal:</span>
-      <span class="text-primary font-bold text-2xl"
-        >Q {{ formatCurrency(subtotal()) }}</span
-      >
+        @if (selectedItem()!.description) {
+        <div class="description-section">
+            <span class="detail-label">Descripción:</span>
+            <p class="description-text">{{ selectedItem()!.description }}</p>
+        </div>
+        }
     </div>
-  </div>
-  }
+    }
 
-  <!-- Actions -->
-  <div class="flex justify-content-end gap-2 mt-3">
-    <p-button
-      label="Cancelar"
-      severity="secondary"
-      [text]="true"
-      (onClick)="cancel()"
-      [disabled]="submitting()"
-    />
-    <p-button
-      label="Agregar Item"
-      icon="pi pi-plus"
-      (onClick)="onSubmit()"
-      [disabled]="form.invalid || submitting()"
-      [loading]="submitting()"
-    />
-  </div>
-</div>
+    <!-- Quantity -->
+    <div class="form-field quantity-field">
+        <label for="quantity">
+            Cantidad <span class="required">*</span>
+        </label>
+        <p-inputnumber
+            inputId="quantity"
+            formControlName="quantity"
+            [min]="1"
+            [max]="100"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+            styleClass="w-full"
+        />
+        @if (form.get('quantity')?.invalid && form.get('quantity')?.touched) {
+        <small class="error-message">La cantidad debe ser al menos 1</small>
+        }
+    </div>
+
+    <!-- Subtotal -->
+    @if (subtotal() > 0) {
+    <div class="subtotal-section">
+        <div class="subtotal-row">
+            <span class="subtotal-label">Subtotal:</span>
+            <span class="subtotal-value">Q {{ formatCurrency(subtotal()) }}</span>
+        </div>
+    </div>
+    }
+
+    <!-- Actions -->
+    <div class="dialog-actions">
+        <p-button
+            label="Cancelar"
+            severity="secondary"
+            [text]="true"
+            (onClick)="cancel()"
+            [disabled]="submitting()"
+        />
+        <p-button
+            label="Agregar Item"
+            icon="pi pi-plus"
+            (onClick)="onSubmit()"
+            [disabled]="form.invalid || submitting()"
+            [loading]="submitting()"
+        />
+    </div>
+</form>

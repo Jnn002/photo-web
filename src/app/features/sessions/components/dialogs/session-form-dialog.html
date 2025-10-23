@@ -1,16 +1,14 @@
-<div class="session-form-container">
-  <!-- Header -->
-  <div class="form-header">
-    <div class="header-info">
-      <h2>Nueva Sesión</h2>
-      <p class="text-muted">Crear una nueva sesión fotográfica</p>
-    </div>
-  </div>
-
-  <!-- Form Card -->
-  <div class="form-card">
-    <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
+<p-dialog
+  header="Nueva Sesión"
+  [modal]="true"
+  [visible]="visible()"
+  (onHide)="onHide()"
+  [style]="{ width: '800px', maxHeight: '90vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="session-form-dialog">
+    <div class="form-grid">
       <!-- Cliente -->
       <div class="form-field">
         <label for="client">
@@ -161,25 +159,25 @@
           class="w-full"
         ></textarea>
       </div>
-      </div>
+    </div>
 
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <p-button
-          label="Cancelar"
-          type="button"
-          severity="secondary"
-          [text]="true"
-          (onClick)="cancel()"
-        />
-        <p-button
-          label="Crear Sesión"
-          type="submit"
-          icon="pi pi-check"
-          [disabled]="sessionForm.invalid || submitting()"
-          [loading]="submitting()"
-        />
-      </div>
-    </form>
-  </div>
-</div>
+    <!-- Form Actions -->
+    <div class="dialog-actions">
+      <p-button
+        label="Cancelar"
+        type="button"
+        severity="secondary"
+        [text]="true"
+        (onClick)="onHide()"
+        [disabled]="submitting()"
+      />
+      <p-button
+        label="Crear Sesión"
+        type="submit"
+        icon="pi pi-check"
+        [disabled]="sessionForm.invalid || submitting()"
+        [loading]="submitting()"
+      />
+    </div>
+  </form>
+</p-dialog>

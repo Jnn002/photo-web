@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -40,6 +40,9 @@ export class SessionListComponent {
     private readonly sessionService = inject(SessionService);
     private readonly clientService = inject(ClientService);
     private readonly router = inject(Router);
+
+    // Output events
+    readonly createClicked = output<void>();
 
     readonly sessions = signal<SessionPublic[]>([]);
     readonly loading = signal(false);
@@ -84,34 +87,14 @@ export class SessionListComponent {
         // Load clients for display
         this.clientService.loadClients();
 
-        // Load initial sessions
-        this.loadInitialSessions();
+        // Table with lazy loading will automatically trigger onLazyLoad
+        // on initialization, so no need to load here
     }
 
-    loadInitialSessions() {
+    loadSessions(event?: any) {
         this.loading.set(true);
-        const filters: SessionListFilters = {
-            limit: this.pageSize,
-            offset: 0,
-        };
-
-        this.sessionService.listSessions(filters).subscribe({
-            next: (response) => {
-                this.sessions.set(response.items);
-                this.totalRecords.set(response.total);
-                this.loading.set(false);
-            },
-            error: (error) => {
-                console.error('Error loading sessions:', error);
-                this.loading.set(false);
-            },
-        });
-    }
-
-    loadSessions(event: any) {
-        this.loading.set(true);
-        const offset = event.first || 0;
-        const limit = event.rows || this.pageSize;
+        const offset = event?.first || 0;
+        const limit = event?.rows || this.pageSize;
 
         const filters: SessionListFilters = {
             status: this.selectedStatus || undefined,
@@ -133,6 +116,18 @@ export class SessionListComponent {
         });
     }
 
+    refresh() {
+        this.loadSessions({ first: this.currentOffset, rows: this.pageSize });
+    }
+
+    resetFilters() {
+        this.searchTerm = '';
+        this.selectedStatus = null;
+        this.selectedType = null;
+        this.currentOffset = 0;
+        this.loadSessions({ first: 0, rows: this.pageSize });
+    }
+
     onSearchChange() {
         // Implement search functionality when backend supports it
         // For now, we'll reload with filters
@@ -145,7 +140,7 @@ export class SessionListComponent {
     }
 
     navigateToCreate() {
-        this.router.navigate(['/sessions/create']);
+        this.createClicked.emit();
     }
 
     navigateToDetails(sessionId: number) {

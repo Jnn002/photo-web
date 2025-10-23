@@ -41,194 +41,198 @@
         </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="content-grid">
-        <!-- Left Column (Main Info) -->
-        <div class="main-column">
-            <!-- Información General -->
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Información General</h2>
+    <!-- Top Grid: Información General + Información Financiera -->
+    <div class="top-grid">
+        <!-- Información General -->
+        <p-card styleClass="info-card">
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <h2>Información General</h2>
+                    <p-tag
+                        [value]="getStatusBadge(sessionData.status).label"
+                        [severity]="getStatusBadge(sessionData.status).severity"
+                    />
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Estado</label>
                         <p-tag
                             [value]="getStatusBadge(sessionData.status).label"
                             [severity]="getStatusBadge(sessionData.status).severity"
                         />
                     </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Estado</label>
-                            <p-tag
-                                [value]="getStatusBadge(sessionData.status).label"
-                                [severity]="getStatusBadge(sessionData.status).severity"
-                            />
-                        </div>
-                        <div class="info-item">
-                            <label>Tipo</label>
-                            <div class="info-value">{{ getSessionTypeLabel(sessionData.session_type) }}</div>
-                        </div>
-                        <div class="info-item">
-                            <label>Fecha</label>
-                            <div class="info-value">
-                                <i class="pi pi-calendar"></i>
-                                {{ formatDate(sessionData.session_date) }}
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <label>Hora</label>
-                            <div class="info-value">
-                                <i class="pi pi-clock"></i>
-                                {{ sessionData.session_time || 'No especificada' }}
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <label>Duración</label>
-                            <div class="info-value">{{ sessionData.estimated_duration_hours || '-' }} horas</div>
-                        </div>
-                        <div class="info-item">
-                            <label>Ubicación</label>
-                            <div class="info-value">
-                                <i class="pi pi-map-marker"></i>
-                                {{ sessionData.location || '-' }}
-                            </div>
+                    <div class="info-item">
+                        <label>Tipo</label>
+                        <div class="info-value">{{ getSessionTypeLabel(sessionData.session_type) }}</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Fecha</label>
+                        <div class="info-value">
+                            <i class="pi pi-calendar"></i>
+                            {{ formatDate(sessionData.session_date) }}
                         </div>
                     </div>
-                </ng-template>
-            </p-card>
+                    <div class="info-item">
+                        <label>Hora</label>
+                        <div class="info-value">
+                            <i class="pi pi-clock"></i>
+                            {{ sessionData.session_time || 'No especificada' }}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <label>Duración</label>
+                        <div class="info-value">{{ sessionData.estimated_duration_hours || '-' }} horas</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Ubicación</label>
+                        <div class="info-value">
+                            <i class="pi pi-map-marker"></i>
+                            {{ sessionData.location || '-' }}
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-card>
 
-            <!-- Cliente -->
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Cliente</h2>
+        <!-- Información Financiera -->
+        <p-card styleClass="financial-card">
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <h2>Información Financiera</h2>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <div class="financial-summary">
+                    <div class="financial-item total">
+                        <label>Total</label>
+                        <div class="amount">Q {{ formatCurrency(sessionData.total_amount) }}</div>
                     </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    @if (currentClient(); as client) {
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Nombre</label>
-                            <div class="info-value">{{ client.full_name }}</div>
-                        </div>
-                        <div class="info-item">
-                            <label>Email</label>
-                            <div class="info-value">
-                                <i class="pi pi-envelope"></i>
-                                <a [href]="'mailto:' + client.email">{{ client.email }}</a>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <label>Teléfono</label>
-                            <div class="info-value">
-                                <i class="pi pi-phone"></i>
-                                {{ client.primary_phone || '-' }}
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <label>Tipo</label>
-                            <div class="info-value">{{ client.client_type }}</div>
-                        </div>
+                    <div class="financial-item">
+                        <label>Depósito</label>
+                        <div class="amount-small">Q {{ formatCurrency(sessionData.deposit_amount) }}</div>
                     </div>
-                    } @else {
-                    <div class="text-center text-600">
-                        <p-progressSpinner styleClass="w-3rem h-3rem" strokeWidth="4" />
-                        <p>Cargando información del cliente...</p>
+                    <div class="financial-item paid">
+                        <label>Pagado</label>
+                        <div class="amount-small">Q {{ formatCurrency(sessionData.paid_amount) }}</div>
+                    </div>
+                    <div class="financial-item balance">
+                        <label>Balance</label>
+                        <div class="amount-small">Q {{ formatCurrency(sessionData.balance_amount) }}</div>
+                    </div>
+                </div>
+
+                <div class="payment-progress">
+                    <label>Progreso de Pago</label>
+                    <p-progressBar [value]="getPaymentProgress()" [showValue]="false" />
+                    <small>{{ getPaymentProgress() }}% pagado</small>
+                </div>
+
+                <p-button
+                    label="Registrar Pago"
+                    icon="pi pi-dollar"
+                    styleClass="w-full"
+                    severity="success"
+                    (onClick)="openRecordPaymentDialog()"
+                />
+
+                @if (payments().length > 0) {
+                <div class="payments-toggle">
+                    <a (click)="togglePaymentHistory()" class="toggle-link">
+                        <i [class]="showPaymentHistory() ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                        Ver detalle de pagos ({{ payments().length }})
+                    </a>
+                </div>
+
+                @if (showPaymentHistory()) {
+                <div class="payments-list">
+                    <label>Historial de Pagos</label>
+                    @for (payment of payments(); track payment.id) {
+                    <div class="payment-item">
+                        <div class="payment-info">
+                            <span class="payment-type">{{ payment.payment_type }}</span>
+                            <small>{{ formatDate(payment.payment_date) }}</small>
+                        </div>
+                        <span class="payment-amount">Q {{ formatCurrency(payment.amount) }}</span>
                     </div>
                     }
-                </ng-template>
-            </p-card>
-
-            <!-- Requerimientos -->
-            @if (sessionData.client_requirements || sessionData.internal_notes) {
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Requerimientos</h2>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    @if (sessionData.client_requirements) {
-                    <div class="requirement-section">
-                        <label>Requerimientos del Cliente</label>
-                        <p class="requirement-text">{{ sessionData.client_requirements }}</p>
-                    </div>
-                    }
-                    @if (sessionData.internal_notes) {
-                    <div class="requirement-section">
-                        <label>Notas Internas</label>
-                        <p class="requirement-text internal">{{ sessionData.internal_notes }}</p>
-                    </div>
-                    }
-                </ng-template>
-            </p-card>
-            }
-        </div>
-
-        <!-- Right Column (Financial Info) -->
-        <div class="sidebar-column">
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Información Financiera</h2>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    <div class="financial-summary">
-                        <div class="financial-item total">
-                            <label>Total</label>
-                            <div class="amount">Q {{ formatCurrency(sessionData.total_amount) }}</div>
-                        </div>
-                        <div class="financial-item">
-                            <label>Depósito</label>
-                            <div class="amount-small">Q {{ formatCurrency(sessionData.deposit_amount) }}</div>
-                        </div>
-                        <div class="financial-item paid">
-                            <label>Pagado</label>
-                            <div class="amount-small">Q {{ formatCurrency(sessionData.paid_amount) }}</div>
-                        </div>
-                        <div class="financial-item balance">
-                            <label>Balance</label>
-                            <div class="amount-small">Q {{ formatCurrency(sessionData.balance_amount) }}</div>
-                        </div>
-                    </div>
-
-                    <div class="payment-progress">
-                        <label>Progreso de Pago</label>
-                        <p-progressBar [value]="getPaymentProgress()" [showValue]="false" />
-                        <small>{{ getPaymentProgress() }}% pagado</small>
-                    </div>
-
-                    <p-button
-                        label="Registrar Pago"
-                        icon="pi pi-dollar"
-                        styleClass="w-full"
-                        severity="success"
-                        (onClick)="openRecordPaymentDialog()"
-                    />
-
-                    @if (payments().length > 0) {
-                    <div class="payments-list">
-                        <label>Historial de Pagos</label>
-                        @for (payment of payments(); track payment.id) {
-                        <div class="payment-item">
-                            <div class="payment-info">
-                                <span class="payment-type">{{ payment.payment_type }}</span>
-                                <small>{{ formatDate(payment.payment_date) }}</small>
-                            </div>
-                            <span class="payment-amount">Q {{ formatCurrency(payment.amount) }}</span>
-                        </div>
-                        }
-                    </div>
-                    }
-                </ng-template>
-            </p-card>
-        </div>
+                </div>
+                }
+                }
+            </ng-template>
+        </p-card>
     </div>
 
-    <!-- Items Contratados (Full Width) -->
-    <p-card>
+    <!-- Cliente -->
+    <p-card styleClass="client-card">
+        <ng-template pTemplate="header">
+            <div class="card-header">
+                <h2>Cliente</h2>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+            @if (currentClient(); as client) {
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Nombre</label>
+                    <div class="info-value">{{ client.full_name }}</div>
+                </div>
+                <div class="info-item">
+                    <label>Email</label>
+                    <div class="info-value">
+                        <i class="pi pi-envelope"></i>
+                        <a [href]="'mailto:' + client.email">{{ client.email }}</a>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Teléfono</label>
+                    <div class="info-value">
+                        <i class="pi pi-phone"></i>
+                        {{ client.primary_phone || '-' }}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label>Tipo</label>
+                    <div class="info-value">{{ client.client_type }}</div>
+                </div>
+            </div>
+            } @else {
+            <div class="text-center text-600">
+                <p-progressSpinner styleClass="w-3rem h-3rem" strokeWidth="4" />
+                <p>Cargando información del cliente...</p>
+            </div>
+            }
+        </ng-template>
+    </p-card>
+
+    <!-- Requerimientos -->
+    @if (sessionData.client_requirements || sessionData.internal_notes) {
+    <p-card styleClass="requirements-card">
+        <ng-template pTemplate="header">
+            <div class="card-header">
+                <h2>Requerimientos</h2>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+            @if (sessionData.client_requirements) {
+            <div class="requirement-section">
+                <label>Requerimientos del Cliente</label>
+                <p class="requirement-text">{{ sessionData.client_requirements }}</p>
+            </div>
+            }
+            @if (sessionData.internal_notes) {
+            <div class="requirement-section">
+                <label>Notas Internas</label>
+                <p class="requirement-text internal">{{ sessionData.internal_notes }}</p>
+            </div>
+            }
+        </ng-template>
+    </p-card>
+    }
+
+    <!-- Items Contratados -->
+    <p-card styleClass="items-card">
         <ng-template pTemplate="header">
             <div class="card-header">
                 <h2>Items Contratados</h2>
@@ -315,7 +319,7 @@
     <!-- Fotógrafos y Editor (2 Columns) -->
     <div class="team-grid">
         <!-- Fotógrafos -->
-        <p-card>
+        <p-card styleClass="team-card">
             <ng-template pTemplate="header">
                 <div class="card-header">
                     <h2>Fotógrafos Asignados</h2>
@@ -355,7 +359,7 @@
         </p-card>
 
         <!-- Editor -->
-        <p-card>
+        <p-card styleClass="team-card">
             <ng-template pTemplate="header">
                 <div class="card-header">
                     <h2>Editor Asignado</h2>
@@ -397,7 +401,7 @@
     </div>
 
     <!-- Timeline de Estado -->
-    <p-card>
+    <p-card styleClass="timeline-card">
         <ng-template pTemplate="header">
             <div class="card-header">
                 <h2>Timeline de Estado</h2>
@@ -410,19 +414,22 @@
                 <p>No hay historial de cambios</p>
             </div>
             } @else {
-            <p-timeline [value]="statusHistory()" align="left">
+            <p-timeline [value]="statusHistory()" align="left" styleClass="custom-timeline">
                 <ng-template pTemplate="marker" let-history>
-                    <span
-                        class="timeline-marker"
-                        [style.background-color]="getStatusColor(history.to_status)"
-                    >
-                        <i class="pi pi-circle-fill"></i>
-                    </span>
+                    <div class="timeline-marker-wrapper">
+                        <span
+                            class="timeline-marker"
+                            [style.background-color]="getStatusColor(history.to_status)"
+                        ></span>
+                    </div>
                 </ng-template>
                 <ng-template pTemplate="content" let-history>
                     <div class="timeline-content">
                         <div class="timeline-header">
-                            <span class="status-label">{{ history.to_status }}</span>
+                            <p-tag
+                                [value]="history.to_status"
+                                [style]="{'background-color': getStatusColor(history.to_status)}"
+                            />
                             @if (history.from_status) {
                             <span class="status-transition">desde {{ history.from_status }}</span>
                             }

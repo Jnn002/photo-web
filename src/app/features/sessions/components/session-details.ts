@@ -71,6 +71,9 @@ export class SessionDetailsComponent {
     // Current client information
     readonly currentClient = signal<ClientPublic | null>(null);
 
+    // Payment history visibility toggle
+    readonly showPaymentHistory = signal(false);
+
     // Reactive route params (Angular 20+ pattern)
     private readonly paramMap = toSignal(this.route.paramMap, { requireSync: true });
     readonly sessionId = computed(() => {
@@ -229,7 +232,10 @@ export class SessionDetailsComponent {
         this.dialogRef = this.dialogService.open(AddPackageToSessionDialogComponent, {
             header: 'Agregar Package a la Sesión',
             width: '700px',
-            data: { sessionId: this.session()!.id },
+            data: {
+                sessionId: this.session()!.id,
+                sessionType: this.session()!.session_type
+            },
         });
 
         this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
@@ -315,16 +321,18 @@ export class SessionDetailsComponent {
     }
 
     getStatusColor(status: string): string {
-        const statusEnum = status as SessionStatus;
-        const badge = STATUS_BADGE_MAP[statusEnum];
-        const colorMap = {
-            success: '#22c55e',
-            info: '#3b82f6',
-            warn: '#f59e0b',
-            danger: '#ef4444',
-            secondary: '#6b7280',
+        const statusColors: Record<string, string> = {
+            Canceled: '#ef4444',
+            Request: '#3b82f6',
+            'Pre-scheduled': '#f59e0b',
+            Negotiation: '#eab308',
+            Confirmed: '#10b981',
+            Assigned: '#3b82f6',
+            Attended: '#6366f1',
+            'In editing': '#8b5cf6',
+            Completed: '#6b7280',
         };
-        return colorMap[badge.severity];
+        return statusColors[status] || '#6b7280';
     }
 
     canEditSession(): boolean {
@@ -355,5 +363,9 @@ export class SessionDetailsComponent {
         if (!this.session()) return false;
         const validTransitions = VALID_TRANSITIONS[this.session()!.status];
         return validTransitions.length > 0;
+    }
+
+    togglePaymentHistory(): void {
+        this.showPaymentHistory.update(value => !value);
     }
 }

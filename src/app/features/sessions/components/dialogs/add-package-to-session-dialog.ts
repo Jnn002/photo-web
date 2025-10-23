@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal, computed, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -9,7 +9,8 @@ import { TableModule } from 'primeng/table';
 import { SessionService } from '../../services/session.service';
 import { PackageService } from '../../../catalog/services/package.service';
 import { NotificationService } from '../../../../core/services/notification';
-import type { PackagePublic } from '../../../catalog/models/catalog.models';
+import type { PackagePublic, PackageItemDetail } from '../../../catalog/models/catalog.models';
+import type { SessionType } from '../../models/session.models';
 
 interface PackageOption {
     label: string;
@@ -30,7 +31,7 @@ interface PackageOption {
     templateUrl: './add-package-to-session-dialog.html',
     styleUrl: './add-package-to-session-dialog.css',
 })
-export class AddPackageToSessionDialogComponent {
+export class AddPackageToSessionDialogComponent implements OnDestroy {
     private readonly fb = inject(FormBuilder);
     private readonly sessionService = inject(SessionService);
     private readonly packageService = inject(PackageService);
@@ -41,6 +42,8 @@ export class AddPackageToSessionDialogComponent {
     readonly form: FormGroup;
     readonly submitting = signal(false);
     readonly selectedPackage = signal<PackagePublic | null>(null);
+    readonly packageItems = signal<PackageItemDetail[]>([]);
+    readonly loadingPackageDetails = signal(false);
     private readonly loaded = signal(false);
 
     // Get package options from PackageService
@@ -61,19 +64,28 @@ export class AddPackageToSessionDialogComponent {
         });
 
         // Watch for package selection changes
-        this.form.get('package_id')?.valueChanges.subscribe((packageId) => {
+        this.form.get('package_id')?.valueChanges.subscribe(async (packageId) => {
             if (packageId) {
                 const selectedOption = this.packageOptions().find((opt) => opt.value === packageId);
                 this.selectedPackage.set(selectedOption?.package || null);
+
+                // Load package details with items
+                await this.loadPackageItems(packageId);
             } else {
                 this.selectedPackage.set(null);
+                this.packageItems.set([]);
             }
         });
 
-        // Load packages only once on initialization
+        // Load packages filtered by session type
         effect(() => {
             if (!this.loaded()) {
-                this.packageService.loadPackages();
+                const sessionType = this.config.data.sessionType as SessionType;
+                // Filter packages by session type to show only compatible ones
+                this.packageService.updateFilters({
+                    sessionType: sessionType,
+                    activeOnly: true
+                });
                 this.loaded.set(true);
             }
         });
@@ -111,6 +123,23 @@ export class AddPackageToSessionDialogComponent {
         this.ref.close(false);
     }
 
+    async loadPackageItems(packageId: number): Promise<void> {
+        this.loadingPackageDetails.set(true);
+        try {
+            const packageDetail = await this.packageService.getPackageWithItems(packageId);
+            if (packageDetail && packageDetail.items) {
+                this.packageItems.set(packageDetail.items);
+            } else {
+                this.packageItems.set([]);
+            }
+        } catch (error) {
+            console.error('Error loading package items:', error);
+            this.packageItems.set([]);
+        } finally {
+            this.loadingPackageDetails.set(false);
+        }
+    }
+
     formatCurrency(amount: number): string {
         return amount.toFixed(2);
     }
@@ -118,5 +147,10 @@ export class AddPackageToSessionDialogComponent {
     // Helper to parse string to float for template
     parseFloat(value: string): number {
         return parseFloat(value);
+    }
+
+    ngOnDestroy() {
+        // Reset filters when dialog closes to not affect other catalog views
+        this.packageService.resetFilters();
     }
 }

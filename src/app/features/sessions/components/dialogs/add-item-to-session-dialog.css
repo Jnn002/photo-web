@@ -1,1 +1,149 @@
 /* Add item to session dialog styles */
+
+/* Dialog Container */
+.dialog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Field */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.required {
+    color: var(--red-500);
+}
+
+/* Item Details Card */
+.item-details {
+    background: linear-gradient(135deg, var(--blue-50) 0%, var(--blue-100) 100%);
+    border-radius: 8px;
+    padding: 1.25rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
+
+.unit-price-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.description-section {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--blue-200);
+}
+
+.description-text {
+    margin: 0.5rem 0 0 0;
+    color: var(--text-color);
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+/* Quantity Field */
+.quantity-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+::ng-deep .quantity-field .p-inputnumber {
+    width: 100%;
+}
+
+::ng-deep .quantity-field .p-inputnumber-input {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Subtotal Section */
+.subtotal-section {
+    background: linear-gradient(135deg, var(--green-50) 0%, var(--green-100) 100%);
+    border-radius: 8px;
+    padding: 1.25rem;
+    border-left: 4px solid var(--green-500);
+}
+
+.subtotal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subtotal-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1.125rem;
+}
+
+.subtotal-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--green-600);
+}
+
+/* Dialog Actions */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--surface-border);
+}
+
+/* Error Message */
+.error-message {
+    color: var(--red-600);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .dialog-form {
+        gap: 1rem;
+    }
+
+    .item-details,
+    .subtotal-section {
+        padding: 1rem;
+    }
+
+    .unit-price-value {
+        font-size: 1.125rem;
+    }
+
+    .subtotal-value {
+        font-size: 1.5rem;
+    }
+
+    .subtotal-label {
+        font-size: 1rem;
+    }
+}

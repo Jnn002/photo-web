@@ -20,6 +20,7 @@
                 placeholder="-- Seleccionar --"
                 [filter]="true"
                 filterBy="label"
+                appendTo="body"
                 [loading]="loading()"
             ></p-select>
             @if ( form.get('editor_id')?.invalid && form.get('editor_id')?.touched ) {
