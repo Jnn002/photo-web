@@ -1,14 +1,16 @@
 import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
-import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SessionService } from '../services/session.service';
 import { ClientService } from '../../clients/services/client.service';
@@ -40,8 +42,10 @@ import { AddPackageToSessionDialogComponent } from './dialogs/add-package-to-ses
         ButtonModule,
         TagModule,
         TimelineModule,
-        PanelModule,
+        CardModule,
         ProgressBarModule,
+        ProgressSpinnerModule,
+        TooltipModule,
     ],
     providers: [DialogService],
     templateUrl: './session-details.html',
@@ -50,7 +54,7 @@ import { AddPackageToSessionDialogComponent } from './dialogs/add-package-to-ses
 })
 export class SessionDetailsComponent {
     private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
+    readonly router = inject(Router);
     private readonly sessionService = inject(SessionService);
     private readonly clientService = inject(ClientService);
     private readonly userService = inject(UserService);
@@ -149,7 +153,7 @@ export class SessionDetailsComponent {
             data: { sessionId: this.session()!.id },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }
@@ -163,7 +167,7 @@ export class SessionDetailsComponent {
             data: { sessionId: this.session()!.id },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }
@@ -180,7 +184,7 @@ export class SessionDetailsComponent {
             },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }
@@ -200,7 +204,7 @@ export class SessionDetailsComponent {
             },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }
@@ -214,7 +218,7 @@ export class SessionDetailsComponent {
             data: { sessionId: this.session()!.id },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }
@@ -228,7 +232,7 @@ export class SessionDetailsComponent {
             data: { sessionId: this.session()!.id },
         });
 
-        this.dialogRef?.onClose.subscribe((result) => {
+        this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
                 this.loadSessionData(this.session()!.id);
             }

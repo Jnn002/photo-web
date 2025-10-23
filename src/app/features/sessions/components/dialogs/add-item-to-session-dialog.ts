@@ -41,6 +41,7 @@ export class AddItemToSessionDialogComponent {
     readonly form: FormGroup;
     readonly submitting = signal(false);
     readonly selectedItem = signal<ItemPublic | null>(null);
+    private readonly loaded = signal(false);
 
     // Get item options from ItemService
     readonly itemOptions = computed(() =>
@@ -79,13 +80,15 @@ export class AddItemToSessionDialogComponent {
                 this.selectedItem.set(null);
             }
         });
-    }
 
-    // Load items effect - runs automatically
-    private loadItemsEffect = effect(() => {
-        // Load items when component is initialized
-        this.itemService.loadItems();
-    });
+        // Load items only once on initialization
+        effect(() => {
+            if (!this.loaded()) {
+                this.itemService.loadItems();
+                this.loaded.set(true);
+            }
+        });
+    }
 
     onSubmit() {
         if (this.form.valid) {

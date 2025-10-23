@@ -30,6 +30,7 @@ export class AssignPhotographerDialogComponent {
 
     readonly form: FormGroup;
     readonly submitting = signal(false);
+    private readonly loaded = signal(false);
 
     // Get photographer options from UserService
     readonly photographerOptions = this.userService.photographerOptions;
@@ -46,13 +47,15 @@ export class AssignPhotographerDialogComponent {
             photographer_id: [null, Validators.required],
             role: [null],
         });
-    }
 
-    // Load photographers effect - runs automatically
-    private loadPhotographersEffect = effect(() => {
-        // Load photographers when component is initialized
-        this.userService.loadPhotographers();
-    });
+        // Load photographers only once on initialization
+        effect(() => {
+            if (!this.loaded()) {
+                this.userService.loadPhotographers();
+                this.loaded.set(true);
+            }
+        });
+    }
 
     onSubmit() {
         if (this.form.valid) {

@@ -1,416 +1,229 @@
-# Photography Studio Web - Contexto del Proyecto
+# CLAUDE.md
 
-## Descripción General
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Aplicación web de gestión para estudios fotográficos desarrollada con Angular 20+ y TypeScript. El proyecto sigue estrictamente las mejores prácticas de Angular moderno y la arquitectura **Scope Rule** con principios de **Screaming Architecture**.
+## Project Overview
 
-## Stack Tecnológico
+Photography studio management web application built with **Angular 20.3** and **TypeScript 5.9**. Uses modern Angular patterns: standalone components, signals-based state, zoneless change detection, and the **Scope Rule** architecture pattern.
 
-### Core
+**Package Manager**: `pnpm` (required)
 
--   **Angular**: 20.3.0 (Standalone Components)
--   **TypeScript**: 5.9.2
--   **RxJS**: 7.8.0
--   **pnpm**: 10.8.1 (Manejador de paquetes)
+## Essential Commands
 
-### UI/UX
-
--   **PrimeNG**: 20.2.0 (Biblioteca de componentes UI)
--   **PrimeIcons**: 7.0.0
--   **@primeuix/themes**: 1.2.5 (Tema Aura configurado)
-
-### Herramientas de Desarrollo
-
--   **Angular CLI**: 20.3.6
--   **@hey-api/openapi-ts**: 0.85.2 (Generación de clientes API desde OpenAPI)
--   **Prettier**: Configurado para formateo de código
--   **Karma + Jasmine**: Testing
-
-### Backend Integration
-
--   API REST documentada con OpenAPI/Swagger
--   Cliente API generado automáticamente desde `http://localhost:8000/openapi.json`
--   Archivos generados en `src/generated/`
-
-## Arquitectura del Proyecto
-
-### Estructura de Carpetas
-
+### Development
+```bash
+pnpm install              # Install dependencies (first time setup)
+ng serve -o              # Dev server at http://localhost:4200
+ng build                 # Production build
+pnpm run watch           # Development build in watch mode
+pnpm test                # Run all tests (Karma + Jasmine)
 ```
-src/
-├── app/
-│   ├── core/                      # Servicios singleton y configuración global
-│   │   ├── guards/                # Guards de autenticación y permisos
-│   │   ├── interceptors/          # HTTP interceptors (auth, error)
-│   │   ├── services/              # Servicios core (auth, storage, notification)
-│   │   └── utils/                 # Utilidades globales
-│   │
-│   ├── features/                  # Características de negocio
-│   │   ├── auth/                  # Autenticación (login)
-│   │   ├── dashboard/             # Dashboard principal
-│   │   ├── unauthorized/          # Página de acceso no autorizado
-│   │   └── shared/                # SOLO componentes usados por 2+ features
-│   │
-│   ├── app.ts                     # Componente raíz standalone
-│   ├── app.config.ts              # Configuración de la aplicación
-│   └── app.routes.ts              # Configuración de rutas
+
+### API Client Generation
+```bash
+pnpm run generate:api           # Generate from http://localhost:8000/openapi.json
+pnpm run generate:api:watch     # Watch mode for API changes
+```
+
+Generated TypeScript client is output to `src/generated/` using `@hey-api/openapi-ts`.
+
+### Code Generation
+```bash
+ng generate component feature-name    # Creates standalone component
+ng generate service service-name      # Creates injectable service
+ng generate guard guard-name          # Creates route guard
+```
+
+**Important**: DO NOT use `.component`, `.service`, `.module` suffixes in filenames. The Angular CLI will add them, but they should be removed (e.g., `login.component.ts` → `login.ts`).
+
+## Architecture
+
+### Folder Structure
+```
+src/app/
+├── core/                           # Singleton services, guards, interceptors, directives
+│   ├── guards/                     # authGuard, permissionGuard
+│   ├── interceptors/               # auth, error, token-refresh
+│   ├── services/                   # auth, storage, notification, token-refresh
+│   ├── directives/                 # hasPermission, hasRole
+│   ├── layout/                     # main-layout, topbar, sidebar
+│   ├── utils/                      # jwt.utils
+│   └── config/                     # api-client.config
 │
-├── generated/                     # Código auto-generado (OpenAPI client)
-├── environments/                  # Configuraciones de entorno
-├── main.ts                        # Bootstrap de la aplicación
-└── styles.css                     # Estilos globales
+├── features/                       # Business features (lazy-loaded)
+│   ├── auth/                       # Login, authentication
+│   ├── dashboard/                  # Main dashboard
+│   ├── clients/                    # Client management
+│   ├── catalog/                    # Package/service catalog
+│   ├── sessions/                   # Photo session management
+│   ├── users/                      # User administration
+│   ├── unauthorized/               # 403 page
+│   └── shared/                     # Components used by 2+ features ONLY
+│
+├── app.ts                          # Root component
+├── app.config.ts                   # App configuration (DI, routing, etc.)
+└── app.routes.ts                   # Top-level routes
+
+src/
+├── generated/                      # Auto-generated OpenAPI client (DO NOT EDIT)
+├── environments/                   # Environment configs
+├── main.ts                         # Bootstrap
+└── styles.css                      # Global styles
 ```
 
 ### Path Aliases (tsconfig.json)
-
 ```typescript
-{
-  "@core/*": ["src/app/core/*"],
-  "@shared/*": ["src/app/features/shared/*"],
-  "@features/*": ["src/app/features/*"],
-  "@environments/*": ["src/environments/*"],
-  "@generated/*": ["src/generated/*"]
+"@core/*"         → "src/app/core/*"
+"@shared/*"       → "src/app/features/shared/*"
+"@features/*"     → "src/app/features/*"
+"@environments/*" → "src/environments/*"
+"@generated/*"    → "src/generated/*"
+```
+
+### Scope Rule (Critical Architecture Pattern)
+
+**"Scope determines structure"** - Non-negotiable rule for code organization:
+
+- **Used by 1 feature only** → Keep it LOCAL within that feature folder
+- **Used by 2+ features** → Move to `shared/` or `core/`
+
+Example feature structure:
+```
+features/auth/
+├── login.ts                 # Main component
+├── login.html
+├── login.css
+├── components/              # Auth-specific components ONLY
+├── services/                # Auth-specific services ONLY
+├── models/                  # Auth-specific types ONLY
+└── auth.routes.ts           # Auth routes
+```
+
+**Never** create a component in `shared/` until it's actually used by 2+ features.
+
+## Angular 20+ Critical Patterns
+
+### 1. Zoneless Change Detection (NO zone.js)
+This project uses `provideZonelessChangeDetection()`. Change detection is triggered by signals, not zones.
+
+### 2. DO NOT declare `standalone: true`
+It's the default in Angular 20+. Declaring it explicitly is redundant and should be avoided.
+
+### 3. Modern Component Pattern
+```typescript
+import { Component, ChangeDetectionStrategy, signal, computed, input, output, inject } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  imports: [CommonModule, /* other imports */],
+  changeDetection: ChangeDetectionStrategy.OnPush,  // REQUIRED
+  templateUrl: './example.html'
+})
+export class ExampleComponent {
+  // ✅ Use input() not @Input()
+  readonly data = input<DataType>();
+
+  // ✅ Use output() not @Output()
+  readonly selected = output<ItemType>();
+
+  // ✅ Use signals for state
+  private readonly loading = signal(false);
+  readonly isLoading = this.loading.asReadonly();
+
+  // ✅ Use computed for derived state
+  readonly filteredData = computed(() => this.data()?.filter(x => x.active) ?? []);
+
+  // ✅ Use inject() not constructor injection
+  private readonly service = inject(ExampleService);
+
+  // ✅ Use effect() not ngOnInit for side effects
+  constructor() {
+    effect(() => {
+      if (this.data()) {
+        this.service.doSomething(this.data());
+      }
+    });
+  }
 }
 ```
 
-## Principios Fundamentales de Angular 20+
-
-### 1. ⚠️ NO usar zone.js
-
-**IMPORTANTE**: Este proyecto NO utiliza zone.js. Angular 20+ utiliza detección de cambios zoneless por defecto.
-
-```typescript
-// app.config.ts
-export const appConfig: ApplicationConfig = {
-    providers: [
-        provideZonelessChangeDetection(), // ✅ Modo zoneless
-        // ...
-    ],
-};
-```
-
-### 2. ⚠️ NO declarar `standalone: true`
-
-**IMPORTANTE**: A partir de Angular 20, `standalone: true` es el comportamiento por defecto y NO debe declararse explícitamente.
-
-```typescript
-// ❌ INCORRECTO (Angular 19 o anterior)
-@Component({
-  standalone: true,
-  selector: 'app-login',
-  // ...
-})
-
-// ✅ CORRECTO (Angular 20+)
-@Component({
-  selector: 'app-login',
-  imports: [...],
-  // ...
-})
-```
-
-### 3. Componentes Standalone Modernos
-
-Todos los componentes deben seguir este patrón:
-
-```typescript
-import { Component, ChangeDetectionStrategy, signal, computed, input, output } from '@angular/core';
-
-@Component({
-    selector: 'app-feature',
-    imports: [
-        /* dependencias */
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-        @if (isLoading()) {
-        <div>Loading...</div>
-        } @else { @for (item of items(); track item.id) {
-        <div>{{ item.name }}</div>
-        } }
-    `,
-})
-export class FeatureComponent {
-    // ✅ Usar input() en lugar de @Input()
-    readonly data = input<DataType>();
-    readonly config = input({ required: true });
-
-    // ✅ Usar output() en lugar de @Output()
-    readonly itemSelected = output<ItemType>();
-
-    // ✅ Usar signals para estado
-    private readonly loading = signal(false);
-    readonly isLoading = this.loading.asReadonly();
-
-    // ✅ Usar computed para estado derivado
-    readonly items = computed(() => this.data()?.filter((item) => item.active) ?? []);
-
-    // ✅ Usar inject() en lugar de constructor
-    private readonly service = inject(FeatureService);
-}
-```
-
-### 4. NO usar NgModules
-
--   **Prohibido** crear o usar `@NgModule`
--   Usar lazy loading con standalone components
--   Importar dependencias directamente en el decorador `@Component`
-
-### 5. Sintaxis Moderna de Templates
-
-```typescript
-// ✅ Control flow nativo (Angular 17+)
-@if (condition) { ... }
-@else { ... }
-
-@for (item of items; track item.id) { ... }
-
-@switch (value) {
-  @case (1) { ... }
-  @default { ... }
+### 4. Modern Template Syntax
+```html
+<!-- ✅ Use native control flow -->
+@if (isLoading()) {
+  <p-progressSpinner />
+} @else {
+  @for (item of items(); track item.id) {
+    <div>{{ item.name }}</div>
+  }
 }
 
-// ✅ Defer para lazy loading
+@switch (status()) {
+  @case ('active') { <span>Active</span> }
+  @case ('inactive') { <span>Inactive</span> }
+  @default { <span>Unknown</span> }
+}
+
+<!-- ✅ Use @defer for lazy loading -->
 @defer (on viewport) {
   <heavy-component />
 } @placeholder {
-  <div>Loading...</div>
+  <p-skeleton />
 }
 
-// ❌ NO usar directivas estructurales antiguas
-*ngIf, *ngFor, *ngSwitch
+<!-- ❌ NEVER use old structural directives -->
+<!-- *ngIf, *ngFor, *ngSwitch are forbidden -->
 ```
 
-### 6. Gestión de Estado con Signals
-
+### 5. Signal-Based Services
 ```typescript
 @Injectable({ providedIn: 'root' })
-export class FeatureService {
-    private readonly http = inject(HttpClient);
+export class DataService {
+  private readonly http = inject(HttpClient);
 
-    // Signal privado para estado interno
-    private readonly _state = signal<FeatureState>({
-        items: [],
-        loading: false,
-        error: null,
-    });
+  // Private signal for internal state
+  private readonly _state = signal<State>({ items: [], loading: false });
 
-    // Computed públicos de solo lectura
-    readonly items = computed(() => this._state().items);
-    readonly loading = computed(() => this._state().loading);
-    readonly error = computed(() => this._state().error);
+  // Public read-only computed properties
+  readonly items = computed(() => this._state().items);
+  readonly loading = computed(() => this._state().loading);
 
-    loadItems(): void {
-        this._state.update((state) => ({ ...state, loading: true }));
-        // Implementation
-    }
-}
-```
-
-### 7. Evitar Lifecycle Hooks
-
-```typescript
-// ❌ NO usar ngOnInit
-ngOnInit() {
-  this.loadData();
-}
-
-// ✅ Usar signals y computed
-readonly data = computed(() => this.service.getData());
-
-// ✅ O effect() si es necesario efectos secundarios
-private loadEffect = effect(() => {
-  const id = this.itemId();
-  if (id) {
-    this.loadData(id);
+  loadData(): void {
+    this._state.update(s => ({ ...s, loading: true }));
+    // ... fetch data
   }
-});
+}
 ```
 
-### 8. Dependency Injection con inject()
-
+### 6. Reactive Route Parameters (NO route.snapshot)
 ```typescript
-// ❌ NO usar constructor injection
-constructor(
-  private authService: AuthService,
-  private router: Router
-) {}
+// ❌ WRONG - breaks zoneless change detection
+constructor() {
+  const id = inject(ActivatedRoute).snapshot.paramMap.get('id');
+}
 
-// ✅ Usar inject()
-private readonly authService = inject(AuthService);
-private readonly router = inject(Router);
+// ✅ CORRECT - reactive pattern
+private readonly route = inject(ActivatedRoute);
+readonly routeParams = toSignal(this.route.paramMap);
+readonly id = computed(() => this.routeParams()?.get('id'));
 ```
 
-### 9. NO usar 'any'
-
-```typescript
-// ❌ PROHIBIDO
-const data: any = response;
-
-// ✅ Usar tipos específicos o genéricos
-const data: ResponseType = response;
-const data = response as ResponseType;
-```
-
-### 10. Convención de Nombres de Archivos
-
-**NO usar** sufijos `.component`, `.service`, `.module` en nombres de archivos.
-
-```
-❌ login.component.ts
-❌ auth.service.ts
-❌ auth.module.ts
-
-✅ login.ts              (el comportamiento se entiende por el contexto)
-✅ auth.ts               (servicio de autenticación)
-✅ auth.routes.ts        (configuración de rutas)
-```
-
-## Scope Rule - Regla Fundamental
-
-### "Scope determines structure"
-
-**Regla absoluta e innegociable:**
-
--   **Código usado por 1 feature** → DEBE quedarse LOCAL en esa feature
--   **Código usado por 2+ features** → DEBE ir en `shared/` o `core/`
-
-### Ejemplo de Estructura de Feature
-
-```
-features/
-├── auth/
-│   ├── login.ts                    # Componente principal
-│   ├── login.html
-│   ├── login.css
-│   ├── components/                 # Componentes SOLO de auth
-│   ├── services/                   # Servicios SOLO de auth
-│   ├── models/                     # Tipos SOLO de auth
-│   └── auth.routes.ts
-│
-└── shared/                         # SOLO si 2+ features lo usan
-    ├── components/
-    ├── directives/
-    ├── pipes/
-    └── services/
-```
-
-## Configuración de la Aplicación
-
-### Change Detection Zoneless
-
-```typescript
-// app.config.ts
-export const appConfig: ApplicationConfig = {
-    providers: [
-        provideZonelessChangeDetection(), // ✅ Sin zone.js
-        provideRouter(routes),
-        provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-        provideAnimationsAsync(),
-        providePrimeNG({
-            theme: {
-                preset: Aura,
-                options: {
-                    prefix: 'p',
-                    darkModeSelector: 'class',
-                    cssLayer: false,
-                },
-            },
-        }),
-        MessageService,
-    ],
-};
-```
-
-### Rutas
-
-```typescript
-// app.routes.ts
-export const routes: Routes = [
-    {
-        path: '',
-        redirectTo: '/dashboard',
-        pathMatch: 'full',
-    },
-    {
-        path: 'auth',
-        loadChildren: () => import('./features/auth/auth.routes'),
-    },
-    {
-        path: 'dashboard',
-        canActivate: [authGuard],
-        loadComponent: () =>
-            import('./features/dashboard/dashboard').then((m) => m.DashboardComponent),
-    },
-    {
-        path: 'unauthorized',
-        loadComponent: () =>
-            import('./features/unauthorized/unauthorized').then((m) => m.UnauthorizedComponent),
-    },
-];
-```
-
-## Comandos Importantes
-
-### Desarrollo
-
-```bash
-ng serve -o                  # Servidor de desarrollo (http://localhost:4200)
-ng build                     # Build de producción
-pnpm run watch               # Build en modo watch
-pnpm test                    # Tests con Karma
-```
-
-### Generación de API Client
-
-```bash
-pnpm run generate:api         # Genera cliente desde OpenAPI (una vez)
-pnpm run generate:api:watch   # Genera en modo watch
-```
-
-El cliente se genera desde `http://localhost:8000/openapi.json` hacia `src/generated/`.
-
-### Gestión de Paquetes (pnpm)
-
-```bash
-pnpm install                 # Instalar dependencias
-pnpm add <package>           # Agregar dependencia
-pnpm add -D <package>        # Agregar dependencia de desarrollo
-pnpm remove <package>        # Eliminar dependencia
-pnpm update                  # Actualizar dependencias
-```
-
-### Angular CLI
-
-```bash
-ng generate component feature-name    # Genera componente standalone
-ng generate service service-name      # Genera servicio
-ng generate guard guard-name          # Genera guard
-```
-
-## Core Services
+## Core Services & Utilities
 
 ### AuthService (`@core/services/auth`)
-
-Maneja autenticación, tokens JWT y estado de sesión.
-
+JWT-based authentication with automatic token refresh.
 ```typescript
-readonly isAuthenticated = signal(false);
+readonly isAuthenticated = signal<boolean>(false);
 readonly currentUser = signal<User | null>(null);
-
 login(credentials: LoginRequest): Observable<LoginResponse>
 logout(): void
-getToken(): string | null
 ```
 
 ### StorageService (`@core/services/storage`)
-
-Abstracción sobre localStorage/sessionStorage.
+Type-safe localStorage/sessionStorage wrapper.
 
 ### NotificationService (`@core/services/notification`)
-
-Wrapper sobre PrimeNG MessageService para mostrar toasts.
-
+PrimeNG MessageService wrapper for toast notifications.
 ```typescript
 showSuccess(message: string): void
 showError(message: string): void
@@ -418,105 +231,96 @@ showInfo(message: string): void
 showWarning(message: string): void
 ```
 
-## Interceptors
+### TokenRefreshService (`@core/services/token-refresh`)
+Handles JWT refresh token logic with retry mechanism.
+
+## HTTP Interceptors
 
 ### authInterceptor
+Automatically adds JWT `Authorization` header to requests.
 
-Añade el token JWT a todas las peticiones HTTP.
+### tokenRefreshInterceptor
+Intercepts 401 responses, refreshes token, and retries failed request.
 
 ### errorInterceptor
+Global error handler for HTTP errors (maps to user-friendly messages).
 
-Maneja errores HTTP globalmente (401, 403, 500, etc.).
-
-## Guards
+## Route Guards
 
 ### authGuard
-
-Protege rutas que requieren autenticación.
+Redirects to `/auth/login` if not authenticated.
 
 ### permissionGuard
+Checks user permissions before allowing route access (configurable via route data).
 
-Valida permisos específicos para acceder a rutas.
+## Directives
 
-## Prettier Configuration
+### hasPermissionDirective
+Conditionally shows/hides elements based on user permissions.
 
-```json
-{
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-        {
-            "files": "*.html",
-            "options": {
-                "parser": "angular"
-            }
-        }
-    ]
-}
+### hasRoleDirective
+Conditionally shows/hides elements based on user roles.
+
+## UI Framework
+
+**PrimeNG 20.2** with **Aura** preset theme configured in `app.config.ts`:
+```typescript
+providePrimeNG({
+  theme: {
+    preset: Aura,
+    options: {
+      prefix: 'p',
+      darkModeSelector: 'class',
+      cssLayer: false
+    }
+  }
+})
 ```
+
+Common components: `p-button`, `p-table`, `p-dialog`, `p-toast`, `p-calendar`, `p-dropdown`, etc.
+
+**Chart.js 4.5** integrated for data visualization.
 
 ## TypeScript Configuration
 
--   **Strict mode**: Habilitado
--   **Target**: ES2022
--   **Module**: preserve
--   Strict templates y injection parameters
--   No implicit returns
--   No fallthrough cases
-
-#### ⚠️ Deprecated `allowSignalWrites` Warning
-
-**Problema:** Uso del antipatrón `route.snapshot` en constructor, incompatible con Angular 20+ zoneless.
-
-**Solución:**
-
--   Migrado a patrón reactivo usando `toSignal()` de `@angular/core/rxjs-interop`
--   Implementado `computed()` para extraer ID de la ruta
--   Usar `effect()` sin `allowSignalWrites` para carga reactiva de datos
-
-## Consideraciones de Rendimiento
-
-1. **OnPush Change Detection**: Todos los componentes deben usar `ChangeDetectionStrategy.OnPush`
-2. **Signals**: Preferir signals sobre observables para estado local
-3. **Defer**: Usar `@defer` para cargar componentes pesados bajo demanda
-4. **Lazy loading**: Todas las features deben cargarse lazy
-5. **NgOptimizedImage**: Usar para todas las imágenes estáticas
+- **Strict mode enabled**: All strict checks on
+- **Target**: ES2022
+- **No `any` types**: Use `unknown` or specific types
+- **No implicit returns**
+- **Strict template checking**
+- **Strict injection parameters**
 
 ## Testing
 
--   Framework: Jasmine + Karma
--   Todos los componentes y servicios deben tener tests
--   Usar `TestBed` para testing de componentes standalone
--   Mock de servicios con signals
+- **Framework**: Karma + Jasmine
+- Use `TestBed` for component/service testing
+- Mock signals using `signal()` in test setup
+- All new code should include tests
 
-## Dominio de Negocio
+## Business Domain
 
-### Contexto: Estudio Fotográfico
+Photography studio management system handling:
+- **Clients**: Customer records and contact info
+- **Sessions**: Photo shoot scheduling and tracking
+- **Catalog**: Service packages and pricing
+- **Users**: Staff accounts and permissions
+- **Dashboard**: Overview metrics and quick actions
 
-El sistema gestiona:
+## Critical Rules
 
--   Clientes y sesiones fotográficas
--   Galería de imágenes
--   Pedidos y entregas
--   Usuarios y permisos
+1. **NO NgModules** - This is a standalone-only project
+2. **NO zone.js** - Use zoneless change detection patterns
+3. **NO `standalone: true`** - It's default in Angular 20+
+4. **NO `any` types** - Strict typing enforced
+5. **NO old template syntax** - Use `@if`, `@for`, `@switch`
+6. **NO `@Input/@Output`** - Use `input()/output()` functions
+7. **NO constructor DI** - Use `inject()` function
+8. **NO lifecycle hooks** - Use signals, computed, and effect
+9. **NO violating Scope Rule** - Strictly enforce feature isolation
+10. **NO file suffixes** - Use `login.ts` not `login.component.ts`
 
-## Próximos Pasos / Roadmap
+## References
 
--   [ ] Implementar gestión de clientes
--   [ ] Sistema de galería de fotos
--   [ ] Módulo de pedidos
--   [ ] Panel de administración
--   [ ] Reportes y estadísticas
-
-## Notas Adicionales
-
--   **NO usar decoradores antiguos**: Migrar `@Input()/@Output()` a `input()/output()`
--   **NO usar lifecycle hooks**: Preferir signals, computed y effect
--   **NO comprometer el Scope Rule**: Es absoluto e innegociable
--   **Consultar Angular MCP**: Validar patrones contra la documentación oficial antes de implementar
-
-## Referencias
-
--   [Angular Documentation](https://angular.dev)
--   [PrimeNG Documentation](https://primeng.org)
--   [Scope Rule Architecture](.windsurf/rules/angular-scope-rule-architect.md)
+- [Angular Official Docs](https://angular.dev)
+- [PrimeNG Components](https://primeng.org)
+- [OpenAPI TypeScript Generator](https://heyapi.vercel.app/openapi-ts/get-started.html)

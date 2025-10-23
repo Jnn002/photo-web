@@ -1,4 +1,4 @@
-<div class="flex flex-column gap-4">
+<div [formGroup]="form" class="flex flex-column gap-4">
   <!-- Item Selection -->
   <div>
     <label for="item" class="block text-900 font-medium mb-2">
@@ -16,7 +16,6 @@
       [showClear]="true"
       [loading]="loading()"
       styleClass="w-full"
-      [formGroup]="form"
     />
     @if (form.get('item_id')?.invalid && form.get('item_id')?.touched) {
     <small class="p-error">El item es requerido</small>
@@ -53,7 +52,6 @@
       [max]="100"
       [showButtons]="true"
       styleClass="w-full"
-      [formGroup]="form"
     />
     @if (form.get('quantity')?.invalid && form.get('quantity')?.touched) {
     <small class="p-error">La cantidad debe ser al menos 1</small>

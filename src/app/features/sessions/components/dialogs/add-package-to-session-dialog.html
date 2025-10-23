@@ -1,4 +1,4 @@
-<div class="flex flex-column gap-4">
+<div [formGroup]="form" class="flex flex-column gap-4">
   <!-- Package Selection -->
   <div>
     <label for="package" class="block text-900 font-medium mb-2">
@@ -16,7 +16,6 @@
       [showClear]="true"
       [loading]="loading()"
       styleClass="w-full"
-      [formGroup]="form"
     />
     @if (form.get('package_id')?.invalid && form.get('package_id')?.touched) {
     <small class="p-error">El package es requerido</small>

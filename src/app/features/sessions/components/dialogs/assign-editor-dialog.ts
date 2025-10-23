@@ -25,6 +25,7 @@ export class AssignEditorDialogComponent {
 
     readonly form: FormGroup;
     readonly submitting = signal(false);
+    private readonly loaded = signal(false);
 
     // Get editor options from UserService
     readonly editorOptions = this.userService.editorOptions;
@@ -35,13 +36,15 @@ export class AssignEditorDialogComponent {
         this.form = this.fb.group({
             editor_id: [null, Validators.required],
         });
-    }
 
-    // Load editors effect - runs automatically
-    private loadEditorsEffect = effect(() => {
-        // Load editors when component is initialized
-        this.userService.loadEditors();
-    });
+        // Load editors only once on initialization
+        effect(() => {
+            if (!this.loaded()) {
+                this.userService.loadEditors();
+                this.loaded.set(true);
+            }
+        });
+    }
 
     onSubmit() {
         if (this.form.valid) {

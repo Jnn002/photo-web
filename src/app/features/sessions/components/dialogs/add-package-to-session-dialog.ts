@@ -41,6 +41,7 @@ export class AddPackageToSessionDialogComponent {
     readonly form: FormGroup;
     readonly submitting = signal(false);
     readonly selectedPackage = signal<PackagePublic | null>(null);
+    private readonly loaded = signal(false);
 
     // Get package options from PackageService
     readonly packageOptions = computed(() =>
@@ -68,13 +69,15 @@ export class AddPackageToSessionDialogComponent {
                 this.selectedPackage.set(null);
             }
         });
-    }
 
-    // Load packages effect - runs automatically
-    private loadPackagesEffect = effect(() => {
-        // Load packages when component is initialized
-        this.packageService.loadPackages();
-    });
+        // Load packages only once on initialization
+        effect(() => {
+            if (!this.loaded()) {
+                this.packageService.loadPackages();
+                this.loaded.set(true);
+            }
+        });
+    }
 
     onSubmit() {
         if (this.form.valid) {
