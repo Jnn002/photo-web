@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { forkJoin, of } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
@@ -26,6 +26,8 @@ import {
     SessionPayment,
     SessionPhotographer,
     VALID_TRANSITIONS,
+    PAYMENT_TYPE_LABELS,
+    PaymentType,
 } from '../models/session.models';
 import type { ClientPublic } from '../../clients/models/client.models';
 import { AssignPhotographerDialogComponent } from './dialogs/assign-photographer-dialog';
@@ -67,12 +69,10 @@ export class SessionDetailsComponent {
     readonly photographers = signal<SessionPhotographer[]>([]);
     readonly statusHistory = signal<SessionStatusHistory[]>([]);
     readonly loading = signal(true);
+    private readonly isRefreshing = signal(false);
 
     // Current client information
     readonly currentClient = signal<ClientPublic | null>(null);
-
-    // Payment history visibility toggle
-    readonly showPaymentHistory = signal(false);
 
     // Reactive route params (Angular 20+ pattern)
     private readonly paramMap = toSignal(this.route.paramMap, { requireSync: true });
@@ -85,15 +85,23 @@ export class SessionDetailsComponent {
 
     constructor() {
         // Reactive data loading with effect (Angular 20+ zoneless pattern)
+        // Use untracked() to prevent infinite loops from signal updates inside loadSessionData
         effect(() => {
             const id = this.sessionId();
             if (id) {
-                this.loadSessionData(id);
+                untracked(() => this.loadSessionData(id));
             }
         });
     }
 
     loadSessionData(sessionId: number) {
+        // Prevent multiple simultaneous loads
+        if (this.isRefreshing()) {
+            console.warn('Already refreshing session data, skipping duplicate call');
+            return;
+        }
+
+        this.isRefreshing.set(true);
         this.loading.set(true);
 
         // Optimize: Load all data in parallel using forkJoin
@@ -137,6 +145,7 @@ export class SessionDetailsComponent {
                 this.photographers.set(photographers);
                 this.statusHistory.set(history.reverse()); // Most recent first
                 this.loading.set(false);
+                this.isRefreshing.set(false);
 
                 // Load client information after session is loaded
                 this.loadClientInfo(session.client_id);
@@ -145,6 +154,7 @@ export class SessionDetailsComponent {
                 console.error('Error loading session:', error);
                 this.notificationService.showError('Error al cargar la sesión');
                 this.loading.set(false);
+                this.isRefreshing.set(false);
             },
         });
     }
@@ -189,7 +199,8 @@ export class SessionDetailsComponent {
 
         this.dialogRef?.onClose.pipe(take(1)).subscribe((result) => {
             if (result) {
-                this.loadSessionData(this.session()!.id);
+                // Optimized: Only reload payments and session summary instead of everything
+                this.refreshPaymentsAndBalance(this.session()!.id);
             }
         });
     }
@@ -270,6 +281,36 @@ export class SessionDetailsComponent {
             console.error('Error loading client info:', error);
             this.currentClient.set(null);
         }
+    }
+
+    /**
+     * Refresh only payments and session balance after recording a payment
+     * More efficient than reloading all session data
+     */
+    refreshPaymentsAndBalance(sessionId: number) {
+        console.log('[DEBUG] Refreshing payments and balance for session:', sessionId);
+        forkJoin({
+            session: this.sessionService.getSession(sessionId),
+            payments: this.sessionService.listSessionPayments(sessionId).pipe(
+                catchError((error) => {
+                    console.error('Error loading payments:', error);
+                    return of([]);
+                })
+            ),
+        }).subscribe({
+            next: ({ session, payments }) => {
+                console.log('[DEBUG] Received payments:', payments.length, 'payments');
+                console.log('[DEBUG] Payment IDs:', payments.map(p => p.id));
+                // Update session to refresh balance amounts
+                this.session.set(session);
+                // Update payments list
+                this.payments.set(payments);
+            },
+            error: (error) => {
+                console.error('Error refreshing payments:', error);
+                this.notificationService.showError('Error al actualizar los pagos');
+            },
+        });
     }
 
     editSession() {
@@ -365,7 +406,7 @@ export class SessionDetailsComponent {
         return validTransitions.length > 0;
     }
 
-    togglePaymentHistory(): void {
-        this.showPaymentHistory.update(value => !value);
+    getPaymentTypeLabel(type: string): string {
+        return PAYMENT_TYPE_LABELS[type as PaymentType] || type;
     }
 }

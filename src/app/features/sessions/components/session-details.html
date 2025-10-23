@@ -138,27 +138,21 @@
                 />
 
                 @if (payments().length > 0) {
-                <div class="payments-toggle">
-                    <a (click)="togglePaymentHistory()" class="toggle-link">
-                        <i [class]="showPaymentHistory() ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-                        Ver detalle de pagos ({{ payments().length }})
-                    </a>
-                </div>
-
-                @if (showPaymentHistory()) {
                 <div class="payments-list">
-                    <label>Historial de Pagos</label>
+                    <label>Historial de Pagos ({{ payments().length }})</label>
                     @for (payment of payments(); track payment.id) {
                     <div class="payment-item">
                         <div class="payment-info">
-                            <span class="payment-type">{{ payment.payment_type }}</span>
-                            <small>{{ formatDate(payment.payment_date) }}</small>
+                            <span class="payment-type">{{ getPaymentTypeLabel(payment.payment_type) }}</span>
+                            <small class="payment-date">{{ formatDate(payment.payment_date) }}</small>
+                            @if (payment.payment_method) {
+                            <small class="payment-method">{{ payment.payment_method }}</small>
+                            }
                         </div>
                         <span class="payment-amount">Q {{ formatCurrency(payment.amount) }}</span>
                     </div>
                     }
                 </div>
-                }
                 }
             </ng-template>
         </p-card>

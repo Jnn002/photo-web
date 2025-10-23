@@ -1,1 +1,83 @@
 /* Record Payment Dialog Styles */
+
+/* Dialog Container */
+.dialog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Field */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.required {
+    color: var(--red-500);
+}
+
+/* Balance Information Card */
+.balance-info {
+    background: linear-gradient(135deg, var(--orange-50) 0%, var(--orange-100) 100%);
+    border-radius: 8px;
+    padding: 1.25rem;
+    border-left: 4px solid var(--orange-500);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
+
+.balance-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--orange-600);
+}
+
+/* Dialog Actions */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--surface-border);
+}
+
+/* Error Message */
+.error-message {
+    color: var(--red-600);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .dialog-form {
+        gap: 1rem;
+    }
+
+    .balance-info {
+        padding: 1rem;
+    }
+
+    .balance-value {
+        font-size: 1.25rem;
+    }
+}

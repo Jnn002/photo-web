@@ -1,119 +1,137 @@
-<div class="p-fluid">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <!-- Tipo de Pago -->
-        <div class="field">
-            <label for="paymentType" class="block text-900 font-medium mb-2">
-                Tipo de Pago <span class="text-red-500">*</span>
-            </label>
-            <p-select
-                id="paymentType"
-                formControlName="payment_type"
-                [options]="paymentTypeOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="-- Seleccionar --"
-            ></p-select>
-            @if ( form.get('payment_type')?.invalid && form.get('payment_type')?.touched ) {
-            <small class="p-error">El tipo de pago es requerido</small>
+<form [formGroup]="form" class="dialog-form" (ngSubmit)="onSubmit()">
+    <!-- Balance Information -->
+    <div class="balance-info">
+        <div class="detail-row">
+            <span class="detail-label">Balance Restante:</span>
+            <span class="balance-value">Q {{ formatCurrency(remainingBalance()) }}</span>
+        </div>
+    </div>
+
+    <!-- Tipo de Pago -->
+    <div class="form-field">
+        <label for="paymentType">
+            Tipo de Pago <span class="required">*</span>
+        </label>
+        <p-select
+            inputId="paymentType"
+            formControlName="payment_type"
+            [options]="paymentTypeOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccionar tipo"
+            styleClass="w-full"
+        />
+        @if (form.get('payment_type')?.invalid && form.get('payment_type')?.touched) {
+        <small class="error-message">El tipo de pago es requerido</small>
+        }
+    </div>
+
+    <!-- Monto -->
+    <div class="form-field">
+        <label for="amount">
+            Monto <span class="required">*</span>
+        </label>
+        <p-inputNumber
+            inputId="amount"
+            formControlName="amount"
+            mode="currency"
+            currency="GTQ"
+            locale="es-GT"
+            [min]="0.01"
+            [max]="maxAmount()"
+            placeholder="0.00"
+            styleClass="w-full"
+        />
+        @if (form.get('amount')?.invalid && form.get('amount')?.touched) {
+        <small class="error-message">
+            @if (form.get('amount')?.hasError('max')) {
+            El monto no puede exceder Q {{ formatCurrency(maxAmount()) }}
+            } @else {
+            El monto es requerido
             }
-        </div>
+        </small>
+        }
+    </div>
 
-        <!-- Monto -->
-        <div class="field">
-            <label for="amount" class="block text-900 font-medium mb-2">
-                Monto <span class="text-red-500">*</span>
-            </label>
-            <p-inputNumber
-                id="amount"
-                formControlName="amount"
-                mode="currency"
-                currency="GTQ"
-                locale="es-GT"
-                [min]="0"
-                [max]="maxAmount()"
-            ></p-inputNumber>
-            <small class="text-600"> Balance restante: Q {{ remainingBalance() }} </small>
-            @if ( form.get('amount')?.invalid && form.get('amount')?.touched ) {
-            <small class="p-error">
-                El monto es requerido y no puede exceder el balance restante
-            </small>
-            }
-        </div>
+    <!-- Método de Pago -->
+    <div class="form-field">
+        <label for="paymentMethod">
+            Método de Pago <span class="required">*</span>
+        </label>
+        <p-select
+            inputId="paymentMethod"
+            formControlName="payment_method"
+            [options]="paymentMethodOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleccionar método"
+            styleClass="w-full"
+        />
+        @if (form.get('payment_method')?.invalid && form.get('payment_method')?.touched) {
+        <small class="error-message">El método de pago es requerido</small>
+        }
+    </div>
 
-        <!-- Método de Pago -->
-        <div class="field">
-            <label for="paymentMethod" class="block text-900 font-medium mb-2">
-                Método de Pago <span class="text-red-500">*</span>
-            </label>
-            <p-select
-                id="paymentMethod"
-                formControlName="payment_method"
-                [options]="paymentMethodOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="-- Seleccionar --"
-            ></p-select>
-            @if ( form.get('payment_method')?.invalid && form.get('payment_method')?.touched ) {
-            <small class="p-error">El método de pago es requerido</small>
-            }
-        </div>
+    <!-- Fecha de Pago -->
+    <div class="form-field">
+        <label for="paymentDate">
+            Fecha de Pago <span class="required">*</span>
+        </label>
+        <p-datepicker
+            inputId="paymentDate"
+            formControlName="payment_date"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            [maxDate]="maxDate"
+            placeholder="dd/mm/aaaa"
+            styleClass="w-full"
+        />
+        @if (form.get('payment_date')?.invalid && form.get('payment_date')?.touched) {
+        <small class="error-message">La fecha de pago es requerida</small>
+        }
+    </div>
 
-        <!-- Fecha de Pago -->
-        <div class="field">
-            <label for="paymentDate" class="block text-900 font-medium mb-2">
-                Fecha de Pago <span class="text-red-500">*</span>
-            </label>
-            <p-datepicker
-                id="paymentDate"
-                formControlName="payment_date"
-                [showIcon]="true"
-                dateFormat="dd/mm/yy"
-                [maxDate]="maxDate"
-                placeholder="Seleccionar fecha"
-            ></p-datepicker>
-            @if ( form.get('payment_date')?.invalid && form.get('payment_date')?.touched ) {
-            <small class="p-error"> La fecha de pago es requerida y no puede ser futura </small>
-            }
-        </div>
+    <!-- Referencia -->
+    <div class="form-field">
+        <label for="reference">Referencia de Transacción</label>
+        <input
+            pInputText
+            id="reference"
+            formControlName="transaction_reference"
+            placeholder="Número de transacción, cheque, etc."
+            class="w-full"
+        />
+    </div>
 
-        <!-- Referencia -->
-        <div class="field">
-            <label for="reference" class="block text-900 font-medium mb-2"> Referencia </label>
-            <input
-                pInputText
-                id="reference"
-                formControlName="transaction_reference"
-                placeholder="Número de transacción, cheque, etc."
-            />
-        </div>
+    <!-- Notas -->
+    <div class="form-field">
+        <label for="notes">Notas</label>
+        <textarea
+            pInputTextarea
+            id="notes"
+            formControlName="notes"
+            rows="3"
+            placeholder="Notas adicionales sobre el pago..."
+            class="w-full"
+        ></textarea>
+    </div>
 
-        <!-- Notas -->
-        <div class="field">
-            <label for="notes" class="block text-900 font-medium mb-2"> Notas </label>
-            <textarea
-                pInputTextarea
-                id="notes"
-                formControlName="notes"
-                rows="3"
-                placeholder="Notas adicionales sobre el pago..."
-            ></textarea>
-        </div>
-
-        <!-- Actions -->
-        <div class="flex justify-content-end gap-2 mt-4">
-            <p-button
-                label="Cancelar"
-                type="button"
-                severity="secondary"
-                [text]="true"
-                (onClick)="cancel()"
-            />
-            <p-button
-                label="Registrar Pago"
-                type="submit"
-                [disabled]="form.invalid || submitting()"
-                [loading]="submitting()"
-            />
-        </div>
-    </form>
-</div>
+    <!-- Actions -->
+    <div class="dialog-actions">
+        <p-button
+            label="Cancelar"
+            type="button"
+            severity="secondary"
+            [text]="true"
+            (onClick)="cancel()"
+            [disabled]="submitting()"
+        />
+        <p-button
+            label="Registrar Pago"
+            icon="pi pi-dollar"
+            type="submit"
+            [disabled]="form.invalid || submitting()"
+            [loading]="submitting()"
+        />
+    </div>
+</form>
