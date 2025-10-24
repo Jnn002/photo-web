@@ -188,7 +188,7 @@ export interface SessionPaymentCreate {
   session_id: number;
   payment_type: PaymentType;
   payment_method: string;
-  amount: number;
+  amount: number | string; // Backend expects Decimal (can be string)
   transaction_reference?: string | null;
   payment_date: string; // ISO date
   notes?: string | null;

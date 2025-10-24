@@ -1,4 +1,12 @@
-import { Component, inject, signal, computed, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    effect,
+    untracked,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { forkJoin, of } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
@@ -83,7 +91,116 @@ export class SessionDetailsComponent {
 
     dialogRef: DynamicDialogRef | null = null;
 
+    // ==================== Validation Methods ====================
+
+    /**
+     * Verifica si se pueden asignar fotógrafos
+     * Solo permitido en estados Confirmed y Assigned
+     */
+    readonly canAssignPhotographer = computed(() => {
+        const session = this.session();
+        if (!session) return false;
+
+        const allowedStatuses = [SessionStatus.CONFIRMED, SessionStatus.ASSIGNED];
+
+        return allowedStatuses.includes(session.status);
+    });
+
+    /**
+     * Verifica si se pueden asignar editores
+     * Solo permitido desde estado Attended en adelante y si no hay editor asignado
+     */
+    readonly canAssignEditor = computed(() => {
+        const session = this.session();
+        if (!session) return false;
+
+        // No se puede si ya hay editor asignado
+        if (session.editing_assigned_to) return false;
+
+        const allowedStatuses = [
+            SessionStatus.ATTENDED,
+            SessionStatus.IN_EDITING,
+            SessionStatus.READY_FOR_DELIVERY,
+        ];
+
+        return allowedStatuses.includes(session.status);
+    });
+
+    /**
+     * Verifica si se pueden registrar pagos
+     * Solo permitido si hay items/paquetes y no está Canceled/Completed
+     */
+    readonly canRecordPayment = computed(() => {
+        const session = this.session();
+        if (!session) return false;
+
+        // No se pueden registrar pagos en sesiones canceladas o completadas
+        if (
+            session.status === SessionStatus.CANCELED ||
+            session.status === SessionStatus.COMPLETED
+        ) {
+            return false;
+        }
+
+        // Solo se pueden registrar pagos si hay items/paquetes
+        return session.total_amount > 0 && this.sessionDetails().length > 0;
+    });
+
+    /**
+     * Verifica si se pueden agregar/eliminar items/paquetes
+     * Solo permitido antes del estado Confirmed
+     */
+    readonly canModifyItems = computed(() => {
+        const session = this.session();
+        if (!session) return false;
+
+        const allowedStatuses = [
+            SessionStatus.REQUEST,
+            SessionStatus.NEGOTIATION,
+            SessionStatus.PRE_SCHEDULED,
+        ];
+
+        return allowedStatuses.includes(session.status);
+    });
+
+    /**
+     * Obtiene las razones por las que los botones están deshabilitados
+     * Útil para mostrar tooltips informativos
+     */
+    readonly getDisabledReason = computed(() => {
+        const session = this.session();
+        if (!session)
+            return {
+                photographer: '',
+                editor: '',
+                payment: '',
+                items: '',
+            };
+
+        return {
+            photographer: this.canAssignPhotographer()
+                ? ''
+                : 'Solo se pueden asignar fotógrafos en estados Confirmado y Asignado',
+            editor: this.canAssignEditor()
+                ? ''
+                : session.editing_assigned_to
+                ? 'Ya hay un editor asignado'
+                : 'Solo se pueden asignar editores desde el estado Atendida',
+            payment: this.canRecordPayment()
+                ? ''
+                : this.sessionDetails().length === 0
+                ? 'Debe agregar items o paquetes antes de registrar pagos'
+                : 'No se pueden registrar pagos en sesiones canceladas o completadas',
+            items: this.canModifyItems()
+                ? ''
+                : 'No se pueden modificar items después del estado Confirmado',
+        };
+    });
+
     constructor() {
+        // Load photographers and editors for name lookups
+        this.userService.loadUsersWithRoles();
+
         // Reactive data loading with effect (Angular 20+ zoneless pattern)
         // Use untracked() to prevent infinite loops from signal updates inside loadSessionData
         effect(() => {
@@ -215,6 +332,7 @@ export class SessionDetailsComponent {
                 sessionId: this.session()!.id,
                 currentStatus: this.session()!.status,
                 validTransitions,
+                sessionData: this.session(), // Pass complete session data for validations
             },
         });
 
@@ -245,7 +363,7 @@ export class SessionDetailsComponent {
             width: '700px',
             data: {
                 sessionId: this.session()!.id,
-                sessionType: this.session()!.session_type
+                sessionType: this.session()!.session_type,
             },
         });
 
@@ -300,7 +418,10 @@ export class SessionDetailsComponent {
         }).subscribe({
             next: ({ session, payments }) => {
                 console.log('[DEBUG] Received payments:', payments.length, 'payments');
-                console.log('[DEBUG] Payment IDs:', payments.map(p => p.id));
+                console.log(
+                    '[DEBUG] Payment IDs:',
+                    payments.map((p) => p.id)
+                );
                 // Update session to refresh balance amounts
                 this.session.set(session);
                 // Update payments list
@@ -354,6 +475,16 @@ export class SessionDetailsComponent {
     getClientName(clientId: number): string {
         // TODO: Implement client name lookup
         return `Cliente #${clientId}`;
+    }
+
+    getPhotographerName(photographerId: number): string {
+        const photographer = this.userService.photographers().find((p) => p.id === photographerId);
+        return photographer?.full_name || `Fotógrafo #${photographerId}`;
+    }
+
+    getEditorName(editorId: number): string {
+        const editor = this.userService.editors().find((e) => e.id === editorId);
+        return editor?.full_name || `Editor #${editorId}`;
     }
 
     getPaymentProgress(): number {

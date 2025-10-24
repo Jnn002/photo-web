@@ -9,9 +9,7 @@
 
     <!-- Tipo de Pago -->
     <div class="form-field">
-        <label for="paymentType">
-            Tipo de Pago <span class="required">*</span>
-        </label>
+        <label for="paymentType"> Tipo de Pago <span class="required">*</span> </label>
         <p-select
             inputId="paymentType"
             formControlName="payment_type"
@@ -28,9 +26,7 @@
 
     <!-- Monto -->
     <div class="form-field">
-        <label for="amount">
-            Monto <span class="required">*</span>
-        </label>
+        <label for="amount"> Monto <span class="required">*</span> </label>
         <p-inputNumber
             inputId="amount"
             formControlName="amount"
@@ -44,20 +40,16 @@
         />
         @if (form.get('amount')?.invalid && form.get('amount')?.touched) {
         <small class="error-message">
-            @if (form.get('amount')?.hasError('max')) {
-            El monto no puede exceder Q {{ formatCurrency(maxAmount()) }}
-            } @else {
-            El monto es requerido
-            }
+            @if (form.get('amount')?.hasError('max')) { El monto no puede exceder Q
+            {{ formatCurrency(maxAmount()) }}
+            } @else { El monto es requerido }
         </small>
         }
     </div>
 
     <!-- Método de Pago -->
     <div class="form-field">
-        <label for="paymentMethod">
-            Método de Pago <span class="required">*</span>
-        </label>
+        <label for="paymentMethod"> Método de Pago <span class="required">*</span> </label>
         <p-select
             inputId="paymentMethod"
             formControlName="payment_method"
@@ -74,16 +66,14 @@
 
     <!-- Fecha de Pago -->
     <div class="form-field">
-        <label for="paymentDate">
-            Fecha de Pago <span class="required">*</span>
-        </label>
+        <label for="paymentDate"> Fecha de Pago <span class="required">*</span> </label>
         <p-datepicker
             inputId="paymentDate"
             formControlName="payment_date"
             [showIcon]="true"
             dateFormat="dd/mm/yy"
             [maxDate]="maxDate"
-            placeholder="dd/mm/aaaa"
+            placeholder="Seleccionar fecha"
             styleClass="w-full"
         />
         @if (form.get('payment_date')?.invalid && form.get('payment_date')?.touched) {

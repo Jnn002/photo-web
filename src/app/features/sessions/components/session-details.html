@@ -65,7 +65,9 @@
                     </div>
                     <div class="info-item">
                         <label>Tipo</label>
-                        <div class="info-value">{{ getSessionTypeLabel(sessionData.session_type) }}</div>
+                        <div class="info-value">
+                            {{ getSessionTypeLabel(sessionData.session_type) }}
+                        </div>
                     </div>
                     <div class="info-item">
                         <label>Fecha</label>
@@ -83,7 +85,9 @@
                     </div>
                     <div class="info-item">
                         <label>Duración</label>
-                        <div class="info-value">{{ sessionData.estimated_duration_hours || '-' }} horas</div>
+                        <div class="info-value">
+                            {{ sessionData.estimated_duration_hours || '-' }} horas
+                        </div>
                     </div>
                     <div class="info-item">
                         <label>Ubicación</label>
@@ -110,16 +114,22 @@
                         <div class="amount">Q {{ formatCurrency(sessionData.total_amount) }}</div>
                     </div>
                     <div class="financial-item">
-                        <label>Depósito</label>
-                        <div class="amount-small">Q {{ formatCurrency(sessionData.deposit_amount) }}</div>
+                        <label>Deposito necesario</label>
+                        <div class="amount-small">
+                            Q {{ formatCurrency(sessionData.deposit_amount) }}
+                        </div>
+                    </div>
+                    <div class="financial-item balance">
+                        <label>Balance Pendiente</label>
+                        <div class="amount-small">
+                            Q {{ formatCurrency(sessionData.balance_amount) }}
+                        </div>
                     </div>
                     <div class="financial-item paid">
                         <label>Pagado</label>
-                        <div class="amount-small">Q {{ formatCurrency(sessionData.paid_amount) }}</div>
-                    </div>
-                    <div class="financial-item balance">
-                        <label>Balance</label>
-                        <div class="amount-small">Q {{ formatCurrency(sessionData.balance_amount) }}</div>
+                        <div class="amount-small">
+                            Q {{ formatCurrency(sessionData.paid_amount) }}
+                        </div>
                     </div>
                 </div>
 
@@ -135,6 +145,9 @@
                     styleClass="w-full"
                     severity="success"
                     (onClick)="openRecordPaymentDialog()"
+                    [disabled]="!canRecordPayment()"
+                    [pTooltip]="getDisabledReason().payment"
+                    tooltipPosition="top"
                 />
 
                 @if (payments().length > 0) {
@@ -143,8 +156,12 @@
                     @for (payment of payments(); track payment.id) {
                     <div class="payment-item">
                         <div class="payment-info">
-                            <span class="payment-type">{{ getPaymentTypeLabel(payment.payment_type) }}</span>
-                            <small class="payment-date">{{ formatDate(payment.payment_date) }}</small>
+                            <span class="payment-type">{{
+                                getPaymentTypeLabel(payment.payment_type)
+                            }}</span>
+                            <small class="payment-date">{{
+                                formatDate(payment.payment_date)
+                            }}</small>
                             @if (payment.payment_method) {
                             <small class="payment-method">{{ payment.payment_method }}</small>
                             }
@@ -214,8 +231,7 @@
                 <label>Requerimientos del Cliente</label>
                 <p class="requirement-text">{{ sessionData.client_requirements }}</p>
             </div>
-            }
-            @if (sessionData.internal_notes) {
+            } @if (sessionData.internal_notes) {
             <div class="requirement-section">
                 <label>Notas Internas</label>
                 <p class="requirement-text internal">{{ sessionData.internal_notes }}</p>
@@ -237,6 +253,9 @@
                         size="small"
                         [outlined]="true"
                         (onClick)="openAddItemDialog()"
+                        [disabled]="!canModifyItems()"
+                        [pTooltip]="getDisabledReason().items"
+                        tooltipPosition="top"
                     />
                     <p-button
                         label="+ Package"
@@ -244,6 +263,9 @@
                         size="small"
                         [outlined]="true"
                         (onClick)="openAddPackageDialog()"
+                        [disabled]="!canModifyItems()"
+                        [pTooltip]="getDisabledReason().items"
+                        tooltipPosition="top"
                     />
                 </div>
             </div>
@@ -275,12 +297,16 @@
                             <td class="item-cell">
                                 <div class="item-name">{{ detail.item_name }}</div>
                                 @if (detail.item_description) {
-                                <small class="item-description">{{ detail.item_description }}</small>
+                                <small class="item-description">{{
+                                    detail.item_description
+                                }}</small>
                                 }
                             </td>
                             <td class="text-center">{{ detail.quantity }}</td>
                             <td class="text-right">Q {{ formatCurrency(detail.unit_price) }}</td>
-                            <td class="text-right font-bold">Q {{ formatCurrency(detail.line_subtotal) }}</td>
+                            <td class="text-right font-bold">
+                                Q {{ formatCurrency(detail.line_subtotal) }}
+                            </td>
                             <td class="text-center action-cell">
                                 <p-button
                                     icon="pi pi-trash"
@@ -288,7 +314,12 @@
                                     [text]="true"
                                     [rounded]="true"
                                     (onClick)="removeSessionDetail(detail.id)"
-                                    pTooltip="Eliminar item"
+                                    [disabled]="!canModifyItems()"
+                                    [pTooltip]="
+                                        canModifyItems()
+                                            ? 'Eliminar item'
+                                            : getDisabledReason().items
+                                    "
                                     tooltipPosition="top"
                                 />
                             </td>
@@ -330,8 +361,18 @@
                     @for (photographer of photographers(); track photographer.id) {
                     <div class="team-member">
                         <div class="member-info">
-                            <span class="member-name">Fotógrafo #{{ photographer.photographer_id }}</span>
+                            <span class="member-name">{{
+                                getPhotographerName(photographer.photographer_id)
+                            }}</span>
                             <small>{{ photographer.role || 'Sin rol especificado' }}</small>
+                            <small class="text-500"
+                                >Asignado: {{ formatDateTime(photographer.assigned_at) }}</small
+                            >
+                            @if (photographer.attended && photographer.attended_at) {
+                            <small class="text-600"
+                                >Asistió: {{ formatDateTime(photographer.attended_at) }}</small
+                            >
+                            }
                         </div>
                         @if (photographer.attended) {
                         <p-tag value="Asistió" severity="success" />
@@ -348,6 +389,9 @@
                     styleClass="w-full mt-3"
                     [outlined]="true"
                     (onClick)="openAssignPhotographerDialog()"
+                    [disabled]="!canAssignPhotographer()"
+                    [pTooltip]="getDisabledReason().photographer"
+                    tooltipPosition="top"
                 />
             </ng-template>
         </p-card>
@@ -369,9 +413,18 @@
                 <div class="team-list">
                     <div class="team-member">
                         <div class="member-info">
-                            <span class="member-name">Editor #{{ sessionData.editing_assigned_to }}</span>
+                            <span class="member-name">{{
+                                getEditorName(sessionData.editing_assigned_to)
+                            }}</span>
                             @if (sessionData.editing_started_at) {
-                            <small>Inicio: {{ formatDateTime(sessionData.editing_started_at) }}</small>
+                            <small class="text-500"
+                                >Inicio: {{ formatDateTime(sessionData.editing_started_at) }}</small
+                            >
+                            } @if (sessionData.editing_completed_at) {
+                            <small class="text-600"
+                                >Completado:
+                                {{ formatDateTime(sessionData.editing_completed_at) }}</small
+                            >
                             }
                         </div>
                         @if (sessionData.editing_completed_at) {
@@ -388,7 +441,9 @@
                     styleClass="w-full mt-3"
                     [outlined]="true"
                     (onClick)="openAssignEditorDialog()"
-                    [disabled]="!!sessionData.editing_assigned_to"
+                    [disabled]="!canAssignEditor()"
+                    [pTooltip]="getDisabledReason().editor"
+                    tooltipPosition="top"
                 />
             </ng-template>
         </p-card>
@@ -422,17 +477,18 @@
                         <div class="timeline-header">
                             <p-tag
                                 [value]="history.to_status"
-                                [style]="{'background-color': getStatusColor(history.to_status)}"
+                                [style]="{ 'background-color': getStatusColor(history.to_status) }"
                             />
                             @if (history.from_status) {
                             <span class="status-transition">desde {{ history.from_status }}</span>
                             }
                         </div>
-                        <small class="timeline-date">{{ formatDateTime(history.changed_at) }}</small>
+                        <small class="timeline-date">{{
+                            formatDateTime(history.changed_at)
+                        }}</small>
                         @if (history.reason) {
                         <p class="timeline-reason">{{ history.reason }}</p>
-                        }
-                        @if (history.notes) {
+                        } @if (history.notes) {
                         <p class="timeline-notes">{{ history.notes }}</p>
                         }
                     </div>

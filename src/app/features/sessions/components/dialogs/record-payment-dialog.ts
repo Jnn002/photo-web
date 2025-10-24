@@ -10,7 +10,11 @@ import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { SessionService } from '../../services/session.service';
 import { NotificationService } from '../../../../core/services/notification';
-import { PaymentType, PAYMENT_TYPE_LABELS } from '../../models/session.models';
+import {
+    PaymentType,
+    PAYMENT_TYPE_LABELS,
+    SessionPaymentCreate,
+} from '../../models/session.models';
 
 interface PaymentTypeOption {
     label: string;
@@ -50,6 +54,7 @@ export class RecordPaymentDialogComponent {
     readonly remainingBalance = signal(0);
     readonly maxAmount = signal(0);
 
+    readonly today = new Date(); // Today's date for defaultDate
     readonly maxDate = new Date(); // Cannot pay in the future
 
     readonly paymentTypeOptions: PaymentTypeOption[] = [
@@ -73,7 +78,7 @@ export class RecordPaymentDialogComponent {
         this.remainingBalance.set(balance);
         this.maxAmount.set(balance);
 
-        // Initialize form
+        // Initialize form with payment_date set to today
         this.form = this.fb.group({
             payment_type: [null, Validators.required],
             amount: [
@@ -85,7 +90,7 @@ export class RecordPaymentDialogComponent {
                 ],
             ],
             payment_method: [null, Validators.required],
-            payment_date: [new Date(), Validators.required],
+            payment_date: [null, Validators.required],
             transaction_reference: [null],
             notes: [null],
         });
@@ -100,7 +105,7 @@ export class RecordPaymentDialogComponent {
             const paymentDate = new Date(this.form.value.payment_date);
             const isoDate = paymentDate.toISOString().split('T')[0];
 
-            const data = {
+            const data: SessionPaymentCreate = {
                 session_id: sessionId,
                 payment_type: this.form.value.payment_type,
                 amount: this.form.value.amount,

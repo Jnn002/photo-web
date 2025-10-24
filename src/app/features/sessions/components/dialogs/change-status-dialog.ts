@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -8,7 +8,7 @@ import { Textarea } from 'primeng/textarea';
 import { MessageModule } from 'primeng/message';
 import { SessionService } from '../../services/session.service';
 import { NotificationService } from '../../../../core/services/notification';
-import { SessionStatus, STATUS_BADGE_MAP } from '../../models/session.models';
+import { SessionStatus, STATUS_BADGE_MAP, SessionDetail } from '../../models/session.models';
 
 interface StatusOption {
     label: string;
@@ -33,14 +33,40 @@ export class ChangeStatusDialogComponent {
     readonly submitting = signal(false);
     readonly statusOptions = signal<StatusOption[]>([]);
     readonly currentStatus: SessionStatus;
+    readonly sessionData = signal<SessionDetail | null>(null);
+
+    /**
+     * Obtiene mensaje de advertencia si Completed no está disponible
+     */
+    readonly getCompletedWarning = computed(() => {
+        const session = this.sessionData();
+        if (!session) return '';
+
+        // Check if Completed is in valid transitions but balance is pending
+        const validTransitions: SessionStatus[] = this.config.data.validTransitions || [];
+        if (validTransitions.includes(SessionStatus.COMPLETED) && session.balance_amount > 0) {
+            return `No se puede completar la sesión. Balance pendiente: Q ${session.balance_amount.toFixed(2)}`;
+        }
+        return '';
+    });
 
     constructor() {
         this.currentStatus = this.config.data.currentStatus;
+        this.sessionData.set(this.config.data.sessionData || null);
         const validTransitions: SessionStatus[] = this.config.data.validTransitions || [];
 
-        // Build status options from valid transitions
+        // Filter transitions: block Completed if balance is pending
+        const filteredTransitions = validTransitions.filter((status) => {
+            if (status === SessionStatus.COMPLETED) {
+                const session = this.sessionData();
+                return session ? session.balance_amount === 0 : false;
+            }
+            return true;
+        });
+
+        // Build status options from filtered valid transitions
         this.statusOptions.set(
-            validTransitions.map((status) => ({
+            filteredTransitions.map((status) => ({
                 label: STATUS_BADGE_MAP[status].label,
                 value: status,
             }))

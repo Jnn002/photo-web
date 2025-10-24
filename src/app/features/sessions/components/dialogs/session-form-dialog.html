@@ -1,183 +1,175 @@
 <p-dialog
-  header="Nueva Sesión"
-  [modal]="true"
-  [visible]="visible()"
-  (onHide)="onHide()"
-  [style]="{ width: '800px', maxHeight: '90vh' }"
-  [draggable]="false"
-  [resizable]="false"
+    header="Nueva Sesión"
+    [modal]="true"
+    [visible]="visible()"
+    (onHide)="onHide()"
+    [style]="{ width: '800px', maxHeight: '90vh' }"
+    [draggable]="false"
+    [resizable]="false"
 >
-  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="session-form-dialog">
-    <div class="form-grid">
-      <!-- Cliente -->
-      <div class="form-field">
-        <label for="client">
-          Cliente <span class="required">*</span>
-        </label>
-        <p-select
-          inputId="client"
-          formControlName="client_id"
-          [options]="clientOptions()"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccionar cliente"
-          [filter]="true"
-          filterBy="label"
-          [showClear]="true"
-          [loading]="loadingClients()"
-          styleClass="w-full"
-        />
-        @if (sessionForm.get('client_id')?.invalid && sessionForm.get('client_id')?.touched) {
-          <small class="p-error">El cliente es requerido</small>
-        }
-      </div>
+    <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="session-form-dialog">
+        <div class="form-grid">
+            <!-- Cliente -->
+            <div class="form-field">
+                <label for="client"> Cliente <span class="required">*</span> </label>
+                <p-select
+                    inputId="client"
+                    formControlName="client_id"
+                    [options]="clientOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccionar cliente"
+                    [filter]="true"
+                    filterBy="label"
+                    [showClear]="true"
+                    [loading]="loadingClients()"
+                    styleClass="w-full"
+                />
+                @if (sessionForm.get('client_id')?.invalid && sessionForm.get('client_id')?.touched)
+                {
+                <small class="p-error">El cliente es requerido</small>
+                }
+            </div>
 
-      <!-- Tipo de Sesión -->
-      <div class="form-field">
-        <label for="sessionType">
-          Tipo de Sesión <span class="required">*</span>
-        </label>
-        <p-select
-          inputId="sessionType"
-          formControlName="session_type"
-          [options]="sessionTypeOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccionar tipo"
-          styleClass="w-full"
-          (onChange)="onSessionTypeChange()"
-        />
-        @if (sessionForm.get('session_type')?.invalid && sessionForm.get('session_type')?.touched) {
-          <small class="p-error">El tipo de sesión es requerido</small>
-        }
-      </div>
+            <!-- Tipo de Sesión -->
+            <div class="form-field">
+                <label for="sessionType"> Tipo de Sesión <span class="required">*</span> </label>
+                <p-select
+                    inputId="sessionType"
+                    formControlName="session_type"
+                    [options]="sessionTypeOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccionar tipo"
+                    styleClass="w-full"
+                    (onChange)="onSessionTypeChange()"
+                />
+                @if (sessionForm.get('session_type')?.invalid &&
+                sessionForm.get('session_type')?.touched) {
+                <small class="p-error">El tipo de sesión es requerido</small>
+                }
+            </div>
 
-      <!-- Fecha de Sesión -->
-      <div class="form-field">
-        <label for="sessionDate">
-          Fecha de Sesión <span class="required">*</span>
-        </label>
-        <p-datepicker
-          inputId="sessionDate"
-          formControlName="session_date"
-          [showIcon]="true"
-          dateFormat="dd/mm/yy"
-          [minDate]="minDate"
-          placeholder="Seleccionar fecha"
-          styleClass="w-full"
-        />
-        @if (sessionForm.get('session_date')?.invalid && sessionForm.get('session_date')?.touched) {
-          <small class="p-error">La fecha de sesión es requerida y debe ser futura</small>
-        }
-      </div>
+            <!-- Fecha de Sesión -->
+            <div class="form-field">
+                <label for="sessionDate"> Fecha de Sesión <span class="required">*</span> </label>
+                <p-datepicker
+                    inputId="sessionDate"
+                    formControlName="session_date"
+                    [showIcon]="true"
+                    dateFormat="dd/mm/yy"
+                    [minDate]="minDate"
+                    placeholder="Seleccionar fecha"
+                    styleClass="w-full"
+                />
+                @if (sessionForm.get('session_date')?.invalid &&
+                sessionForm.get('session_date')?.touched) {
+                <small class="p-error">La fecha de sesión es requerida y debe ser futura</small>
+                }
+            </div>
 
-      <!-- Hora -->
-      <div class="form-field">
-        <label for="sessionTime">Hora</label>
-        <input
-          pInputText
-          id="sessionTime"
-          type="time"
-          formControlName="session_time"
-          class="w-full"
-        />
-        @if (sessionForm.get('session_time')?.invalid && sessionForm.get('session_time')?.touched) {
-          <small class="p-error">Formato de hora inválido (HH:MM)</small>
-        }
-      </div>
+            <!-- Hora -->
+            <div class="form-field">
+                <label for="sessionTime">Hora</label>
+                <input
+                    pInputText
+                    id="sessionTime"
+                    type="time"
+                    formControlName="session_time"
+                    class="w-full"
+                />
+                @if (sessionForm.get('session_time')?.invalid &&
+                sessionForm.get('session_time')?.touched) {
+                <small class="p-error">Formato de hora inválido (HH:MM)</small>
+                }
+            </div>
 
-      <!-- Duración -->
-      <div class="form-field">
-        <label for="duration">Duración (horas)</label>
-        <p-inputnumber
-          inputId="duration"
-          formControlName="estimated_duration_hours"
-          [min]="1"
-          [max]="24"
-          [showButtons]="true"
-          styleClass="w-full"
-        />
-      </div>
+            <!-- Duración -->
+            <div class="form-field">
+                <label for="duration">Duración (horas)</label>
+                <p-inputnumber
+                    inputId="duration"
+                    formControlName="estimated_duration_hours"
+                    [min]="1"
+                    [max]="24"
+                    [showButtons]="true"
+                    styleClass="w-full"
+                />
+            </div>
 
-      <!-- Sala (solo para sesiones en estudio) -->
-      @if (isStudioSession()) {
-        <div class="form-field">
-          <label for="room">
-            Sala <span class="required">*</span>
-          </label>
-          <p-select
-            inputId="room"
-            formControlName="room_id"
-            [options]="roomOptions()"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Seleccionar sala"
-            [filter]="true"
-            filterBy="label"
-            [showClear]="true"
-            [loading]="loadingRooms()"
-            styleClass="w-full"
-          />
-          <small class="field-hint">Solo para sesiones en estudio</small>
-          @if (sessionForm.get('room_id')?.invalid && sessionForm.get('room_id')?.touched) {
-            <small class="p-error">La sala es requerida para sesiones en estudio</small>
-          }
+            <!-- Sala (solo para sesiones en estudio) -->
+            @if (isStudioSession()) {
+            <div class="form-field">
+                <label for="room"> Sala <span class="required">*</span> </label>
+                <p-select
+                    inputId="room"
+                    formControlName="room_id"
+                    [options]="roomOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccionar sala"
+                    [filter]="true"
+                    filterBy="label"
+                    [showClear]="true"
+                    [loading]="loadingRooms()"
+                    styleClass="w-full"
+                />
+                <small class="field-hint">Solo para sesiones en estudio</small>
+                @if (sessionForm.get('room_id')?.invalid && sessionForm.get('room_id')?.touched) {
+                <small class="p-error">La sala es requerida para sesiones en estudio</small>
+                }
+            </div>
+            }
+
+            <!-- Ubicación (solo para sesiones externas) -->
+            @if (isExternalSession()) {
+            <div class="form-field">
+                <label for="location"> Ubicación <span class="required">*</span> </label>
+                <input
+                    pInputText
+                    id="location"
+                    formControlName="location"
+                    placeholder="Ciudad de Guatemala"
+                    class="w-full"
+                />
+                <small class="field-hint">Dirección o lugar del evento</small>
+                @if (sessionForm.get('location')?.invalid && sessionForm.get('location')?.touched) {
+                <small class="p-error">La ubicación es requerida para sesiones externas</small>
+                }
+            </div>
+            }
+
+            <!-- Requerimientos del Cliente -->
+            <div class="form-field full-width">
+                <label for="requirements"> Requerimientos del Cliente </label>
+                <textarea
+                    pTextarea
+                    id="requirements"
+                    formControlName="client_requirements"
+                    rows="4"
+                    placeholder="Requerimientos especiales del cliente..."
+                    class="w-full"
+                ></textarea>
+            </div>
         </div>
-      }
 
-      <!-- Ubicación (solo para sesiones externas) -->
-      @if (isExternalSession()) {
-        <div class="form-field">
-          <label for="location">
-            Ubicación <span class="required">*</span>
-          </label>
-          <input
-            pInputText
-            id="location"
-            formControlName="location"
-            placeholder="Ciudad de Guatemala"
-            class="w-full"
-          />
-          <small class="field-hint">Dirección o lugar del evento</small>
-          @if (sessionForm.get('location')?.invalid && sessionForm.get('location')?.touched) {
-            <small class="p-error">La ubicación es requerida para sesiones externas</small>
-          }
+        <!-- Form Actions -->
+        <div class="dialog-actions">
+            <p-button
+                label="Cancelar"
+                type="button"
+                severity="secondary"
+                [text]="true"
+                (onClick)="onHide()"
+                [disabled]="submitting()"
+            />
+            <p-button
+                label="Crear Sesión"
+                type="submit"
+                icon="pi pi-check"
+                [disabled]="sessionForm.invalid || submitting()"
+                [loading]="submitting()"
+            />
         </div>
-      }
-
-      <!-- Requerimientos del Cliente -->
-      <div class="form-field full-width">
-        <label for="requirements">
-          Requerimientos del Cliente
-        </label>
-        <textarea
-          pTextarea
-          id="requirements"
-          formControlName="client_requirements"
-          rows="4"
-          placeholder="Requerimientos especiales del cliente..."
-          class="w-full"
-        ></textarea>
-      </div>
-    </div>
-
-    <!-- Form Actions -->
-    <div class="dialog-actions">
-      <p-button
-        label="Cancelar"
-        type="button"
-        severity="secondary"
-        [text]="true"
-        (onClick)="onHide()"
-        [disabled]="submitting()"
-      />
-      <p-button
-        label="Crear Sesión"
-        type="submit"
-        icon="pi pi-check"
-        [disabled]="sessionForm.invalid || submitting()"
-        [loading]="submitting()"
-      />
-    </div>
-  </form>
+    </form>
 </p-dialog>
