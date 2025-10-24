@@ -1,5 +1,53 @@
 /* Change Status Dialog Styles */
 
+.status-dialog-content {
+    padding: 0.25rem;
+}
+.titulo-regi {
+    margin: 0.25rem 0 2rem 0;
+}
+
+/* Grid para Estados (Actual y Nuevo) en dos columnas */
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Contenedor del badge de estado actual */
+.status-badge-container {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--surface-50);
+    border: 1px solid var(--surface-200);
+    border-radius: var(--border-radius);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-100);
+    color: var(--primary-700);
+}
+
+/* Textareas sin resize */
 textarea {
     resize: none;
+}
+
+/* Reducir espaciado en labels */
+.text-sm {
+    font-size: 0.875rem;
+}
+
+/* Responsivo: una columna en pantallas pequeñas */
+@media (max-width: 576px) {
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
 }
