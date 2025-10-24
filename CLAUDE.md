@@ -11,6 +11,7 @@ Photography studio management web application built with **Angular 20.3** and **
 ## Essential Commands
 
 ### Development
+
 ```bash
 pnpm install              # Install dependencies (first time setup)
 ng serve -o              # Dev server at http://localhost:4200
@@ -20,6 +21,7 @@ pnpm test                # Run all tests (Karma + Jasmine)
 ```
 
 ### API Client Generation
+
 ```bash
 pnpm run generate:api           # Generate from http://localhost:8000/openapi.json
 pnpm run generate:api:watch     # Watch mode for API changes
@@ -28,6 +30,7 @@ pnpm run generate:api:watch     # Watch mode for API changes
 Generated TypeScript client is output to `src/generated/` using `@hey-api/openapi-ts`.
 
 ### Code Generation
+
 ```bash
 ng generate component feature-name    # Creates standalone component
 ng generate service service-name      # Creates injectable service
@@ -39,6 +42,7 @@ ng generate guard guard-name          # Creates route guard
 ## Architecture
 
 ### Folder Structure
+
 ```
 src/app/
 ├── core/                           # Singleton services, guards, interceptors, directives
@@ -72,6 +76,7 @@ src/
 ```
 
 ### Path Aliases (tsconfig.json)
+
 ```typescript
 "@core/*"         → "src/app/core/*"
 "@shared/*"       → "src/app/features/shared/*"
@@ -84,10 +89,11 @@ src/
 
 **"Scope determines structure"** - Non-negotiable rule for code organization:
 
-- **Used by 1 feature only** → Keep it LOCAL within that feature folder
-- **Used by 2+ features** → Move to `shared/` or `core/`
+-   **Used by 1 feature only** → Keep it LOCAL within that feature folder
+-   **Used by 2+ features** → Move to `shared/` or `core/`
 
 Example feature structure:
+
 ```
 features/auth/
 ├── login.ts                 # Main component
@@ -104,71 +110,76 @@ features/auth/
 ## Angular 20+ Critical Patterns
 
 ### 1. Zoneless Change Detection (NO zone.js)
+
 This project uses `provideZonelessChangeDetection()`. Change detection is triggered by signals, not zones.
 
 ### 2. DO NOT declare `standalone: true`
+
 It's the default in Angular 20+. Declaring it explicitly is redundant and should be avoided.
 
 ### 3. Modern Component Pattern
+
 ```typescript
-import { Component, ChangeDetectionStrategy, signal, computed, input, output, inject } from '@angular/core';
+import {
+    Component,
+    ChangeDetectionStrategy,
+    signal,
+    computed,
+    input,
+    output,
+    inject,
+} from '@angular/core';
 
 @Component({
-  selector: 'app-example',
-  imports: [CommonModule, /* other imports */],
-  changeDetection: ChangeDetectionStrategy.OnPush,  // REQUIRED
-  templateUrl: './example.html'
+    selector: 'app-example',
+    imports: [CommonModule /* other imports */],
+    changeDetection: ChangeDetectionStrategy.OnPush, // REQUIRED
+    templateUrl: './example.html',
 })
 export class ExampleComponent {
-  // ✅ Use input() not @Input()
-  readonly data = input<DataType>();
+    // ✅ Use input() not @Input()
+    readonly data = input<DataType>();
 
-  // ✅ Use output() not @Output()
-  readonly selected = output<ItemType>();
+    // ✅ Use output() not @Output()
+    readonly selected = output<ItemType>();
 
-  // ✅ Use signals for state
-  private readonly loading = signal(false);
-  readonly isLoading = this.loading.asReadonly();
+    // ✅ Use signals for state
+    private readonly loading = signal(false);
+    readonly isLoading = this.loading.asReadonly();
 
-  // ✅ Use computed for derived state
-  readonly filteredData = computed(() => this.data()?.filter(x => x.active) ?? []);
+    // ✅ Use computed for derived state
+    readonly filteredData = computed(() => this.data()?.filter((x) => x.active) ?? []);
 
-  // ✅ Use inject() not constructor injection
-  private readonly service = inject(ExampleService);
+    // ✅ Use inject() not constructor injection
+    private readonly service = inject(ExampleService);
 
-  // ✅ Use effect() not ngOnInit for side effects
-  constructor() {
-    effect(() => {
-      if (this.data()) {
-        this.service.doSomething(this.data());
-      }
-    });
-  }
+    // ✅ Use effect() not ngOnInit for side effects
+    constructor() {
+        effect(() => {
+            if (this.data()) {
+                this.service.doSomething(this.data());
+            }
+        });
+    }
 }
 ```
 
 ### 4. Modern Template Syntax
+
 ```html
 <!-- ✅ Use native control flow -->
 @if (isLoading()) {
-  <p-progressSpinner />
-} @else {
-  @for (item of items(); track item.id) {
-    <div>{{ item.name }}</div>
-  }
-}
-
-@switch (status()) {
-  @case ('active') { <span>Active</span> }
-  @case ('inactive') { <span>Inactive</span> }
-  @default { <span>Unknown</span> }
-}
+<p-progressSpinner />
+} @else { @for (item of items(); track item.id) {
+<div>{{ item.name }}</div>
+} } @switch (status()) { @case ('active') { <span>Active</span> } @case ('inactive') {
+<span>Inactive</span> } @default { <span>Unknown</span> } }
 
 <!-- ✅ Use @defer for lazy loading -->
 @defer (on viewport) {
-  <heavy-component />
+<heavy-component />
 } @placeholder {
-  <p-skeleton />
+<p-skeleton />
 }
 
 <!-- ❌ NEVER use old structural directives -->
@@ -176,26 +187,28 @@ export class ExampleComponent {
 ```
 
 ### 5. Signal-Based Services
+
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class DataService {
-  private readonly http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
 
-  // Private signal for internal state
-  private readonly _state = signal<State>({ items: [], loading: false });
+    // Private signal for internal state
+    private readonly _state = signal<State>({ items: [], loading: false });
 
-  // Public read-only computed properties
-  readonly items = computed(() => this._state().items);
-  readonly loading = computed(() => this._state().loading);
+    // Public read-only computed properties
+    readonly items = computed(() => this._state().items);
+    readonly loading = computed(() => this._state().loading);
 
-  loadData(): void {
-    this._state.update(s => ({ ...s, loading: true }));
-    // ... fetch data
-  }
+    loadData(): void {
+        this._state.update((s) => ({ ...s, loading: true }));
+        // ... fetch data
+    }
 }
 ```
 
 ### 6. Reactive Route Parameters (NO route.snapshot)
+
 ```typescript
 // ❌ WRONG - breaks zoneless change detection
 constructor() {
@@ -211,7 +224,9 @@ readonly id = computed(() => this.routeParams()?.get('id'));
 ## Core Services & Utilities
 
 ### AuthService (`@core/services/auth`)
+
 JWT-based authentication with automatic token refresh.
+
 ```typescript
 readonly isAuthenticated = signal<boolean>(false);
 readonly currentUser = signal<User | null>(null);
@@ -220,10 +235,13 @@ logout(): void
 ```
 
 ### StorageService (`@core/services/storage`)
+
 Type-safe localStorage/sessionStorage wrapper.
 
 ### NotificationService (`@core/services/notification`)
+
 PrimeNG MessageService wrapper for toast notifications.
+
 ```typescript
 showSuccess(message: string): void
 showError(message: string): void
@@ -232,49 +250,92 @@ showWarning(message: string): void
 ```
 
 ### TokenRefreshService (`@core/services/token-refresh`)
+
 Handles JWT refresh token logic with retry mechanism.
 
 ## HTTP Interceptors
 
 ### authInterceptor
+
 Automatically adds JWT `Authorization` header to requests.
 
 ### tokenRefreshInterceptor
+
 Intercepts 401 responses, refreshes token, and retries failed request.
 
 ### errorInterceptor
+
 Global error handler for HTTP errors (maps to user-friendly messages).
 
 ## Route Guards
 
 ### authGuard
+
 Redirects to `/auth/login` if not authenticated.
 
 ### permissionGuard
+
 Checks user permissions before allowing route access (configurable via route data).
 
 ## Directives
 
 ### hasPermissionDirective
+
+**Modernized with Angular 20+ `input()` signals**
+
 Conditionally shows/hides elements based on user permissions.
 
+```html
+<!-- Single permission -->
+<button *hasPermission="'user.create'">Create User</button>
+
+<!-- Multiple permissions (requires all) -->
+<button *hasPermission="['user.create', 'user.edit']">Edit User</button>
+
+<!-- Any permission (requires at least one) -->
+<button *hasPermission="['user.view', 'user.list']; mode: 'any'">View Users</button>
+```
+
+**Implementation:**
+
+-   Uses `input.required<string | string[]>()` for the permission parameter
+-   Uses `input<'all' | 'any'>('all')` for the mode parameter
+-   Automatically reacts to permission changes via signals
+
 ### hasRoleDirective
+
+**Modernized with Angular 20+ `input()` signals**
+
 Conditionally shows/hides elements based on user roles.
+
+```html
+<!-- Single role -->
+<div *hasRole="'Admin'">Admin Panel</div>
+
+<!-- Multiple roles (requires at least one) -->
+<div *hasRole="['Admin', 'Manager']">Management Section</div>
+```
+
+**Implementation:**
+
+-   Uses `input.required<string | string[]>()` for the role parameter
+-   Automatically reacts to role changes via signals
 
 ## UI Framework
 
 **PrimeNG 20.2** with **Aura** preset theme configured in `app.config.ts`:
+
 ```typescript
 providePrimeNG({
-  theme: {
-    preset: Aura,
-    options: {
-      prefix: 'p',
-      darkModeSelector: 'class',
-      cssLayer: false
-    }
-  }
-})
+    theme: {
+        preset: Aura,
+        options: {
+            prefix: 'p',
+            darkModeSelector: 'class',
+            cssLayer: false,
+        },
+    },
+});
 ```
 
 Common components: `p-button`, `p-table`, `p-dialog`, `p-toast`, `p-calendar`, `p-dropdown`, etc.
@@ -283,28 +344,29 @@ Common components: `p-button`, `p-table`, `p-dialog`, `p-toast`, `p-calendar`, `
 
 ## TypeScript Configuration
 
-- **Strict mode enabled**: All strict checks on
-- **Target**: ES2022
-- **No `any` types**: Use `unknown` or specific types
-- **No implicit returns**
-- **Strict template checking**
-- **Strict injection parameters**
+-   **Strict mode enabled**: All strict checks on
+-   **Target**: ES2022
+-   **No `any` types**: Use `unknown` or specific types
+-   **No implicit returns**
+-   **Strict template checking**
+-   **Strict injection parameters**
 
 ## Testing
 
-- **Framework**: Karma + Jasmine
-- Use `TestBed` for component/service testing
-- Mock signals using `signal()` in test setup
-- All new code should include tests
+-   **Framework**: Karma + Jasmine
+-   Use `TestBed` for component/service testing
+-   Mock signals using `signal()` in test setup
+-   All new code should include tests
 
 ## Business Domain
 
 Photography studio management system handling:
-- **Clients**: Customer records and contact info
-- **Sessions**: Photo shoot scheduling and tracking
-- **Catalog**: Service packages and pricing
-- **Users**: Staff accounts and permissions
-- **Dashboard**: Overview metrics and quick actions
+
+-   **Clients**: Customer records and contact info
+-   **Sessions**: Photo shoot scheduling and tracking
+-   **Catalog**: Service packages and pricing
+-   **Users**: Staff accounts and permissions
+-   **Dashboard**: Overview metrics and quick actions
 
 ## Critical Rules
 
@@ -321,6 +383,6 @@ Photography studio management system handling:
 
 ## References
 
-- [Angular Official Docs](https://angular.dev)
-- [PrimeNG Components](https://primeng.org)
-- [OpenAPI TypeScript Generator](https://heyapi.vercel.app/openapi-ts/get-started.html)
+-   [Angular Official Docs](https://angular.dev)
+-   [PrimeNG Components](https://primeng.org)
+-   [OpenAPI TypeScript Generator](https://heyapi.vercel.app/openapi-ts/get-started.html)

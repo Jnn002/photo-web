@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, inject, effect, input } from '@angular/core';
 import { AuthService } from '@core/services/auth';
 
 /**
@@ -24,25 +24,16 @@ export class HasPermissionDirective {
     private readonly templateRef = inject(TemplateRef<unknown>);
     private readonly viewContainer = inject(ViewContainerRef);
 
-    private permissions: string | string[] = [];
-    private mode: 'all' | 'any' = 'all';
-
-    @Input()
-    set hasPermission(value: string | string[]) {
-        this.permissions = value;
-        this.updateView();
-    }
-
-    @Input()
-    set hasPermissionMode(value: 'all' | 'any') {
-        this.mode = value;
-        this.updateView();
-    }
+    // ✅ Use input() instead of @Input()
+    readonly hasPermission = input.required<string | string[]>();
+    readonly hasPermissionMode = input<'all' | 'any'>('all');
 
     constructor() {
-        // React to permission changes
+        // React to input changes and permission changes
         effect(() => {
-            // Trigger update when permissions signal changes
+            // Track both inputs and auth permissions
+            this.hasPermission();
+            this.hasPermissionMode();
             this.authService.permissions();
             this.updateView();
         });
@@ -59,14 +50,17 @@ export class HasPermissionDirective {
     }
 
     private checkPermission(): boolean {
-        if (typeof this.permissions === 'string') {
-            return this.authService.hasPermission(this.permissions);
+        const permissions = this.hasPermission();
+        const mode = this.hasPermissionMode();
+
+        if (typeof permissions === 'string') {
+            return this.authService.hasPermission(permissions);
         }
 
-        if (Array.isArray(this.permissions)) {
-            return this.mode === 'all'
-                ? this.authService.hasAllPermissions(this.permissions)
-                : this.authService.hasAnyPermission(this.permissions);
+        if (Array.isArray(permissions)) {
+            return mode === 'all'
+                ? this.authService.hasAllPermissions(permissions)
+                : this.authService.hasAnyPermission(permissions);
         }
 
         return false;

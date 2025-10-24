@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, inject, effect } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, inject, effect, input } from '@angular/core';
 import { AuthService } from '@core/services/auth';
 
 /**
@@ -21,18 +21,14 @@ export class HasRoleDirective {
     private readonly templateRef = inject(TemplateRef<unknown>);
     private readonly viewContainer = inject(ViewContainerRef);
 
-    private roles: string | string[] = [];
-
-    @Input()
-    set hasRole(value: string | string[]) {
-        this.roles = value;
-        this.updateView();
-    }
+    // ✅ Use input() instead of @Input()
+    readonly hasRole = input.required<string | string[]>();
 
     constructor() {
-        // React to role changes
+        // React to input changes and role changes
         effect(() => {
-            // Trigger update when userRoles signal changes
+            // Track input and auth roles
+            this.hasRole();
             this.authService.userRoles();
             this.updateView();
         });
@@ -49,12 +45,14 @@ export class HasRoleDirective {
     }
 
     private checkRole(): boolean {
-        if (typeof this.roles === 'string') {
-            return this.authService.hasRole(this.roles);
+        const roles = this.hasRole();
+
+        if (typeof roles === 'string') {
+            return this.authService.hasRole(roles);
         }
 
-        if (Array.isArray(this.roles)) {
-            return this.roles.some((role) => this.authService.hasRole(role));
+        if (Array.isArray(roles)) {
+            return roles.some((role) => this.authService.hasRole(role));
         }
 
         return false;
