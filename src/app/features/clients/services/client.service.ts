@@ -14,14 +14,11 @@ import {
     updateClientApiV1ClientsClientIdPatch,
     deactivateClientApiV1ClientsClientIdDelete,
     reactivateClientApiV1ClientsClientIdReactivatePut,
+    listSessionsApiV1SessionsGet,
 } from '@generated/sdk.gen';
+import type { SessionPublic } from '@generated/types.gen';
 import { NotificationService } from '@core/services/notification';
-import type {
-    ClientPublic,
-    ClientCreate,
-    ClientUpdate,
-    ClientType,
-} from '../models/client.models';
+import type { ClientPublic, ClientCreate, ClientUpdate, ClientType } from '../models/client.models';
 import type { ClientListState, ClientDetailsState, ClientFilters } from '../models/client.models';
 
 @Injectable({
@@ -293,6 +290,51 @@ export class ClientService {
             loading: false,
             error: null,
         });
+    }
+
+    /**
+     * Get client session statistics
+     * Fetches all sessions for a client and calculates stats
+     */
+    async getClientSessionStats(clientId: number): Promise<{
+        totalSessions: number;
+        completedSessions: number;
+        canceledSessions: number;
+    }> {
+        try {
+            const response = await listSessionsApiV1SessionsGet({
+                query: {
+                    client_id: clientId,
+                    limit: 1000, // Get all sessions (assuming no client has 1000+ sessions)
+                },
+            });
+
+            if (response.data) {
+                const sessions = response.data.items;
+                const totalSessions = sessions.length;
+                const completedSessions = sessions.filter((s) => s.status === 'Completed').length;
+                const canceledSessions = sessions.filter((s) => s.status === 'Canceled').length;
+
+                return {
+                    totalSessions,
+                    completedSessions,
+                    canceledSessions,
+                };
+            }
+
+            return {
+                totalSessions: 0,
+                completedSessions: 0,
+                canceledSessions: 0,
+            };
+        } catch (error) {
+            this.handleError(error, 'Error al obtener estadísticas de sesiones');
+            return {
+                totalSessions: 0,
+                completedSessions: 0,
+                canceledSessions: 0,
+            };
+        }
     }
 
     /**

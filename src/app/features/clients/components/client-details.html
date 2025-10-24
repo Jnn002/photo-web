@@ -9,9 +9,9 @@
                 pTooltip="Volver"
             />
             @if (client(); as clientData) {
-                <h1>{{ clientData.full_name }}</h1>
+            <h1>{{ clientData.full_name }}</h1>
             } @else {
-                <p-skeleton width="300px" height="2rem" />
+            <p-skeleton width="300px" height="2rem" />
             }
         </div>
         <div class="header-actions">
@@ -26,126 +26,141 @@
     </div>
 
     @if (loading()) {
-        <div class="loading-container">
-            <p-skeleton width="100%" height="200px" />
-            <p-skeleton width="100%" height="150px" />
-        </div>
+    <div class="loading-container">
+        <p-skeleton width="100%" height="200px" />
+        <p-skeleton width="100%" height="150px" />
+    </div>
     } @else if (error()) {
-        <div class="error-container">
-            <i class="pi pi-exclamation-circle" style="font-size: 3rem; color: var(--red-500)"></i>
-            <h3>Error al cargar cliente</h3>
-            <p>{{ error() }}</p>
-            <p-button label="Volver" icon="pi pi-arrow-left" (click)="goBack()" />
-        </div>
+    <div class="error-container">
+        <i class="pi pi-exclamation-circle" style="font-size: 3rem; color: var(--red-500)"></i>
+        <h3>Error al cargar cliente</h3>
+        <p>{{ error() }}</p>
+        <p-button label="Volver" icon="pi pi-arrow-left" (click)="goBack()" />
+    </div>
     } @else if (client(); as clientData) {
-        <div class="content-grid">
-            <!-- Client Information Card -->
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Información del Cliente</h2>
+    <div class="content-grid">
+        <!-- Client Information Card -->
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <h2>Información del Cliente</h2>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Tipo de Cliente</label>
+                        <p-tag
+                            [value]="getClientTypeLabel(clientData.client_type)"
+                            [severity]="getClientTypeSeverity(clientData.client_type)"
+                        />
                     </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Tipo de Cliente</label>
-                            <p-tag
-                                [value]="getClientTypeLabel(clientData.client_type)"
-                                [severity]="getClientTypeSeverity(clientData.client_type)"
-                            />
-                        </div>
 
-                        <div class="info-item">
-                            <label>Email</label>
-                            <div class="info-value">
-                                <i class="pi pi-envelope"></i>
-                                <a [href]="'mailto:' + clientData.email">{{ clientData.email }}</a>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <label>Teléfono Principal</label>
-                            <div class="info-value">
-                                <i class="pi pi-phone"></i>
-                                <a [href]="'tel:' + clientData.primary_phone">{{
-                                    clientData.primary_phone
-                                }}</a>
-                            </div>
-                        </div>
-
-                        @if (clientData.secondary_phone) {
-                            <div class="info-item">
-                                <label>Teléfono Secundario</label>
-                                <div class="info-value">
-                                    <i class="pi pi-phone"></i>
-                                    <a [href]="'tel:' + clientData.secondary_phone">{{
-                                        clientData.secondary_phone
-                                    }}</a>
-                                </div>
-                            </div>
-                        }
-
-                        @if (clientData.delivery_address) {
-                            <div class="info-item full-width">
-                                <label>Dirección de Entrega</label>
-                                <div class="info-value">
-                                    <i class="pi pi-map-marker"></i>
-                                    <span>{{ clientData.delivery_address }}</span>
-                                </div>
-                            </div>
-                        }
-
-                        <div class="info-item">
-                            <label>Estado</label>
-                            <p-tag
-                                [value]="getStatusLabel(clientData.status)"
-                                [severity]="getStatusSeverity(clientData.status)"
-                            />
-                        </div>
-
-                        <div class="info-item">
-                            <label>Fecha de Registro</label>
-                            <div class="info-value">
-                                <i class="pi pi-calendar"></i>
-                                <span>{{ formatDate(clientData.created_at) }}</span>
-                            </div>
-                        </div>
-
-                        @if (clientData.notes) {
-                            <div class="info-item full-width">
-                                <label>Notas</label>
-                                <p class="notes-content">{{ clientData.notes }}</p>
-                            </div>
-                        }
-                    </div>
-                </ng-template>
-            </p-card>
-
-            <!-- Statistics Card -->
-            <p-card>
-                <ng-template pTemplate="header">
-                    <div class="card-header">
-                        <h2>Estadísticas</h2>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="content">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Total de Sesiones</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Sesiones Completadas</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Sesiones Canceladas</div>
+                    <div class="info-item">
+                        <label>Email</label>
+                        <div class="info-value">
+                            <i class="pi pi-envelope"></i>
+                            <a [href]="'mailto:' + clientData.email">{{ clientData.email }}</a>
                         </div>
                     </div>
-                </ng-template>
-            </p-card>
-        </div>
+
+                    <div class="info-item">
+                        <label>Teléfono Principal</label>
+                        <div class="info-value">
+                            <i class="pi pi-phone"></i>
+                            <a [href]="'tel:' + clientData.primary_phone">{{
+                                clientData.primary_phone
+                            }}</a>
+                        </div>
+                    </div>
+
+                    @if (clientData.secondary_phone) {
+                    <div class="info-item">
+                        <label>Teléfono Secundario</label>
+                        <div class="info-value">
+                            <i class="pi pi-phone"></i>
+                            <a [href]="'tel:' + clientData.secondary_phone">{{
+                                clientData.secondary_phone
+                            }}</a>
+                        </div>
+                    </div>
+                    } @if (clientData.delivery_address) {
+                    <div class="info-item full-width">
+                        <label>Dirección de Entrega</label>
+                        <div class="info-value">
+                            <i class="pi pi-map-marker"></i>
+                            <span>{{ clientData.delivery_address }}</span>
+                        </div>
+                    </div>
+                    }
+
+                    <div class="info-item">
+                        <label>Estado</label>
+                        <p-tag
+                            [value]="getStatusLabel(clientData.status)"
+                            [severity]="getStatusSeverity(clientData.status)"
+                        />
+                    </div>
+
+                    <div class="info-item">
+                        <label>Fecha de Registro</label>
+                        <div class="info-value">
+                            <i class="pi pi-calendar"></i>
+                            <span>{{ formatDate(clientData.created_at) }}</span>
+                        </div>
+                    </div>
+
+                    @if (clientData.notes) {
+                    <div class="info-item full-width">
+                        <label>Notas</label>
+                        <p class="notes-content">{{ clientData.notes }}</p>
+                    </div>
+                    }
+                </div>
+            </ng-template>
+        </p-card>
+
+        <!-- Statistics Card -->
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <h2>Estadísticas</h2>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+                @if (sessionStats().loading) {
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <p-skeleton width="3rem" height="2rem" />
+                        <div class="stat-label">Total de Sesiones</div>
+                    </div>
+                    <div class="stat-item">
+                        <p-skeleton width="3rem" height="2rem" />
+                        <div class="stat-label">Sesiones Completadas</div>
+                    </div>
+                    <div class="stat-item">
+                        <p-skeleton width="3rem" height="2rem" />
+                        <div class="stat-label">Sesiones Canceladas</div>
+                    </div>
+                </div>
+                } @else {
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ sessionStats().totalSessions }}</div>
+                        <div class="stat-label">Total de Sesiones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ sessionStats().completedSessions }}</div>
+                        <div class="stat-label">Sesiones Completadas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ sessionStats().canceledSessions }}</div>
+                        <div class="stat-label">Sesiones Canceladas</div>
+                    </div>
+                </div>
+                }
+            </ng-template>
+        </p-card>
+    </div>
     }
 </div>

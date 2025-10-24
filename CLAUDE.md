@@ -368,6 +368,44 @@ Photography studio management system handling:
 -   **Users**: Staff accounts and permissions
 -   **Dashboard**: Overview metrics and quick actions
 
+## Recent Improvements (2024)
+
+### Client Statistics Integration
+
+Implemented real session statistics for client detail view:
+
+-   **Service Method**: `ClientService.getClientSessionStats(clientId)` fetches sessions from backend
+-   **Data Source**: Uses `listSessionsApiV1SessionsGet` with `client_id` filter
+-   **Calculated Metrics**:
+    -   Total sessions count
+    -   Completed sessions (status === 'Completed')
+    -   Canceled sessions (status === 'Canceled')
+-   **UI Integration**: Displays real-time stats with loading skeleton states
+-   **Files Modified**:
+    -   `client.service.ts` - Added `getClientSessionStats()` method
+    -   `client-details.ts` - Added `sessionStats` signal and `loadSessionStats()` method
+    -   `client-details.html` - Updated statistics card with dynamic data and loading states
+
+### Directive Modernization
+
+Migrated authentication directives to Angular 20+ patterns:
+
+-   **Updated Directives**:
+    -   `hasPermission` - Uses `input.required<string | string[]>()` instead of `@Input()`
+    -   `hasRole` - Uses `input.required<string | string[]>()` instead of `@Input()`
+-   **Pattern**: Structural directives with signal-based inputs and `effect()` for reactivity
+-   **Files**: `src/app/core/directives/has-permission.directive.ts`, `has-role.directive.ts`
+
+### Dashboard Optimization
+
+Improved dashboard performance and data accuracy:
+
+-   **Removed**: Infinite loop `effect()` in constructor
+-   **Added**: Date filters (year/month selectors) for targeted data loading
+-   **Fixed**: Hardcoded mock metrics replaced with real backend data
+-   **Pattern**: Explicit `loadData()` method call instead of reactive effect
+-   **Files**: `dashboard.ts`, `dashboard.service.ts`, `dashboard.html`
+
 ## Critical Rules
 
 1. **NO NgModules** - This is a standalone-only project

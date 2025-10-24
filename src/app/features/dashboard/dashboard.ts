@@ -1,13 +1,31 @@
-import { Component, ChangeDetectionStrategy, computed, inject, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
+import { Select } from 'primeng/select';
+import { TooltipModule } from 'primeng/tooltip';
 import { DashboardService } from './services/dashboard.service';
+
+interface MonthOption {
+    label: string;
+    value: number;
+}
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule, CardModule, ChartModule, TagModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        CardModule,
+        ChartModule,
+        TagModule,
+        ButtonModule,
+        Select,
+        TooltipModule,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.css',
@@ -20,69 +38,72 @@ export class DashboardComponent {
     readonly metrics = this.dashboardService.metrics;
     readonly sessionStatuses = this.dashboardService.sessionsByStatus;
 
+    // Date filters
+    private readonly currentDate = new Date();
+    readonly selectedYear = signal(this.currentDate.getFullYear());
+    readonly selectedMonth = signal(this.currentDate.getMonth() + 1);
+
+    // Year options (last 3 years + current + next)
+    readonly yearOptions = computed(() => {
+        const current = this.currentDate.getFullYear();
+        return Array.from({ length: 5 }, (_, i) => ({
+            label: (current - 3 + i).toString(),
+            value: current - 3 + i,
+        }));
+    });
+
+    // Month options
+    readonly monthOptions: MonthOption[] = [
+        { label: 'Enero', value: 1 },
+        { label: 'Febrero', value: 2 },
+        { label: 'Marzo', value: 3 },
+        { label: 'Abril', value: 4 },
+        { label: 'Mayo', value: 5 },
+        { label: 'Junio', value: 6 },
+        { label: 'Julio', value: 7 },
+        { label: 'Agosto', value: 8 },
+        { label: 'Septiembre', value: 9 },
+        { label: 'Octubre', value: 10 },
+        { label: 'Noviembre', value: 11 },
+        { label: 'Diciembre', value: 12 },
+    ];
+
     constructor() {
-        effect(() => {
-            this.dashboardService.refresh();
-        });
+        // Load initial data for current month/year
+        this.loadData();
     }
 
-    readonly chartData = computed(() => ({
-        labels: [
-            'Ene',
-            'Feb',
-            'Mar',
-            'Abr',
-            'May',
-            'Jun',
-            'Jul',
-            'Ago',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dic',
-        ],
-        datasets: [
-            {
-                label: 'Sesiones',
-                data: [5, 8, 6, 10, 7, 9, 12, 8, 10, 11, 9, 8],
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                tension: 0.4,
-                fill: true,
-            },
-        ],
-    }));
+    /**
+     * Load dashboard data for selected month/year
+     */
+    loadData(): void {
+        this.dashboardService.getStats(this.selectedYear(), this.selectedMonth()).subscribe();
+    }
 
-    readonly chartOptions = computed(() => ({
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false,
-            },
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-            },
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false,
-                },
-            },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: '#f3f4f6',
-                },
-                ticks: {
-                    stepSize: 2,
-                },
-            },
-        },
-    }));
+    /**
+     * Handle year change
+     */
+    onYearChange(year: number): void {
+        this.selectedYear.set(year);
+        this.loadData();
+    }
 
+    /**
+     * Handle month change
+     */
+    onMonthChange(month: number): void {
+        this.selectedMonth.set(month);
+        this.loadData();
+    }
+
+    /**
+     * Refresh current data
+     */
+    refresh(): void {
+        this.loadData();
+    }
+
+    // Chart configuration for status distribution
     readonly statusChartData = computed(() => {
         const statuses = this.sessionStatuses();
         return {

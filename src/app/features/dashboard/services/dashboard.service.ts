@@ -22,31 +22,27 @@ export class DashboardService {
     readonly metrics = computed(() => {
         const stats = this._stats();
         if (!stats) return null;
-        // TODO: Implementar logica de cambio
+
         return [
             {
                 title: 'Sesiones Activas',
                 value: stats.active_sessions_count,
-                change: '↑ 12% vs. mes anterior',
-                isPositive: true,
+                subtitle: 'No completadas o canceladas',
             },
             {
                 title: 'Sesiones Este Mes',
                 value: stats.sessions_this_month,
-                change: '↓ 8% vs. mes anterior',
-                isPositive: false,
+                subtitle: 'Creadas en el mes actual',
             },
             {
-                title: 'Ingresos Totales',
+                title: 'Ingresos del Mes',
                 value: `Q ${parseFloat(stats.total_revenue_this_month).toFixed(2)}`,
-                change: '↑ 15% vs. mes anterior',
-                isPositive: true,
+                subtitle: 'Pagos recibidos',
             },
             {
                 title: 'Balance Pendiente',
                 value: `Q ${parseFloat(stats.pending_balance).toFixed(2)}`,
-                change: '↓ 5% vs. mes anterior',
-                isPositive: false,
+                subtitle: 'Por cobrar',
             },
         ];
     });

@@ -42,6 +42,19 @@ export class ClientDetailsComponent {
 
     readonly clientId = signal<number | null>(null);
 
+    // Session statistics
+    readonly sessionStats = signal<{
+        totalSessions: number;
+        completedSessions: number;
+        canceledSessions: number;
+        loading: boolean;
+    }>({
+        totalSessions: 0,
+        completedSessions: 0,
+        canceledSessions: 0,
+        loading: false,
+    });
+
     // Helper functions for template
     readonly getClientTypeLabel = getClientTypeLabel;
     readonly getClientTypeSeverity = getClientTypeSeverity;
@@ -58,8 +71,23 @@ export class ClientDetailsComponent {
                 if (!isNaN(clientIdNum)) {
                     this.clientId.set(clientIdNum);
                     this.clientService.loadClient(clientIdNum);
+                    this.loadSessionStats(clientIdNum);
                 }
             }
+        });
+    }
+
+    /**
+     * Load session statistics for the client
+     */
+    private async loadSessionStats(clientId: number): Promise<void> {
+        this.sessionStats.update((state) => ({ ...state, loading: true }));
+
+        const stats = await this.clientService.getClientSessionStats(clientId);
+
+        this.sessionStats.set({
+            ...stats,
+            loading: false,
         });
     }
 

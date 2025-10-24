@@ -1,75 +1,112 @@
 <div class="dashboard-container">
-  <div class="dashboard-header">
-    <h1 class="page-title">Dashboard</h1>
-    <p class="page-subtitle">Resumen general del estudio fotográfico</p>
-  </div>
+    <div class="dashboard-header">
+        <div class="header-left">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Resumen general del estudio fotográfico</p>
+        </div>
 
-  @if (loading()) {
+        <div class="header-actions">
+            <!-- Date Filters -->
+            <div class="date-filters">
+                <p-select
+                    [options]="monthOptions"
+                    [(ngModel)]="selectedMonth"
+                    (onChange)="onMonthChange($event.value)"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccionar mes"
+                    styleClass="filter-select"
+                />
+
+                <p-select
+                    [options]="yearOptions()"
+                    [(ngModel)]="selectedYear"
+                    (onChange)="onYearChange($event.value)"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccionar año"
+                    styleClass="filter-select"
+                />
+            </div>
+
+            <p-button
+                icon="pi pi-refresh"
+                (onClick)="refresh()"
+                [loading]="loading()"
+                severity="secondary"
+                [outlined]="true"
+                pTooltip="Refrescar datos"
+            />
+        </div>
+    </div>
+
+    @if (loading()) {
     <div class="loading-state">
-      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-      <p>Cargando estadísticas...</p>
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+        <p>Cargando estadísticas...</p>
     </div>
-  } @else if (error()) {
+    } @else if (error()) {
     <div class="error-state">
-      <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ef4444"></i>
-      <p>{{ error() }}</p>
+        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ef4444"></i>
+        <p>{{ error() }}</p>
     </div>
-  } @else if (metrics()) {
+    } @else if (metrics()) {
     <!-- Metrics Cards -->
     <div class="metrics-grid">
-      @for (metric of metrics(); track metric.title) {
+        @for (metric of metrics(); track metric.title) {
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-title">{{ metric.title }}</span>
-          </div>
-          <div class="metric-value">{{ metric.value }}</div>
-          <div class="metric-change" [class.positive]="metric.isPositive" [class.negative]="!metric.isPositive">
-            {{ metric.change }}
-          </div>
+            <div class="metric-header">
+                <span class="metric-title">{{ metric.title }}</span>
+            </div>
+            <div class="metric-value">{{ metric.value }}</div>
+            <div class="metric-subtitle">{{ metric.subtitle }}</div>
         </div>
-      }
+        }
     </div>
-  }
-
-  @if (!loading() && !error() && sessionStatuses()) {
+    } @if (!loading() && !error() && sessionStatuses() && sessionStatuses().length > 0) {
     <!-- Charts Section -->
     <div class="charts-grid">
-      <!-- Sessions by Status -->
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3 class="chart-title">Sesiones por Estado</h3>
+        <!-- Sessions by Status -->
+        <div class="chart-card full-width">
+            <div class="chart-header">
+                <h3 class="chart-title">Distribución de Sesiones por Estado</h3>
+                <p class="chart-subtitle">
+                    Período: {{ monthOptions[selectedMonth() - 1]?.label }} {{ selectedYear() }}
+                </p>
+            </div>
+            <div class="chart-content">
+                <div class="status-chart-container">
+                    <p-chart
+                        type="bar"
+                        [data]="statusChartData()"
+                        [options]="statusChartOptions()"
+                    />
+                </div>
+                <div class="status-legend">
+                    @for (status of sessionStatuses(); track status.label) {
+                    <div class="status-item">
+                        <span class="status-badge" [style.background-color]="status.color">
+                            {{ status.count }}
+                        </span>
+                        <span class="status-label"
+                            >{{ status.label }} ({{ status.percentage }}%)</span
+                        >
+                    </div>
+                    }
+                </div>
+            </div>
         </div>
-        <div class="chart-content">
-          <div class="status-chart-container">
-            <p-chart type="bar" [data]="statusChartData()" [options]="statusChartOptions()" />
-          </div>
-          <div class="status-legend">
-            @for (status of sessionStatuses(); track status.label) {
-              <div class="status-item">
-                <span class="status-badge" [style.background-color]="status.color">
-                  {{ status.count }} ({{ status.percentage }}%)
-                </span>
-                <span class="status-label">{{ status.label }}</span>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <!-- Monthly Trend -->
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3 class="chart-title">Tendencia Mensual</h3>
-        </div>
-        <div class="chart-content">
-          <div class="trend-chart-container">
-            <p-chart type="line" [data]="chartData()" [options]="chartOptions()" />
-          </div>
-          <div class="chart-footer">
-            <span class="chart-note">Gráfico de tendencia mensual</span>
-          </div>
-        </div>
-      </div>
     </div>
-  }
+    } @else if (!loading() && !error()) {
+    <!-- Empty State -->
+    <div class="chart-card full-width">
+        <div class="empty-chart-state">
+            <i class="pi pi-chart-bar"></i>
+            <p>No hay sesiones registradas para este período</p>
+            <p class="empty-subtitle">
+                {{ monthOptions[selectedMonth() - 1]?.label }} {{ selectedYear() }}
+            </p>
+        </div>
+    </div>
+    }
 </div>

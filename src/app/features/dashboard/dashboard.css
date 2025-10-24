@@ -1,185 +1,255 @@
 .dashboard-container {
-  max-width: 1400px;
-  margin: 0 auto;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .dashboard-header {
-  margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.header-left {
+    flex: 1;
+    min-width: 250px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.date-filters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-select {
+    min-width: 140px;
 }
 
 .page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
 }
 
 .page-subtitle {
-  font-size: 1rem;
-  color: #6b7280;
-  margin: 0;
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
 }
 
 .loading-state,
 .error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1rem;
 }
 
 .loading-state p,
 .error-state p {
-  font-size: 1rem;
-  color: #6b7280;
-  margin: 0;
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
 }
 
 /* Metrics Grid */
 .metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .metric-card {
-  background: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
-  transition: all 0.2s ease;
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
 }
 
 .metric-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
 }
 
 .metric-header {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .metric-title {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 500;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
 }
 
 .metric-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
 }
 
-.metric-change {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.metric-change.positive {
-  color: #10b981;
-}
-
-.metric-change.negative {
-  color: #ef4444;
+.metric-subtitle {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 400;
 }
 
 /* Charts Grid */
 .charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 1.5rem;
+    display: grid;
+    gap: 1.5rem;
 }
 
 .chart-card {
-  background: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
 }
 
 .chart-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .chart-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.chart-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
 }
 
 .chart-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.status-chart-container,
-.trend-chart-container {
-  height: 300px;
+.status-chart-container {
+    height: 320px;
 }
 
 .status-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
 }
 
 .status-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    min-width: 3rem;
+    text-align: center;
 }
 
 .status-label {
-  font-size: 0.875rem;
-  color: #4b5563;
+    font-size: 0.875rem;
+    color: #4b5563;
 }
 
 .chart-footer {
-  text-align: center;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
 }
 
 .chart-note {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-style: italic;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Empty state for charts */
+.empty-chart-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    gap: 0.5rem;
+}
+
+.empty-chart-state i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 0.5rem;
+}
+
+.empty-chart-state p {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.empty-subtitle {
+    font-size: 0.75rem;
+    color: #d1d5db;
+    font-weight: 500;
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .date-filters {
+        flex: 1;
+    }
+
+    .filter-select {
+        flex: 1;
+    }
+}
 @media (max-width: 768px) {
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
 
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
 
-  .page-title {
-    font-size: 1.5rem;
-  }
+    .page-title {
+        font-size: 1.5rem;
+    }
 
-  .metric-value {
-    font-size: 1.5rem;
-  }
+    .metric-value {
+        font-size: 1.5rem;
+    }
 }
