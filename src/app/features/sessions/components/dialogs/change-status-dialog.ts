@@ -36,6 +36,15 @@ export class ChangeStatusDialogComponent {
     readonly sessionData = signal<SessionDetail | null>(null);
 
     /**
+     * Convierte balance_amount (que puede venir como string o number) a number
+     */
+    private parseBalance(amount: number | string): number {
+        if (typeof amount === 'number') return amount;
+        const parsed = parseFloat(amount);
+        return isNaN(parsed) ? 0 : parsed;
+    }
+
+    /**
      * Obtiene mensaje de advertencia si Completed no está disponible
      */
     readonly getCompletedWarning = computed(() => {
@@ -44,8 +53,10 @@ export class ChangeStatusDialogComponent {
 
         // Check if Completed is in valid transitions but balance is pending
         const validTransitions: SessionStatus[] = this.config.data.validTransitions || [];
-        if (validTransitions.includes(SessionStatus.COMPLETED) && session.balance_amount > 0) {
-            return `No se puede completar la sesión. Balance pendiente: Q ${session.balance_amount.toFixed(2)}`;
+        const balance = this.parseBalance(session.balance_amount);
+
+        if (validTransitions.includes(SessionStatus.COMPLETED) && balance > 0) {
+            return `No se puede completar la sesión. Balance pendiente: Q ${balance.toFixed(2)}`;
         }
         return '';
     });
@@ -59,7 +70,9 @@ export class ChangeStatusDialogComponent {
         const filteredTransitions = validTransitions.filter((status) => {
             if (status === SessionStatus.COMPLETED) {
                 const session = this.sessionData();
-                return session ? session.balance_amount === 0 : false;
+                if (!session) return false;
+                const balance = this.parseBalance(session.balance_amount);
+                return balance === 0;
             }
             return true;
         });
