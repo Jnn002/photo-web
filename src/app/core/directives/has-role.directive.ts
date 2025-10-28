@@ -21,7 +21,7 @@ export class HasRoleDirective {
     private readonly templateRef = inject(TemplateRef<unknown>);
     private readonly viewContainer = inject(ViewContainerRef);
 
-    // ✅ Use input() instead of @Input()
+    //  Use input() instead of @Input()
     readonly hasRole = input.required<string | string[]>();
 
     constructor() {

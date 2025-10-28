@@ -3,6 +3,7 @@
  *
  * Manages client data with signals and integrates with the backend API.
  * Follows Angular 20+ best practices with signals-based state management.
+ * Implements caching strategy to reduce backend calls.
  */
 
 import { Injectable, signal, computed, inject } from '@angular/core';
@@ -18,6 +19,7 @@ import {
 } from '@generated/sdk.gen';
 import type { SessionPublic } from '@generated/types.gen';
 import { NotificationService } from '@core/services/notification';
+import { CacheService } from '@core/services/cache';
 import type { ClientPublic, ClientCreate, ClientUpdate, ClientType } from '../models/client.models';
 import type { ClientListState, ClientDetailsState, ClientFilters } from '../models/client.models';
 
@@ -26,6 +28,14 @@ import type { ClientListState, ClientDetailsState, ClientFilters } from '../mode
 })
 export class ClientService {
     private readonly notificationService = inject(NotificationService);
+    private readonly cacheService = inject(CacheService);
+
+    // Cache configuration
+    private readonly CACHE_TTL = {
+        list: 3 * 60 * 1000, // 3 minutes
+        detail: 5 * 60 * 1000, // 5 minutes
+        stats: 10 * 60 * 1000, // 10 minutes
+    };
 
     // Private signals for internal state management
     private readonly _listState = signal<ClientListState>({
@@ -66,12 +76,52 @@ export class ClientService {
     readonly detailsLoading = computed(() => this._detailsState().loading);
     readonly detailsError = computed(() => this._detailsState().error);
 
+    // Last update timestamp for UI display
+    readonly lastUpdate = signal<Date | null>(null);
+
+    /**
+     * Build cache key for list queries
+     */
+    private buildListCacheKey(
+        filters: ClientFilters,
+        pagination: { limit: number; offset: number }
+    ): string {
+        const filterKey = `${filters.activeOnly}-${filters.clientType ?? 'all'}-${filters.search}`;
+        return `clients:list:${filterKey}:${pagination.limit}:${pagination.offset}`;
+    }
+
+    /**
+     * Build cache key for client details
+     */
+    private buildDetailCacheKey(clientId: number): string {
+        return `clients:detail:${clientId}`;
+    }
+
     /**
      * Load clients with current filters and pagination
+     * @param forceRefresh - If true, bypass cache and fetch from server
      */
-    async loadClients(): Promise<void> {
+    async loadClients(forceRefresh = false): Promise<void> {
         const currentState = this._listState();
+        const cacheKey = this.buildListCacheKey(currentState.filters, currentState.pagination);
 
+        // Try cache first if not forcing refresh
+        if (!forceRefresh) {
+            const cached = this.cacheService.get<{ items: ClientPublic[]; total: number }>(
+                cacheKey
+            );
+            if (cached) {
+                this._listState.update((state) => ({
+                    ...state,
+                    items: cached.items,
+                    total: cached.total,
+                    loading: false,
+                }));
+                return;
+            }
+        }
+
+        // Fetch from server
         this._listState.update((state) => ({
             ...state,
             loading: true,
@@ -90,12 +140,19 @@ export class ClientService {
             });
 
             if (response.data) {
+                // Cache the response
+                this.cacheService.set(cacheKey, response.data, {
+                    ttl: this.CACHE_TTL.list,
+                });
+
                 this._listState.update((state) => ({
                     ...state,
                     items: response.data.items,
                     total: response.data.total,
                     loading: false,
                 }));
+
+                this.lastUpdate.set(new Date());
             }
         } catch (error) {
             const errorMessage = this.handleError(error, 'Error al cargar clientes');
@@ -109,8 +166,26 @@ export class ClientService {
 
     /**
      * Load a single client by ID
+     * @param clientId - Client ID to load
+     * @param forceRefresh - If true, bypass cache and fetch from server
      */
-    async loadClient(clientId: number): Promise<void> {
+    async loadClient(clientId: number, forceRefresh = false): Promise<void> {
+        const cacheKey = this.buildDetailCacheKey(clientId);
+
+        // Try cache first if not forcing refresh
+        if (!forceRefresh) {
+            const cached = this.cacheService.get<ClientPublic>(cacheKey);
+            if (cached) {
+                this._detailsState.update((state) => ({
+                    ...state,
+                    client: cached,
+                    loading: false,
+                }));
+                return;
+            }
+        }
+
+        // Fetch from server
         this._detailsState.update((state) => ({
             ...state,
             loading: true,
@@ -123,6 +198,11 @@ export class ClientService {
             });
 
             if (response.data) {
+                // Cache the response
+                this.cacheService.set(cacheKey, response.data, {
+                    ttl: this.CACHE_TTL.detail,
+                });
+
                 this._detailsState.update((state) => ({
                     ...state,
                     client: response.data,
@@ -150,7 +230,11 @@ export class ClientService {
 
             if (response.data) {
                 this.notificationService.showSuccess('Cliente creado exitosamente');
-                await this.loadClients(); // Refresh the list
+
+                // Invalidate list cache
+                this.cacheService.invalidatePattern('clients:list:*');
+
+                await this.loadClients(true); // Force refresh
                 return response.data;
             }
             return null;
@@ -172,9 +256,14 @@ export class ClientService {
 
             if (response.data) {
                 this.notificationService.showSuccess('Cliente actualizado exitosamente');
-                await this.loadClients(); // Refresh the list
+
+                // Invalidate both list and detail caches
+                this.cacheService.invalidatePattern('clients:list:*');
+                this.cacheService.invalidate(this.buildDetailCacheKey(clientId));
+
+                await this.loadClients(true); // Force refresh list
                 if (this._detailsState().client?.id === clientId) {
-                    await this.loadClient(clientId); // Refresh details if viewing this client
+                    await this.loadClient(clientId, true); // Force refresh details if viewing this client
                 }
                 return response.data;
             }
@@ -196,9 +285,14 @@ export class ClientService {
 
             if (response.data) {
                 this.notificationService.showSuccess('Cliente desactivado exitosamente');
-                await this.loadClients(); // Refresh the list
+
+                // Invalidate caches
+                this.cacheService.invalidatePattern('clients:list:*');
+                this.cacheService.invalidate(this.buildDetailCacheKey(clientId));
+
+                await this.loadClients(true); // Force refresh list
                 if (this._detailsState().client?.id === clientId) {
-                    await this.loadClient(clientId); // Refresh details if viewing this client
+                    await this.loadClient(clientId, true); // Force refresh details if viewing this client
                 }
                 return true;
             }
@@ -220,9 +314,14 @@ export class ClientService {
 
             if (response.data) {
                 this.notificationService.showSuccess('Cliente reactivado exitosamente');
-                await this.loadClients(); // Refresh the list
+
+                // Invalidate caches
+                this.cacheService.invalidatePattern('clients:list:*');
+                this.cacheService.invalidate(this.buildDetailCacheKey(clientId));
+
+                await this.loadClients(true); // Force refresh list
                 if (this._detailsState().client?.id === clientId) {
-                    await this.loadClient(clientId); // Refresh details if viewing this client
+                    await this.loadClient(clientId, true); // Force refresh details if viewing this client
                 }
                 return true;
             }
@@ -248,7 +347,8 @@ export class ClientService {
                 offset: 0, // Reset to first page when filters change
             },
         }));
-        this.loadClients();
+        // Force refresh when filters change to get new data
+        this.loadClients(true);
     }
 
     /**
@@ -259,6 +359,7 @@ export class ClientService {
             ...state,
             pagination: { limit, offset },
         }));
+        // Normal load (will use cache if available)
         this.loadClients();
     }
 
@@ -278,7 +379,8 @@ export class ClientService {
                 offset: 0,
             },
         }));
-        this.loadClients();
+        // Force refresh to get all data
+        this.loadClients(true);
     }
 
     /**

@@ -15,12 +15,12 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
-            // ✅ Solo interceptar errores 401 (Unauthorized)
+            //  Solo interceptar errores 401 (Unauthorized)
             if (error.status !== 401) {
                 return throwError(() => error);
             }
 
-            // ✅ No intentar refresh en endpoints de auth
+            //  No intentar refresh en endpoints de auth
             if (
                 req.url.includes('/auth/login') ||
                 req.url.includes('/auth/refresh') ||
@@ -29,7 +29,7 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req, next) => {
                 return throwError(() => error);
             }
 
-            // ✅ Si ya está refrescando, esperar al resultado
+            //  Si ya está refrescando, esperar al resultado
             if (tokenRefreshService.isRefreshing()) {
                 return tokenRefreshService.waitForTokenRefresh().pipe(
                     switchMap((newToken) => {
@@ -44,11 +44,11 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req, next) => {
                 );
             }
 
-            // ✅ Iniciar proceso de refresh
+            //  Iniciar proceso de refresh
             return tokenRefreshService.refreshAccessToken().pipe(
                 switchMap((response) => {
                     if (response && response.access_token) {
-                        // ✅ Reintentar request original con nuevo token
+                        //  Reintentar request original con nuevo token
                         const clonedReq = req.clone({
                             setHeaders: {
                                 Authorization: `Bearer ${response.access_token}`,
@@ -57,11 +57,11 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req, next) => {
                         return next(clonedReq);
                     }
 
-                    // ❌ Refresh falló, propagar error
+                    //  Refresh falló, propagar error
                     return throwError(() => error);
                 }),
                 catchError((refreshError) => {
-                    // ❌ Error en refresh, propagar para que errorInterceptor maneje el logout
+                    //  Error en refresh, propagar para que errorInterceptor maneje el logout
                     return throwError(() => refreshError);
                 })
             );

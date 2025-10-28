@@ -58,6 +58,21 @@
     gap: 0.5rem;
 }
 
+.last-update-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    background: var(--surface-50);
+    border-top: 1px solid var(--surface-border);
+}
+
+.last-update-info i {
+    font-size: 0.9rem;
+}
+
 .table-section {
     background: var(--surface-card);
     border-radius: 8px;

@@ -24,7 +24,6 @@ export class HasPermissionDirective {
     private readonly templateRef = inject(TemplateRef<unknown>);
     private readonly viewContainer = inject(ViewContainerRef);
 
-    // ✅ Use input() instead of @Input()
     readonly hasPermission = input.required<string | string[]>();
     readonly hasPermissionMode = input<'all' | 'any'>('all');
 

@@ -1,6 +1,15 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError, catchError, tap, switchMap, filter, take } from 'rxjs';
+import {
+    Observable,
+    BehaviorSubject,
+    throwError,
+    catchError,
+    tap,
+    switchMap,
+    filter,
+    take,
+} from 'rxjs';
 import { environment } from '@environments/environment';
 import { StorageService } from './storage';
 import type { TokenResponse } from '@generated/types.gen';
@@ -8,7 +17,7 @@ import type { TokenResponse } from '@generated/types.gen';
 /**
  * Token Refresh Service
  *
- * Gestiona el estado del refresh token usando signals de Angular 20+.
+ * Gestiona el estado del refresh token usando signals
  * Garantiza que solo se ejecute un refresh a la vez y coordina múltiples requests.
  * PREVIENE loops infinitos con contador de intentos.
  */
@@ -19,17 +28,17 @@ export class TokenRefreshService {
     private readonly http = inject(HttpClient);
     private readonly storage = inject(StorageService);
 
-    // ✅ Signal para estado de refresh (privado)
+    // Signal para estado de refresh (privado)
     private readonly _isRefreshing = signal(false);
 
-    // ✅ BehaviorSubject para coordinar múltiples requests esperando el mismo refresh
+    // BehaviorSubject para coordinar múltiples requests esperando el mismo refresh
     private readonly refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-    // ✅ Contador de intentos fallidos para prevenir loops infinitos
+    // Contador de intentos fallidos para prevenir loops infinitos
     private readonly _failedAttempts = signal(0);
     private readonly MAX_FAILED_ATTEMPTS = 2;
 
-    // ✅ Public readonly signal
+    // Public readonly signal
     readonly isRefreshing = this._isRefreshing.asReadonly();
     readonly failedAttempts = this._failedAttempts.asReadonly();
 
@@ -39,7 +48,7 @@ export class TokenRefreshService {
      * PREVIENE loops infinitos con límite de intentos fallidos.
      */
     refreshAccessToken(): Observable<TokenResponse | null> {
-        // ❌ Si ya superamos el límite de intentos fallidos, no intentar más
+        //  Si ya superamos el límite de intentos fallidos, no intentar más
         if (this._failedAttempts() >= this.MAX_FAILED_ATTEMPTS) {
             console.error('Max refresh attempts reached. Forcing logout.');
             return throwError(() => new Error('Max refresh attempts exceeded'));
@@ -63,14 +72,14 @@ export class TokenRefreshService {
             })
             .pipe(
                 tap((response) => {
-                    // ✅ Actualizar tokens en storage
+                    //  Actualizar tokens en storage
                     this.storage.setAccessToken(response.access_token);
                     this.storage.setRefreshToken(response.refresh_token);
 
-                    // ✅ Notificar a requests esperando
+                    // Notificar a requests esperando
                     this.refreshTokenSubject.next(response.access_token);
 
-                    // ✅ Resetear estado y contador
+                    // Resetear estado y contador
                     this._isRefreshing.set(false);
                     this._failedAttempts.set(0); // Reiniciar contador en éxito
 
@@ -79,10 +88,10 @@ export class TokenRefreshService {
                 catchError((error) => {
                     console.error('Token refresh failed:', error);
 
-                    // ✅ Incrementar contador de fallos
+                    //  Incrementar contador de fallos
                     this._failedAttempts.update((count) => count + 1);
 
-                    // ✅ Resetear estado
+                    // Resetear estado
                     this._isRefreshing.set(false);
                     this.refreshTokenSubject.next(null);
 

@@ -5,7 +5,7 @@
  * Features: search, filter, pagination, and CRUD operations.
  */
 
-import { Component, ChangeDetectionStrategy, inject, effect, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService } from 'primeng/api';
 
 import { ClientService } from './services/client.service';
@@ -40,6 +41,7 @@ import {
         Select,
         TagModule,
         ConfirmDialogModule,
+        TooltipModule,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ConfirmationService],
@@ -47,9 +49,11 @@ import {
     styleUrl: './clients.css',
 })
 export class ClientsComponent {
-    private readonly clientService = inject(ClientService);
     private readonly router = inject(Router);
     private readonly confirmationService = inject(ConfirmationService);
+
+    // Public service reference for template access
+    readonly clientService = inject(ClientService);
 
     // Expose service state via computed
     readonly clients = this.clientService.items;
@@ -71,10 +75,30 @@ export class ClientsComponent {
     readonly getStatusLabel = getStatusLabel;
     readonly getStatusSeverity = getStatusSeverity;
 
-    // Load clients on component initialization
-    constructor() {
-        // Load initial data
-        this.clientService.loadClients();
+    /**
+     * Format last update timestamp for display
+     */
+    formatLastUpdate(): string {
+        const lastUpdate = this.clientService.lastUpdate();
+        if (!lastUpdate) return '';
+
+        const now = new Date();
+        const diff = now.getTime() - lastUpdate.getTime();
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+
+        if (seconds < 60) return 'hace unos segundos';
+        if (minutes < 60) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+        if (hours < 24) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
+
+        return lastUpdate.toLocaleString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
     }
 
     /**
@@ -164,10 +188,10 @@ export class ClientsComponent {
     }
 
     /**
-     * Refresh the client list
+     * Refresh the client list (force reload from server)
      */
     refresh(): void {
-        this.clientService.loadClients();
+        this.clientService.loadClients(true);
     }
 
     /**
