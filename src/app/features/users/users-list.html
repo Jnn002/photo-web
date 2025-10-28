@@ -1,0 +1,183 @@
+<div class="users-list-container">
+    <!-- Header with title and actions -->
+    <div class="list-header">
+        <div class="header-content">
+            <h1>Gestión de Usuarios</h1>
+            <p class="subtitle">Administra los usuarios de la plataforma</p>
+        </div>
+        <div class="header-actions">
+            <p-button
+                label="Enviar Invitación"
+                icon="pi pi-send"
+                (onClick)="openInvitationDialog()"
+            />
+        </div>
+    </div>
+
+    <!-- Search and filters toolbar -->
+    <div class="toolbar">
+        <div class="search-container">
+            <span class="p-input-icon-left w-full">
+                <i class="pi pi-search"></i>
+                <input
+                    pInputText
+                    type="text"
+                    placeholder="Buscar por nombre o email..."
+                    [(ngModel)]="searchTerm"
+                    class="w-full"
+                />
+            </span>
+        </div>
+        <p-button
+            icon="pi pi-refresh"
+            [outlined]="true"
+            (onClick)="refreshUsers()"
+            [loading]="loading()"
+            pTooltip="Actualizar lista"
+            tooltipPosition="left"
+        />
+    </div>
+
+    <!-- Users table -->
+    <div class="table-container">
+        <p-table
+            [value]="filteredUsers()"
+            [loading]="loading()"
+            responsiveLayout="scroll"
+            styleClass="p-datatable-striped"
+        >
+            <!-- Loading template -->
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                </tr>
+            </ng-template>
+
+            <!-- Table header -->
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Roles</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+
+            <!-- Table body -->
+            <ng-template pTemplate="body" let-user>
+                <tr>
+                    <!-- ID -->
+                    <td>{{ user.id }}</td>
+
+                    <!-- Name -->
+                    <td>{{ user.full_name }}</td>
+
+                    <!-- Email -->
+                    <td>{{ user.email }}</td>
+
+                    <!-- Phone -->
+                    <td>{{ user.phone || '-' }}</td>
+
+                    <!-- Roles (badges) -->
+                    <td>
+                        <div class="roles-badges">
+                            @for (roleName of getUserRoles(user); track roleName) {
+                                <p-badge
+                                    [value]="getRoleDisplayName(roleName)"
+                                    [severity]="getRoleBadgeSeverity(roleName)"
+                                />
+                            }
+                            @if (getUserRoles(user).length === 0) {
+                                <span class="text-muted">Sin roles</span>
+                            }
+                        </div>
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                        <p-badge
+                            [value]="getStatusText(user.status)"
+                            [severity]="getStatusBadgeSeverity(user.status)"
+                        />
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                        <div class="action-buttons">
+                            <p-button
+                                icon="pi pi-eye"
+                                [outlined]="true"
+                                severity="info"
+                                size="small"
+                                (onClick)="viewUser(user.id)"
+                                pTooltip="Ver detalles"
+                            />
+                            <p-button
+                                icon="pi pi-pencil"
+                                [outlined]="true"
+                                severity="secondary"
+                                size="small"
+                                (onClick)="editUser(user.id)"
+                                pTooltip="Editar usuario"
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <!-- Empty message -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center">
+                        @if (searchTerm()) {
+                            <div class="empty-state">
+                                <i class="pi pi-search" style="font-size: 3rem; color: #ccc;"></i>
+                                <p>No se encontraron usuarios que coincidan con "{{ searchTerm() }}"</p>
+                            </div>
+                        } @else {
+                            <div class="empty-state">
+                                <i class="pi pi-users" style="font-size: 3rem; color: #ccc;"></i>
+                                <p>No hay usuarios registrados</p>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Total count -->
+    @if (!loading() && filteredUsers().length > 0) {
+        <div class="table-footer">
+            <span class="total-count">
+                Total: {{ filteredUsers().length }} usuario(s)
+                @if (searchTerm()) {
+                    de {{ total() }}
+                }
+            </span>
+        </div>
+    }
+</div>
+
+<!-- Send Invitation Dialog -->
+<app-send-invitation-dialog
+    [visible]="showInvitationDialog()"
+    (onClose)="closeInvitationDialog()"
+    (onSuccess)="onInvitationSent()"
+/>
+
+<!-- Edit User Dialog -->
+<app-user-form-dialog
+    [visible]="showEditDialog()"
+    [userId]="selectedUserId()"
+    (onClose)="closeEditDialog()"
+    (onSuccess)="onUserUpdated()"
+/>

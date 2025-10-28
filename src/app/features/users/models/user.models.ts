@@ -19,6 +19,18 @@ export type RolePublic = GeneratedRolePublic;
 export type PaginatedResponseUserPublic = GeneratedPaginatedResponseUserPublic;
 
 /**
+ * Paginated response for users with roles (from /with-roles endpoint)
+ * This type matches the structure returned by the /api/v1/users/with-roles endpoint
+ */
+export interface PaginatedResponseUserWithRoles {
+    items: UserWithRoles[];
+    total: number;
+    limit: number;
+    offset: number;
+    has_more: boolean;
+}
+
+/**
  * User filter options for the user list component
  */
 export interface UserFilters {
@@ -86,3 +98,13 @@ export const ROLE_NAMES = {
 } as const;
 
 export type RoleName = (typeof ROLE_NAMES)[keyof typeof ROLE_NAMES];
+
+// Export invitation-related models
+export type {
+    InvitationCreate,
+    InvitationResponse,
+    InvitationValidateResponse,
+    InvitationResend,
+    InvitationState,
+    RegistrationData,
+} from './invitation.models';

@@ -1,0 +1,141 @@
+<p-dialog
+    [header]="'Editar Usuario'"
+    [visible]="visible()"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="user-form-dialog"
+    (onHide)="handleClose()"
+>
+    <!-- Loading skeleton -->
+    @if (loadingUser()) {
+        <div class="loading-skeleton">
+            <div class="field">
+                <p-skeleton width="8rem" height="1rem" />
+                <p-skeleton width="100%" height="2.5rem" />
+            </div>
+            <div class="field">
+                <p-skeleton width="8rem" height="1rem" />
+                <p-skeleton width="100%" height="2.5rem" />
+            </div>
+            <div class="field">
+                <p-skeleton width="8rem" height="1rem" />
+                <p-skeleton width="100%" height="2.5rem" />
+            </div>
+        </div>
+    }
+
+    <!-- User form -->
+    @if (!loadingUser()) {
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+            <!-- Full Name -->
+            <div class="field">
+                <label for="full_name">Nombre Completo *</label>
+                <input
+                    pInputText
+                    id="full_name"
+                    formControlName="full_name"
+                    type="text"
+                    placeholder="Nombre completo del usuario"
+                    class="w-full"
+                    [class.ng-invalid]="hasFieldError('full_name')"
+                />
+                @if (hasFieldError('full_name')) {
+                    <small class="p-error">{{ getFieldError('full_name') }}</small>
+                }
+            </div>
+
+            <!-- Email -->
+            <div class="field">
+                <label for="email">Email *</label>
+                <input
+                    pInputText
+                    id="email"
+                    formControlName="email"
+                    type="email"
+                    placeholder="usuario@ejemplo.com"
+                    class="w-full"
+                    [class.ng-invalid]="hasFieldError('email')"
+                />
+                @if (hasFieldError('email')) {
+                    <small class="p-error">{{ getFieldError('email') }}</small>
+                }
+            </div>
+
+            <!-- Phone -->
+            <div class="field">
+                <label for="phone">Teléfono</label>
+                <input
+                    pInputText
+                    id="phone"
+                    formControlName="phone"
+                    type="tel"
+                    placeholder="Número de teléfono (opcional)"
+                    class="w-full"
+                />
+            </div>
+
+            <!-- Status -->
+            <div class="field">
+                <label for="status">Estado *</label>
+                <p-select
+                    id="status"
+                    formControlName="status"
+                    [options]="statusOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Selecciona el estado"
+                    styleClass="w-full"
+                />
+                @if (hasFieldError('status')) {
+                    <small class="p-error">{{ getFieldError('status') }}</small>
+                }
+            </div>
+
+            <!-- Roles (Multiple Selection) -->
+            <div class="field">
+                <label>Roles *</label>
+                <div class="roles-selection">
+                    @for (roleOption of roleOptions(); track roleOption.value) {
+                        <div class="role-checkbox">
+                            <input
+                                type="checkbox"
+                                [id]="'role-' + roleOption.value"
+                                [value]="roleOption.value"
+                                [checked]="userForm.get('roles')?.value?.includes(roleOption.value)"
+                                (change)="onRoleChange(roleOption.value, $event)"
+                            />
+                            <label [for]="'role-' + roleOption.value">{{ roleOption.label }}</label>
+                        </div>
+                    }
+                </div>
+                @if (hasFieldError('roles')) {
+                    <small class="p-error">{{ getFieldError('roles') }}</small>
+                }
+                <small class="field-note">
+                    Selecciona uno o más roles para el usuario
+                </small>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <p-button
+                    label="Cancelar"
+                    severity="secondary"
+                    [outlined]="true"
+                    type="button"
+                    (onClick)="handleClose()"
+                    [disabled]="loading()"
+                />
+                <p-button
+                    label="Guardar Cambios"
+                    icon="pi pi-check"
+                    type="submit"
+                    [loading]="loading()"
+                    [disabled]="userForm.invalid"
+                />
+            </div>
+        </form>
+    }
+</p-dialog>

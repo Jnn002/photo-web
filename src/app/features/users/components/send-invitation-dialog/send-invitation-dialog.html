@@ -1,0 +1,67 @@
+<p-dialog
+    [header]="'Enviar Invitación'"
+    [visible]="visible()"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="invitation-dialog"
+    (onHide)="handleClose()"
+>
+    <form [formGroup]="invitationForm" (ngSubmit)="onSubmit()" class="invitation-form">
+        <!-- Email Field -->
+        <div class="field">
+            <label for="email">Email del Usuario *</label>
+            <input
+                pInputText
+                id="email"
+                formControlName="email"
+                type="email"
+                placeholder="usuario@ejemplo.com"
+                class="w-full"
+                [class.ng-invalid]="hasFieldError('email')"
+                autofocus
+            />
+            @if (hasFieldError('email')) {
+                <small class="p-error">{{ getEmailError() }}</small>
+            }
+            <small class="field-note">
+                Se enviará un correo con un enlace de registro a esta dirección
+            </small>
+        </div>
+
+        <!-- Custom Message Field -->
+        <div class="field">
+            <label for="custom_message">Mensaje Personalizado (Opcional)</label>
+            <textarea
+                id="custom_message"
+                formControlName="custom_message"
+                placeholder="Agrega un mensaje personalizado para el nuevo usuario..."
+                rows="4"
+                class="w-full"
+            ></textarea>
+            <small class="field-note">
+                Este mensaje se incluirá en el correo de invitación
+            </small>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <p-button
+                label="Cancelar"
+                severity="secondary"
+                [outlined]="true"
+                type="button"
+                (onClick)="handleClose()"
+                [disabled]="loading()"
+            />
+            <p-button
+                label="Enviar Invitación"
+                icon="pi pi-send"
+                type="submit"
+                [loading]="loading()"
+                [disabled]="invitationForm.invalid"
+            />
+        </div>
+    </form>
+</p-dialog>

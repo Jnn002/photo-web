@@ -1,0 +1,57 @@
+:host ::ng-deep .invitation-dialog {
+    width: 500px;
+    max-width: 90vw;
+}
+
+.invitation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field label {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.field-note {
+    color: #666;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+.p-error {
+    color: #e24c4c;
+    font-size: 0.85rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    :host ::ng-deep .invitation-dialog {
+        width: 95vw;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions p-button {
+        width: 100%;
+    }
+}

@@ -1,0 +1,95 @@
+:host ::ng-deep .user-form-dialog {
+    width: 600px;
+    max-width: 90vw;
+}
+
+.loading-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field label {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.field-note {
+    color: #666;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+.p-error {
+    color: #e24c4c;
+    font-size: 0.85rem;
+}
+
+/* Roles selection */
+.roles-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.role-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.role-checkbox input[type='checkbox'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+.role-checkbox label {
+    cursor: pointer;
+    font-weight: normal;
+    color: #333;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* PrimeNG component width fixes */
+:host ::ng-deep .p-select {
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    :host ::ng-deep .user-form-dialog {
+        width: 95vw;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions p-button {
+        width: 100%;
+    }
+}
