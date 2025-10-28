@@ -16,6 +16,7 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { tokenRefreshInterceptor } from './core/interceptors/token-refresh.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { AuthService } from './core/services/auth';
+import { RoleService } from '@features/users/services/role.service';
 
 /**
  * Factory function para inicializar AuthService antes del bootstrap
@@ -28,6 +29,15 @@ function initializeAuth(): () => void {
     return () => {
         // No-op: la inicialización ya ocurrió en el constructor
     };
+}
+
+/**
+ * Factory function para cargar roles al iniciar la aplicación
+ * Carga roles una sola vez antes del bootstrap para evitar múltiples llamadas
+ */
+function initializeRoles(): () => Promise<void> {
+    const roleService = inject(RoleService);
+    return () => roleService.loadRoles();
 }
 
 export const appConfig: ApplicationConfig = {
@@ -57,6 +67,12 @@ export const appConfig: ApplicationConfig = {
         {
             provide: APP_INITIALIZER,
             useFactory: initializeAuth,
+            multi: true
+        },
+        // Inicializar roles antes del bootstrap de la app
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeRoles,
             multi: true
         }
     ],

@@ -44,34 +44,10 @@ export const routes: Routes = [
                 path: 'sessions',
                 loadChildren: () => import('./features/sessions/sessions.routes').then(m => m.SESSIONS_ROUTES),
             },
-            /*{
-        path: 'sessions',
-        loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsComponent)
-      },
-      {
-        path: 'my-sessions',
-        loadComponent: () => import('./features/sessions/my-sessions').then(m => m.MySessionsComponent)
-      },
-      {
-        path: 'items',
-        loadComponent: () => import('./features/items/items').then(m => m.ItemsComponent)
-      },
-      {
-        path: 'packages',
-        loadComponent: () => import('./features/packages/packages').then(m => m.PackagesComponent)
-      },
-      {
-        path: 'rooms',
-        loadComponent: () => import('./features/rooms/rooms').then(m => m.RoomsComponent)
-      },
-      {
-        path: 'users',
-        loadComponent: () => import('./features/users/users').then(m => m.UsersComponent)
-      },
-      {
-        path: 'reports',
-        loadComponent: () => import('./features/reports/reports').then(m => m.ReportsComponent)
-      }*/
+            {
+                path: 'users',
+                loadChildren: () => import('./features/users/users.routes').then((m) => m.usersRoutes),
+            },
         ],
     },
     {

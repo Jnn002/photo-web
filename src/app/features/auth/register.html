@@ -1,0 +1,164 @@
+<div class="register-container">
+    <div class="register-card-wrapper">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="card-header">
+                    <h2>Registro de Usuario</h2>
+                    <p class="subtitle">Completa tu registro para acceder a la plataforma</p>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="content">
+                <!-- Loading spinner while validating token -->
+                @if (validatingToken()) {
+                    <div class="loading-container">
+                        <p-progressSpinner styleClass="w-4rem h-4rem" />
+                        <p>Validando invitación...</p>
+                    </div>
+                }
+
+                <!-- Error message -->
+                @if (error() && !validatingToken()) {
+                    <div class="error-message">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <span>{{ error() }}</span>
+                    </div>
+                }
+
+                <!-- Registration form (only show if token is valid) -->
+                @if (tokenValid() && !validatingToken()) {
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+                        <!-- Email (readonly, pre-filled) -->
+                        <div class="field">
+                            <label for="email">Email *</label>
+                            <input
+                                pInputText
+                                id="email"
+                                formControlName="email"
+                                type="email"
+                                class="w-full"
+                                readonly
+                            />
+                            <small class="field-note">
+                                Este email fue proporcionado en la invitación
+                            </small>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="field">
+                            <label for="full_name">Nombre Completo *</label>
+                            <input
+                                pInputText
+                                id="full_name"
+                                formControlName="full_name"
+                                type="text"
+                                placeholder="Ingresa tu nombre completo"
+                                class="w-full"
+                                [class.ng-invalid]="
+                                    registerForm.get('full_name')?.invalid &&
+                                    registerForm.get('full_name')?.touched
+                                "
+                            />
+                            @if (
+                                registerForm.get('full_name')?.invalid &&
+                                registerForm.get('full_name')?.touched
+                            ) {
+                                <small class="p-error">El nombre completo es requerido (mínimo 3 caracteres)</small>
+                            }
+                        </div>
+
+                        <!-- Phone (optional) -->
+                        <div class="field">
+                            <label for="phone">Teléfono</label>
+                            <input
+                                pInputText
+                                id="phone"
+                                formControlName="phone"
+                                type="tel"
+                                placeholder="Ingresa tu teléfono (opcional)"
+                                class="w-full"
+                            />
+                        </div>
+
+                        <!-- Password -->
+                        <div class="field">
+                            <label for="password">Contraseña *</label>
+                            <p-password
+                                id="password"
+                                formControlName="password"
+                                [toggleMask]="true"
+                                [feedback]="true"
+                                promptLabel="Ingresa una contraseña"
+                                weakLabel="Débil"
+                                mediumLabel="Media"
+                                strongLabel="Fuerte"
+                                placeholder="Ingresa tu contraseña"
+                                styleClass="w-full"
+                                [inputStyleClass]="
+                                    registerForm.get('password')?.invalid &&
+                                    registerForm.get('password')?.touched
+                                        ? 'ng-invalid w-full'
+                                        : 'w-full'
+                                "
+                            />
+                            @if (
+                                registerForm.get('password')?.invalid &&
+                                registerForm.get('password')?.touched
+                            ) {
+                                <small class="p-error">La contraseña es requerida (mínimo 8 caracteres)</small>
+                            }
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="field">
+                            <label for="confirmPassword">Confirmar Contraseña *</label>
+                            <p-password
+                                id="confirmPassword"
+                                formControlName="confirmPassword"
+                                [toggleMask]="true"
+                                [feedback]="false"
+                                placeholder="Confirma tu contraseña"
+                                styleClass="w-full"
+                                [inputStyleClass]="
+                                    passwordMismatch ? 'ng-invalid w-full' : 'w-full'
+                                "
+                            />
+                            @if (passwordMismatch) {
+                                <small class="p-error">Las contraseñas no coinciden</small>
+                            }
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <p-button
+                                label="Volver al Login"
+                                severity="secondary"
+                                [outlined]="true"
+                                type="button"
+                                (onClick)="goToLogin()"
+                                [disabled]="loading()"
+                            />
+                            <p-button
+                                label="Registrarse"
+                                type="submit"
+                                [loading]="loading()"
+                                [disabled]="registerForm.invalid"
+                            />
+                        </div>
+                    </form>
+                }
+
+                <!-- If token invalid, show button to go back -->
+                @if (!tokenValid() && !validatingToken()) {
+                    <div class="invalid-token-actions">
+                        <p-button
+                            label="Ir al Login"
+                            severity="secondary"
+                            (onClick)="goToLogin()"
+                        />
+                    </div>
+                }
+            </ng-template>
+        </p-card>
+    </div>
+</div>

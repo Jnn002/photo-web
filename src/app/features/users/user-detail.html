@@ -1,0 +1,173 @@
+<div class="user-detail-container">
+    <!-- Header with actions -->
+    <div class="detail-header">
+        <h1>Detalle de Usuario</h1>
+        <div class="header-actions">
+            <p-button
+                label="Volver"
+                icon="pi pi-arrow-left"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="goBack()"
+            />
+            <p-button
+                label="Editar"
+                icon="pi pi-pencil"
+                (onClick)="openEditDialog()"
+                [disabled]="loading()"
+            />
+        </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    @if (loading()) {
+        <div class="detail-content">
+            <div class="info-card">
+                <p-card>
+                    <ng-template pTemplate="header">
+                        <p-skeleton width="12rem" height="1.5rem" />
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="skeleton-content">
+                            <p-skeleton width="100%" height="1.5rem" class="mb-3" />
+                            <p-skeleton width="100%" height="1.5rem" class="mb-3" />
+                            <p-skeleton width="100%" height="1.5rem" class="mb-3" />
+                            <p-skeleton width="100%" height="1.5rem" />
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+            <div class="activity-card">
+                <p-card>
+                    <ng-template pTemplate="header">
+                        <p-skeleton width="8rem" height="1.5rem" />
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="skeleton-content">
+                            <p-skeleton width="100%" height="1.5rem" class="mb-3" />
+                            <p-skeleton width="100%" height="1.5rem" />
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+        </div>
+    }
+
+    <!-- User detail content -->
+    @if (!loading() && user()) {
+        <div class="detail-content">
+            <!-- Information Card -->
+            <div class="info-card">
+                <p-card>
+                    <ng-template pTemplate="header">
+                        <div class="card-title">
+                            <h2>Información del Usuario</h2>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="info-grid">
+                            <!-- Full Name -->
+                            <div class="info-item">
+                                <label>Nombre Completo</label>
+                                <p>{{ user()!.full_name }}</p>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="info-item">
+                                <label>Email</label>
+                                <p>{{ user()!.email }}</p>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="info-item">
+                                <label>Teléfono</label>
+                                <p>{{ user()!.phone || 'No especificado' }}</p>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="info-item">
+                                <label>Estado</label>
+                                <p>
+                                    <p-badge
+                                        [value]="getStatusText(user()!.status)"
+                                        [severity]="getStatusBadgeSeverity(user()!.status)"
+                                    />
+                                </p>
+                            </div>
+
+                            <!-- Roles -->
+                            <div class="info-item">
+                                <label>Roles</label>
+                                <div class="roles-container">
+                                    @for (role of user()!.roles || []; track role.id) {
+                                        <p-badge
+                                            [value]="getRoleDisplayName(role.name)"
+                                            [severity]="getRoleBadgeSeverity(role.name)"
+                                        />
+                                    }
+                                    @if ((user()!.roles || []).length === 0) {
+                                        <span class="text-muted">Sin roles asignados</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Registration Date -->
+                            <div class="info-item">
+                                <label>Fecha de Registro</label>
+                                <p>{{ user()!.created_at | date: 'dd/MM/yyyy HH:mm' }}</p>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+
+            <!-- Activity Card -->
+            <div class="activity-card">
+                <p-card>
+                    <ng-template pTemplate="header">
+                        <div class="card-title">
+                            <h2>Actividad</h2>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="content">
+                        <div class="activity-stats">
+                            <!-- Assigned Sessions (Photographer) -->
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="pi pi-camera"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <label>Sesiones Asignadas (Fotógrafo)</label>
+                                    <p class="stat-value">-</p>
+                                    <small class="text-muted">Próximamente disponible</small>
+                                </div>
+                            </div>
+
+                            <p-divider />
+
+                            <!-- Sessions in Editing -->
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="pi pi-image"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <label>Sesiones en Edición</label>
+                                    <p class="stat-value">-</p>
+                                    <small class="text-muted">Próximamente disponible</small>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Edit User Dialog -->
+<app-user-form-dialog
+    [visible]="showEditDialog()"
+    [userId]="userId()"
+    (onClose)="closeEditDialog()"
+    (onSuccess)="onUserUpdated()"
+/>

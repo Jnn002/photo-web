@@ -85,12 +85,8 @@ export class UserFormDialogComponent {
             }
         });
 
-        // Load roles when dialog opens
-        effect(() => {
-            if (this.visible()) {
-                this.roleService.loadRoles();
-            }
-        });
+        // Roles are loaded by APP_INITIALIZER in app.config.ts
+        // No need to load them here
     }
 
     /**

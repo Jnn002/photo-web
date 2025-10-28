@@ -16,6 +16,7 @@ import type {
     UserFilters,
     UserOption,
     PaginatedResponseUserPublic,
+    PaginatedResponseUserWithRoles,
 } from '../models/user.models';
 import { userHasRole, filterUsersByRole, usersToOptions, ROLE_NAMES } from '../models/user.models';
 
@@ -122,7 +123,7 @@ export class UserService {
 
     /**
      * Load users with roles for role-based filtering
-     * This fetches each user's roles for accurate filtering
+     * Uses the optimized /with-roles endpoint to get all data in a single request
      */
     async loadUsersWithRoles(): Promise<void> {
         const currentState = this._listState();
@@ -139,21 +140,19 @@ export class UserService {
                 .set('limit', currentState.pagination.limit.toString())
                 .set('offset', currentState.pagination.offset.toString());
 
+            // Use the optimized /with-roles endpoint - single request gets all data including roles
             const response = await this.http
-                .get<PaginatedResponseUserPublic>(this.apiUrl, { params })
+                .get<PaginatedResponseUserWithRoles>(`${this.apiUrl}/with-roles`, { params })
                 .toPromise();
 
             if (response) {
-                // Load detailed info with roles for each user
-                const usersWithRoles = await Promise.all(
-                    response.items.map((user) => this.getUserWithRoles(user.id))
-                );
+                // Store users with roles for role-based filtering
+                this._usersWithRoles.set(response.items);
 
-                this._usersWithRoles.set(usersWithRoles.filter((u): u is UserWithRoles => u !== null));
-
+                // Also update the main items list (cast to UserPublic for compatibility)
                 this._listState.update((state) => ({
                     ...state,
-                    items: response.items,
+                    items: response.items as unknown as UserPublic[],
                     total: response.total,
                     loading: false,
                 }));
@@ -244,6 +243,98 @@ export class UserService {
             },
         }));
         this.loadUsers();
+    }
+
+    /**
+     * Update user data (name, email, phone, etc.)
+     */
+    async updateUser(userId: number, data: Partial<UserPublic>): Promise<UserWithRoles | null> {
+        try {
+            const response = await this.http
+                .patch<UserWithRoles>(`${this.apiUrl}/${userId}`, data)
+                .toPromise();
+
+            if (response) {
+                this.notificationService.showSuccess('Usuario actualizado exitosamente');
+
+                // Refresh the list if this user is in the current list
+                await this.loadUsers();
+
+                return response;
+            }
+
+            return null;
+        } catch (error) {
+            this.handleError(error, 'Error al actualizar usuario');
+            return null;
+        }
+    }
+
+    /**
+     * Assign a role to a user
+     */
+    async assignRole(userId: number, roleId: number): Promise<boolean> {
+        try {
+            await this.http.post(`${this.apiUrl}/${userId}/roles/${roleId}`, {}).toPromise();
+
+            this.notificationService.showSuccess('Rol asignado exitosamente');
+
+            // Refresh the list to show updated roles
+            await this.loadUsers();
+
+            return true;
+        } catch (error) {
+            this.handleError(error, 'Error al asignar rol');
+            return false;
+        }
+    }
+
+    /**
+     * Remove a role from a user
+     */
+    async removeRole(userId: number, roleId: number): Promise<boolean> {
+        try {
+            await this.http.delete(`${this.apiUrl}/${userId}/roles/${roleId}`).toPromise();
+
+            this.notificationService.showSuccess('Rol removido exitosamente');
+
+            // Refresh the list to show updated roles
+            await this.loadUsers();
+
+            return true;
+        } catch (error) {
+            this.handleError(error, 'Error al remover rol');
+            return false;
+        }
+    }
+
+    /**
+     * Update user roles (assigns new roles and removes old ones)
+     * This is a convenience method that compares current and new roles
+     */
+    async updateUserRoles(
+        userId: number,
+        currentRoleIds: number[],
+        newRoleIds: number[]
+    ): Promise<boolean> {
+        try {
+            // Find roles to add (in new but not in current)
+            const rolesToAdd = newRoleIds.filter((id) => !currentRoleIds.includes(id));
+
+            // Find roles to remove (in current but not in new)
+            const rolesToRemove = currentRoleIds.filter((id) => !newRoleIds.includes(id));
+
+            // Execute all role changes
+            const addPromises = rolesToAdd.map((roleId) => this.assignRole(userId, roleId));
+            const removePromises = rolesToRemove.map((roleId) => this.removeRole(userId, roleId));
+
+            await Promise.all([...addPromises, ...removePromises]);
+
+            return true;
+        } catch (error) {
+            this.handleError(error, 'Error al actualizar roles');
+            return false;
+        }
     }
 
     /**

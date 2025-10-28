@@ -75,10 +75,10 @@ export class UsersListComponent {
     }
 
     /**
-     * Load initial data (users and roles)
+     * Load initial data (users)
      */
     private async loadData(): Promise<void> {
-        await Promise.all([this.userService.loadUsersWithRoles(), this.roleService.loadRoles()]);
+        await this.userService.loadUsersWithRoles();
     }
 
     /**
