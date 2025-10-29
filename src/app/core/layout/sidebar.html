@@ -14,7 +14,7 @@
   <nav class="sidebar-nav">
     <!-- Main Menu -->
     <div class="menu-section">
-      @for (item of mainMenuItems; track item.route) {
+      @for (item of mainMenuItems(); track item.route) {
         <a
           [routerLink]="item.route"
           routerLinkActive="active"
@@ -34,7 +34,7 @@
       @if (!collapsed()) {
         <div class="section-title">CATÁLOGO</div>
       }
-      @for (item of catalogMenuItems; track item.route) {
+      @for (item of catalogMenuItems(); track item.route) {
         <a
           [routerLink]="item.route"
           routerLinkActive="active"
@@ -54,7 +54,7 @@
       @if (!collapsed()) {
         <div class="section-title">SISTEMA</div>
       }
-      @for (item of systemMenuItems; track item.route) {
+      @for (item of systemMenuItems(); track item.route) {
         <a
           [routerLink]="item.route"
           routerLinkActive="active"

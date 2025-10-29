@@ -1,0 +1,212 @@
+<div class="my-sessions-container">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="header-content">
+        <div class="title-section">
+          <h2>Mis Sesiones</h2>
+          @if (pendingCount() > 0) {
+            <p-tag
+              [value]="pendingCount() + ' pendiente' + (pendingCount() > 1 ? 's' : '')"
+              severity="warn"
+              icon="pi pi-exclamation-circle"
+            />
+          }
+        </div>
+
+        <p-button
+          label="Actualizar"
+          icon="pi pi-refresh"
+          (onClick)="loadSessions()"
+          [loading]="loading()"
+          severity="secondary"
+          [outlined]="true"
+        />
+      </div>
+    </ng-template>
+
+    <!-- Filters -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <label for="status-filter">Estado</label>
+        <p-select
+          id="status-filter"
+          [(ngModel)]="selectedStatus"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Filtrar por estado"
+          [style]="{ width: '200px' }"
+          (onChange)="onFilterChange()"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="date-range-filter">Rango de fechas</label>
+        <p-datepicker
+          id="date-range-filter"
+          [(ngModel)]="dateRange"
+          selectionMode="range"
+          [readonlyInput]="true"
+          placeholder="Seleccionar rango"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          [style]="{ width: '300px' }"
+          (onSelect)="onFilterChange()"
+        />
+      </div>
+
+      @if (selectedStatus() || dateRange()) {
+        <p-button
+          label="Limpiar filtros"
+          icon="pi pi-filter-slash"
+          (onClick)="clearFilters()"
+          [text]="true"
+          severity="secondary"
+        />
+      }
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-container">
+        <p-progressSpinner />
+        <p>Cargando sesiones...</p>
+      </div>
+    }
+
+    <!-- Sessions Table -->
+    @if (!loading()) {
+      @if (sessions().length > 0) {
+        <p-table
+          [value]="sessions()"
+          [tableStyle]="{ 'min-width': '1200px' }"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th>Mi Rol</th>
+              <th>Asistencia</th>
+              <th style="width: 200px">Acciones</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-session>
+            <tr>
+              <!-- Date -->
+              <td>{{ formatDate(session.session_date) }}</td>
+
+              <!-- Time -->
+              <td>{{ formatTime(session.session_time) }}</td>
+
+              <!-- Client Name -->
+              <td>
+                <strong>{{ session.client_name }}</strong>
+              </td>
+
+              <!-- Session Type -->
+              <td>
+                <p-tag
+                  [value]="getTypeLabel(session.session_type)"
+                  [severity]="session.session_type === 'STUDIO' ? 'info' : 'secondary'"
+                />
+              </td>
+
+              <!-- Location -->
+              <td>{{ session.location || '-' }}</td>
+
+              <!-- Status -->
+              <td>
+                <p-tag
+                  [value]="getStatusLabel(session.status)"
+                  [severity]="getStatusSeverity(session.status)"
+                />
+              </td>
+
+              <!-- My Role -->
+              <td>
+                <span class="role-badge">
+                  <i class="pi pi-user"></i>
+                  {{ getRoleLabel(session.my_role) }}
+                </span>
+              </td>
+
+              <!-- Attendance Status -->
+              <td>
+                <app-attendance-status
+                  [attended]="session.my_attended"
+                  [attendedAt]="session.my_attended_at"
+                />
+              </td>
+
+              <!-- Actions -->
+              <td>
+                <div class="action-buttons">
+                  <p-button
+                    icon="pi pi-eye"
+                    label="Ver"
+                    (onClick)="viewDetails(session)"
+                    severity="info"
+                    [text]="true"
+                    size="small"
+                  />
+
+                  @if (canMarkAttendance(session) && !session.my_attended) {
+                    <p-button
+                      icon="pi pi-check"
+                      label="Marcar"
+                      (onClick)="openAttendanceDialog(session, true)"
+                      severity="success"
+                      [text]="true"
+                      size="small"
+                    />
+                  }
+
+                  @if (session.my_attended) {
+                    <p-button
+                      icon="pi pi-times"
+                      label="Desmarcar"
+                      (onClick)="openAttendanceDialog(session, false)"
+                      severity="warn"
+                      [text]="true"
+                      size="small"
+                    />
+                  }
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="9" style="text-align: center; padding: 2rem;">
+                <i class="pi pi-inbox" style="font-size: 3rem; color: var(--text-color-secondary);"></i>
+                <p style="margin-top: 1rem; color: var(--text-color-secondary);">
+                  No se encontraron sesiones asignadas
+                </p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-calendar"></i>
+          <h3>No tienes sesiones asignadas</h3>
+          <p>Cuando se te asignen sesiones fotográficas, aparecerán aquí.</p>
+        </div>
+      }
+    }
+  </p-card>
+
+  <!-- Attendance Dialog -->
+  <app-mark-attendance-dialog
+    [(visible)]="showAttendanceDialog"
+    [markAsAttended]="markAsAttended()"
+    (confirm)="onAttendanceConfirm($event)"
+  />
+</div>

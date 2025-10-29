@@ -1,0 +1,292 @@
+<div class="session-detail-container">
+  @if (loading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+      <p>Cargando detalles de la sesión...</p>
+    </div>
+  }
+
+  @if (!loading() && session()) {
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <p-button
+        label="Volver"
+        icon="pi pi-arrow-left"
+        (onClick)="goBack()"
+        severity="secondary"
+        [outlined]="true"
+      />
+
+      <div class="right-actions">
+        @if (canMarkAttendance()) {
+          <p-button
+            label="Marcar Mi Asistencia"
+            icon="pi pi-check-circle"
+            (onClick)="openAttendanceDialog(true)"
+            severity="success"
+          />
+        }
+
+        @if (canUnmarkAttendance()) {
+          <p-button
+            label="Desmarcar Asistencia"
+            icon="pi pi-times-circle"
+            (onClick)="openAttendanceDialog(false)"
+            severity="warn"
+            [outlined]="true"
+          />
+        }
+      </div>
+    </div>
+
+    <!-- Session Info Card -->
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <div>
+            <h2>Sesión Fotográfica</h2>
+            <p class="session-subtitle">{{ formatDate(session()!.session_date) }}</p>
+          </div>
+          <p-tag
+            [value]="getStatusLabel(session()!.status)"
+            [severity]="getStatusSeverity(session()!.status)"
+            [style]="{ fontSize: '1rem' }"
+          />
+        </div>
+      </ng-template>
+
+      <div class="info-grid">
+        <!-- Date & Time -->
+        <div class="info-item">
+          <label><i class="pi pi-calendar"></i> Fecha</label>
+          <p>{{ formatDate(session()!.session_date) }}</p>
+        </div>
+
+        <div class="info-item">
+          <label><i class="pi pi-clock"></i> Hora</label>
+          <p>{{ formatTime(session()!.session_time) }}</p>
+        </div>
+
+        <!-- Type & Duration -->
+        <div class="info-item">
+          <label><i class="pi pi-tag"></i> Tipo</label>
+          <p>{{ getTypeLabel(session()!.session_type) }}</p>
+        </div>
+
+        <div class="info-item">
+          <label><i class="pi pi-hourglass"></i> Duración estimada</label>
+          <p>{{ formatDuration(session()!.estimated_duration_hours) }}</p>
+        </div>
+
+        <!-- Location -->
+        <div class="info-item full-width">
+          <label><i class="pi pi-map-marker"></i> Ubicación</label>
+          <p>{{ session()!.location || 'No especificada' }}</p>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Client Info Card -->
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="card-header-simple">
+          <h3><i class="pi pi-user"></i> Información del Cliente</h3>
+        </div>
+      </ng-template>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nombre completo</label>
+          <p><strong>{{ session()!.client.full_name }}</strong></p>
+        </div>
+
+        <div class="info-item">
+          <label>Email</label>
+          <p>
+            <a [href]="'mailto:' + session()!.client.email">
+              {{ session()!.client.email }}
+            </a>
+          </p>
+        </div>
+
+        <div class="info-item">
+          <label>Teléfono</label>
+          <p>
+            <a [href]="'tel:' + session()!.client.primary_phone">
+              {{ session()!.client.primary_phone }}
+            </a>
+          </p>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- My Assignment Card -->
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="card-header-simple">
+          <h3><i class="pi pi-id-card"></i> Mi Asignación</h3>
+        </div>
+      </ng-template>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Mi Rol</label>
+          <p>
+            <p-tag
+              [value]="getRoleLabel(session()!.my_role)"
+              [severity]="getRoleSeverity(session()!.my_role)"
+            />
+          </p>
+        </div>
+
+        <div class="info-item">
+          <label>Estado de Asistencia</label>
+          <p>
+            <app-attendance-status
+              [attended]="session()!.my_attended"
+              [attendedAt]="session()!.my_attended_at"
+            />
+          </p>
+        </div>
+
+        @if (session()!.my_notes) {
+          <div class="info-item full-width">
+            <label>Mis Notas</label>
+            <p class="notes-text">{{ session()!.my_notes }}</p>
+          </div>
+        }
+      </div>
+    </p-card>
+
+    <!-- Team Card -->
+    @if (team() && team()!.photographers.length > 1) {
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="card-header-simple">
+            <h3><i class="pi pi-users"></i> Equipo de Fotógrafos</h3>
+          </div>
+        </ng-template>
+
+        <!-- Attendance Progress -->
+        <div class="attendance-progress">
+          <div class="progress-header">
+            <span class="progress-label">
+              Progreso de Asistencia:
+              <strong>
+                {{ attendanceProgress().attended }} de {{ attendanceProgress().total }}
+              </strong>
+            </span>
+            <span class="progress-percentage">
+              {{ attendanceProgress().percentage }}%
+            </span>
+          </div>
+          <p-progressBar
+            [value]="attendanceProgress().percentage"
+            [showValue]="false"
+            [style]="{ height: '12px' }"
+          />
+        </div>
+
+        <!-- Team Table -->
+        <p-table [value]="team()!.photographers" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Fotógrafo</th>
+              <th>Rol</th>
+              <th>Asistencia</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-photographer>
+            <tr>
+              <td>
+                <strong>{{ photographer.photographer_name }}</strong>
+              </td>
+              <td>
+                <p-tag
+                  [value]="getRoleLabel(photographer.role)"
+                  [severity]="getRoleSeverity(photographer.role)"
+                />
+              </td>
+              <td>
+                <app-attendance-status
+                  [attended]="photographer.attended"
+                  [attendedAt]="photographer.attended_at"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    }
+
+    <!-- Items/Packages Panel -->
+    @if (session()!.details.length > 0) {
+      <p-panel header="Items y Paquetes Contratados" [toggleable]="true" [collapsed]="false">
+        <p-table [value]="session()!.details" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Código</th>
+              <th>Tipo</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-detail>
+            <tr>
+              <td><code>{{ detail.item_code }}</code></td>
+              <td>
+                <p-tag
+                  [value]="detail.line_type"
+                  [severity]="detail.line_type === 'Package' ? 'info' : 'secondary'"
+                />
+              </td>
+              <td><strong>{{ detail.item_name }}</strong></td>
+              <td>{{ detail.item_description || '-' }}</td>
+              <td>{{ detail.quantity }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-panel>
+    }
+
+    <!-- Client Requirements Panel -->
+    @if (session()!.client_requirements) {
+      <p-panel header="Requerimientos del Cliente" [toggleable]="true" [collapsed]="false">
+        <div class="requirements-content">
+          <p>{{ session()!.client_requirements }}</p>
+        </div>
+      </p-panel>
+    }
+
+    <!-- Delivery Info Panel -->
+    @if (session()!.delivery_method || session()!.delivery_deadline) {
+      <p-panel header="Información de Entrega" [toggleable]="true" [collapsed]="true">
+        <div class="info-grid">
+          @if (session()!.delivery_method) {
+            <div class="info-item">
+              <label>Método de Entrega</label>
+              <p>{{ session()!.delivery_method }}</p>
+            </div>
+          }
+
+          @if (session()!.delivery_deadline) {
+            <div class="info-item">
+              <label>Fecha límite de entrega</label>
+              <p>{{ formatDate(session()!.delivery_deadline!) }}</p>
+            </div>
+          }
+        </div>
+      </p-panel>
+    }
+  }
+
+  <!-- Attendance Dialog -->
+  <app-mark-attendance-dialog
+    [(visible)]="showAttendanceDialog"
+    [markAsAttended]="markAsAttended()"
+    (confirm)="onAttendanceConfirm($event)"
+  />
+</div>
