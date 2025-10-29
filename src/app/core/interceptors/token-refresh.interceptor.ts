@@ -20,12 +20,16 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req, next) => {
                 return throwError(() => error);
             }
 
-            //  No intentar refresh en endpoints de auth
-            if (
-                req.url.includes('/auth/login') ||
-                req.url.includes('/auth/refresh') ||
-                req.url.includes('/auth/logout')
-            ) {
+            //  No intentar refresh en endpoints públicos
+            const publicEndpoints = [
+                '/auth/login',
+                '/auth/refresh',
+                '/auth/logout',
+                '/auth/register',
+                '/invitations/validate'
+            ];
+
+            if (publicEndpoints.some(endpoint => req.url.includes(endpoint))) {
                 return throwError(() => error);
             }
 

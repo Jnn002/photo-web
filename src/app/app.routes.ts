@@ -1,12 +1,17 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { permissionGuard } from './core/guards/permission.guard';
+import { RegisterRedirectComponent } from './core/utils/register-redirect';
 
 export const routes: Routes = [
     {
         path: '',
         redirectTo: '/dashboard',
         pathMatch: 'full',
+    },
+    {
+        path: 'register',
+        component: RegisterRedirectComponent,
     },
     {
         path: 'auth',

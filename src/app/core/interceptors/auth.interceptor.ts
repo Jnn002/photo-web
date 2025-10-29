@@ -6,8 +6,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const storage = inject(StorageService);
   const token = storage.getAccessToken();
 
-  // Skip auth header for login/refresh endpoints
-  if (req.url.includes('/auth/login') || req.url.includes('/auth/refresh')) {
+  // Skip auth header for public endpoints (auth and invitation-related)
+  const publicEndpoints = [
+    '/auth/login',
+    '/auth/refresh',
+    '/auth/register',
+    '/invitations/validate'
+  ];
+
+  if (publicEndpoints.some(endpoint => req.url.includes(endpoint))) {
     return next(req);
   }
 
