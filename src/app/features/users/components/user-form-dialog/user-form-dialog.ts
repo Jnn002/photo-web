@@ -59,6 +59,7 @@ export class UserFormDialogComponent {
 
     // Role options from service
     readonly roleOptions = this.roleService.roleOptions;
+    readonly rolesLoading = this.roleService.loading;
 
     // Status options
     readonly statusOptions = [

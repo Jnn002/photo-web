@@ -96,20 +96,31 @@
             <!-- Roles (Multiple Selection) -->
             <div class="field">
                 <label>Roles *</label>
-                <div class="roles-selection">
-                    @for (roleOption of roleOptions(); track roleOption.value) {
-                        <div class="role-checkbox">
-                            <input
-                                type="checkbox"
-                                [id]="'role-' + roleOption.value"
-                                [value]="roleOption.value"
-                                [checked]="userForm.get('roles')?.value?.includes(roleOption.value)"
-                                (change)="onRoleChange(roleOption.value, $event)"
-                            />
-                            <label [for]="'role-' + roleOption.value">{{ roleOption.label }}</label>
-                        </div>
-                    }
-                </div>
+
+                <!-- Loading skeleton while roles are being fetched -->
+                @if (rolesLoading() || roleOptions().length === 0) {
+                    <div class="roles-loading">
+                        <p-skeleton width="100%" height="2rem" styleClass="mb-2" />
+                        <p-skeleton width="100%" height="2rem" styleClass="mb-2" />
+                        <p-skeleton width="100%" height="2rem" />
+                    </div>
+                } @else {
+                    <div class="roles-selection">
+                        @for (roleOption of roleOptions(); track roleOption.value) {
+                            <div class="role-checkbox">
+                                <input
+                                    type="checkbox"
+                                    [id]="'role-' + roleOption.value"
+                                    [value]="roleOption.value"
+                                    [checked]="userForm.get('roles')?.value?.includes(roleOption.value)"
+                                    (change)="onRoleChange(roleOption.value, $event)"
+                                />
+                                <label [for]="'role-' + roleOption.value">{{ roleOption.label }}</label>
+                            </div>
+                        }
+                    </div>
+                }
+
                 @if (hasFieldError('roles')) {
                     <small class="p-error">{{ getFieldError('roles') }}</small>
                 }
