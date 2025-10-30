@@ -11,10 +11,16 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { NotificationService } from '@core/services/notification';
 import { InvitationService } from '@features/users/services/invitation.service';
+import { passwordStrengthValidator, passwordMatchValidator } from '@core/validators/password-strength.validator';
 import type { RegistrationData } from '@features/users/models/user.models';
 
 /**
- * RegistrationComponent
+ * UPDATED RegistrationComponent
+ *
+ * SECURITY IMPROVEMENTS:
+ * - Integrated passwordStrengthValidator for complex password requirements
+ * - Integrated passwordMatchValidator from centralized validators
+ * - Enforces strong password policy
  *
  * Handles user registration via invitation token.
  * Users receive an invitation email with a token and use it to complete registration.
@@ -52,16 +58,16 @@ export class RegisterComponent {
     readonly invitationEmail = signal<string | null>(null);
     readonly tokenValid = signal(false);
 
-    // Registration form
+    // Registration form with STRONG password requirements
     readonly registerForm = this.fb.nonNullable.group(
         {
             email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
             full_name: ['', [Validators.required, Validators.minLength(3)]],
             phone: [''],
-            password: ['', [Validators.required, Validators.minLength(8)]],
+            password: ['', [Validators.required, passwordStrengthValidator()]],
             confirmPassword: ['', [Validators.required]],
         },
-        { validators: this.passwordMatchValidator }
+        { validators: passwordMatchValidator('password', 'confirmPassword') }
     );
 
     constructor() {
@@ -100,27 +106,12 @@ export class RegisterComponent {
     }
 
     /**
-     * Custom validator to check if passwords match
-     */
-    private passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-        const password = control.get('password');
-        const confirmPassword = control.get('confirmPassword');
-
-        if (!password || !confirmPassword) {
-            return null;
-        }
-
-        return password.value === confirmPassword.value ? null : { passwordMismatch: true };
-    }
-
-    /**
      * Check if passwords match error should be shown
+     * NOTE: Now using centralized passwordMatchValidator
      */
     get passwordMismatch(): boolean {
-        return (
-            this.registerForm.hasError('passwordMismatch') &&
-            (this.registerForm.get('confirmPassword')?.touched ?? false)
-        );
+        const confirmPasswordControl = this.registerForm.get('confirmPassword');
+        return !!(confirmPasswordControl?.hasError('passwordMismatch') && confirmPasswordControl.touched);
     }
 
     /**

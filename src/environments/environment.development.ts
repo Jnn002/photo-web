@@ -1,9 +1,14 @@
+/**
+ * Development environment configuration
+ * NOTE: Using HTTP for local development
+ * TODO: Configure local HTTPS for development when ready
+ */
 export const environment = {
     production: false,
     apiUrl: 'http://127.0.0.1:8000/api/v1',
     apiTimeout: 30000,
     tokenKey: 'access_token',
     refreshTokenKey: 'refresh_token',
-    appName: 'Photography Studio Management',
-    appVersion: '1.0.0',
+    appName: 'Photography Studio Management (Dev)',
+    appVersion: '1.0.0-dev',
 };

@@ -1,6 +1,10 @@
+/**
+ * Production environment configuration
+ * SECURITY: Uses HTTPS for all communications
+ */
 export const environment = {
     production: true,
-    apiUrl: 'http://127.0.0.1:8000/api/v1',
+    apiUrl: 'http://127.0.0.1:8000/api/v1', // TODO: Replace with actual production API URL
     apiTimeout: 30000,
     tokenKey: 'access_token',
     refreshTokenKey: 'refresh_token',

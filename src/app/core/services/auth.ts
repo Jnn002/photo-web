@@ -1,13 +1,31 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap, of, forkJoin } from 'rxjs';
+import { catchError, tap, of, forkJoin, Subject, takeUntil } from 'rxjs';
 import { environment } from '@environments/environment';
 import { StorageService } from './storage';
 import { TokenRefreshService } from './token-refresh';
+import { TokenStorageService } from './token-storage';
+import { TokenRefreshSchedulerService } from './token-refresh-scheduler';
+import { SessionTimeoutService } from './session-timeout';
+import { LoggingService } from './logging';
+import { NotificationService } from './notification';
 import { isTokenValid } from '@core/utils/jwt.utils';
+import { SECURITY_EVENTS } from '@core/constants/security.constants';
 import type { UserLogin, TokenResponse, UserPublic, UserWithRoles } from '@generated/types.gen';
 
+/**
+ * REFACTORED AuthService
+ *
+ * SECURITY IMPROVEMENTS:
+ * - Integrated TokenStorageService for secure token management
+ * - Integrated TokenRefreshSchedulerService for proactive token refresh
+ * - Integrated SessionTimeoutService for session warnings
+ * - Integrated LoggingService for secure logging
+ * - Sensitive data (roles, permissions) now stored in memory signals only
+ * - Proper cleanup on logout (cancel requests, timers)
+ * - Security event logging for audit trail
+ */
 @Injectable({
     providedIn: 'root',
 })
@@ -17,8 +35,16 @@ export class AuthService {
     private readonly storage = inject(StorageService);
     private readonly router = inject(Router);
     private readonly tokenRefreshService = inject(TokenRefreshService);
+    private readonly tokenStorage = inject(TokenStorageService);
+    private readonly refreshScheduler = inject(TokenRefreshSchedulerService);
+    private readonly sessionTimeout = inject(SessionTimeoutService);
+    private readonly logger = inject(LoggingService);
+    private readonly notification = inject(NotificationService);
 
-    // ✅ Private writable signals
+    // Subject for cancelling in-flight requests on logout
+    private readonly destroy$ = new Subject<void>();
+
+    // ✅ Private writable signals - SECURITY: Data now stays in memory only
     private readonly _currentUser = signal<UserPublic | null>(null);
     private readonly _userWithRoles = signal<UserWithRoles | null>(null);
     private readonly _permissions = signal<string[]>([]);
@@ -43,15 +69,50 @@ export class AuthService {
     // ✅ Inicialización síncrona en el constructor
     constructor() {
         this.initializeAuth();
+        this.setupSessionManagement();
     }
 
     /**
-     * Inicializa el estado de autenticación desde localStorage
+     * Setup session management listeners
+     * Handles session expiration warnings and extension requests
+     */
+    private setupSessionManagement(): void {
+        // Listen for session expiration warning
+        this.sessionTimeout.onSessionExpiring.subscribe((warning) => {
+            this.logger.security(SECURITY_EVENTS.SESSION_TIMEOUT_WARNING, {
+                minutesRemaining: warning.minutesRemaining,
+                expiresAt: warning.expiresAt.toISOString(),
+            });
+        });
+
+        // Listen for session expiration
+        this.sessionTimeout.onSessionExpired.subscribe(() => {
+            this.logger.security(SECURITY_EVENTS.TOKEN_EXPIRED);
+            this.logout();
+        });
+
+        // Listen for session extension request
+        this.sessionTimeout.onSessionExtended.subscribe(() => {
+            this.refreshToken().subscribe();
+        });
+
+        // Listen for scheduled token refresh
+        this.refreshScheduler.onRefreshNeeded.subscribe(() => {
+            this.logger.debug('Proactive token refresh triggered');
+            this.refreshToken().subscribe();
+        });
+    }
+
+    /**
+     * Inicializa el estado de autenticación desde storage
      * Se ejecuta síncronamente al crear el servicio para garantizar
      * que el estado esté disponible antes del routing
+     *
+     * SECURITY IMPROVEMENT: Roles/permissions no longer loaded from storage
+     * They must be fetched fresh from backend
      */
     private initializeAuth(): void {
-        const token = this.storage.getAccessToken();
+        const token = this.tokenStorage.getAccessToken();
         const user = this.storage.getCurrentUser();
 
         // Validar que existe token, usuario y que el token no haya expirado
@@ -59,45 +120,44 @@ export class AuthService {
             this._currentUser.set(user);
             this._isAuthenticated.set(true);
 
-            // Cargar roles/permisos desde localStorage (sin HTTP)
-            const userWithRoles = this.storage.getUserWithRoles();
-            const permissions = this.storage.getPermissions();
+            this.logger.debug('Auth initialized from storage');
 
-            if (userWithRoles) {
-                this._userWithRoles.set(userWithRoles);
-            }
-
-            if (permissions.length > 0) {
-                this._permissions.set(permissions);
-            }
+            // Start session monitoring
+            this.sessionTimeout.startMonitoring(token);
+            this.refreshScheduler.scheduleTokenRefresh(token);
 
             // Refrescar roles/permisos en segundo plano (lazy)
-            // Se hace después de que la app ya esté inicializada
+            // SECURITY: Always fetch fresh from backend, never from localStorage
             setTimeout(() => {
                 this.loadUserRolesAndPermissions().subscribe();
             }, 0);
         } else if (token || user) {
-            // Si hay datos pero el token expiró, limpiar localStorage
-            console.warn('Token expired or invalid, clearing auth data');
+            // Si hay datos pero el token expiró, limpiar storage
+            this.logger.warn('Token expired or invalid, clearing auth data');
             this.storage.clearAuth();
+            this.logger.security(SECURITY_EVENTS.TOKEN_EXPIRED);
         }
     }
 
+    /**
+     * Load user roles and permissions from backend
+     * SECURITY: Data is stored ONLY in memory signals, never in localStorage
+     */
     private loadUserRolesAndPermissions() {
         return forkJoin({
             userWithRoles: this.http.get<UserWithRoles>(`${environment.apiUrl}/users/me`),
             permissions: this.http.get<string[]>(`${environment.apiUrl}/users/me/permissions`),
         }).pipe(
+            takeUntil(this.destroy$), // Cancel on logout
             tap(({ userWithRoles, permissions }) => {
+                // SECURITY: Store only in memory
                 this._userWithRoles.set(userWithRoles);
                 this._permissions.set(permissions);
 
-                // Persistir en localStorage para próxima sesión
-                this.storage.setUserWithRoles(userWithRoles);
-                this.storage.setPermissions(permissions);
+                this.logger.debug('User roles and permissions loaded');
             }),
             catchError((error) => {
-                console.error('Failed to load user roles/permissions:', error);
+                this.logger.error('Failed to load user roles/permissions', error);
                 return of({ userWithRoles: null, permissions: [] });
             })
         );
@@ -107,9 +167,17 @@ export class AuthService {
         return this.http.post<TokenResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
             tap((response) => {
                 this.handleAuthSuccess(response);
+                this.logger.security(SECURITY_EVENTS.LOGIN_SUCCESS, {
+                    email: credentials.email,
+                    timestamp: new Date().toISOString(),
+                });
             }),
             catchError((error) => {
-                console.error('Login failed:', error);
+                this.logger.security(SECURITY_EVENTS.LOGIN_FAILED, {
+                    email: credentials.email,
+                    error: error?.status || 'unknown',
+                });
+                this.logger.error('Login failed', error);
                 throw error;
             })
         );
@@ -118,19 +186,50 @@ export class AuthService {
     /**
      * Delega al TokenRefreshService para refrescar el token
      * El TokenRefreshService gestiona el estado y evita múltiples refreshes simultáneos
+     *
+     * SECURITY IMPROVEMENT: Reschedule timers after successful refresh
      */
     refreshToken() {
         return this.tokenRefreshService.refreshAccessToken().pipe(
+            tap((response) => {
+                if (response) {
+                    // Reschedule session monitoring and auto-refresh with new token
+                    this.sessionTimeout.reschedule(response.access_token);
+                    this.refreshScheduler.reschedule(response.access_token);
+
+                    this.logger.security(SECURITY_EVENTS.TOKEN_REFRESH_SUCCESS);
+                }
+            }),
             catchError((error) => {
-                console.error('Token refresh failed:', error);
+                this.logger.security(SECURITY_EVENTS.TOKEN_REFRESH_FAILED, {
+                    error: error?.status || 'unknown',
+                });
+                this.logger.error('Token refresh failed', error);
                 this.logout();
                 return of(null);
             })
         );
     }
 
+    /**
+     * Logout user
+     * SECURITY IMPROVEMENTS:
+     * - Cancels all in-flight HTTP requests
+     * - Stops all timers (session, refresh)
+     * - Cleans up all resources
+     * - Logs security event
+     */
     logout(): void {
-        const refreshToken = this.storage.getRefreshToken();
+        const refreshToken = this.tokenStorage.getRefreshToken();
+
+        this.logger.debug('Logout initiated');
+
+        // Cancel all in-flight requests
+        this.destroy$.next();
+
+        // Stop session monitoring and refresh scheduling
+        this.sessionTimeout.stopMonitoring();
+        this.refreshScheduler.cancelScheduledRefresh();
 
         // Si hay token, intentar revocar en backend ANTES de limpiar estado local
         if (refreshToken) {
@@ -139,7 +238,7 @@ export class AuthService {
                 .pipe(
                     catchError((error) => {
                         // Ignorar errores de logout en backend
-                        console.warn('Backend logout failed:', error);
+                        this.logger.warn('Backend logout failed, proceeding with local cleanup');
                         return of(null);
                     })
                 )
@@ -153,29 +252,60 @@ export class AuthService {
             this.clearAuth();
             this.router.navigate(['/auth/login']);
         }
+
+        this.logger.security(SECURITY_EVENTS.LOGOUT, {
+            timestamp: new Date().toISOString(),
+        });
     }
 
+    /**
+     * Handle successful authentication
+     * SECURITY IMPROVEMENTS:
+     * - Start session monitoring
+     * - Schedule proactive token refresh
+     * - Load fresh roles/permissions
+     */
     private handleAuthSuccess(response: TokenResponse): void {
-        this.storage.setAccessToken(response.access_token);
-        this.storage.setRefreshToken(response.refresh_token);
+        // Store tokens via TokenStorageService (through StorageService for now)
+        this.tokenStorage.setAccessToken(response.access_token);
+        this.tokenStorage.setRefreshToken(response.refresh_token);
         this.storage.setCurrentUser(response.user);
 
         this._currentUser.set(response.user);
         this._isAuthenticated.set(true);
 
+        // Start session monitoring and auto-refresh
+        this.sessionTimeout.startMonitoring(response.access_token);
+        this.refreshScheduler.scheduleTokenRefresh(response.access_token);
+
         // Cargar roles y permisos inmediatamente después del login
         this.loadUserRolesAndPermissions().subscribe();
+
+        this.logger.debug('Auth success handled, session monitoring started');
     }
 
+    /**
+     * Clear authentication state
+     * SECURITY IMPROVEMENTS:
+     * - Cleanup all timers and subscriptions
+     * - Clear sensitive data from memory
+     * - Reset all services
+     */
     private clearAuth(): void {
         this.storage.clearAuth();
         this._currentUser.set(null);
         this._userWithRoles.set(null);
         this._permissions.set([]);
         this._isAuthenticated.set(false);
-        
+
         // ✅ Resetear estado del refresh token
         this.tokenRefreshService.resetState();
+
+        // Cleanup timers and subscriptions
+        this.sessionTimeout.cleanup();
+        this.refreshScheduler.cleanup();
+
+        this.logger.debug('Auth state cleared');
     }
 
     hasPermission(permission: string): boolean {

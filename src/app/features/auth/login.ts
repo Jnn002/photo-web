@@ -7,7 +7,14 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '@core/services/auth';
 import { NotificationService } from '@core/services/notification';
+import { PASSWORD_REQUIREMENTS } from '@core/constants/security.constants';
 
+/**
+ * UPDATED LoginComponent
+ * SECURITY IMPROVEMENTS:
+ * - Updated password min length to match security constants
+ * - Sanitized error messages
+ */
 @Component({
     selector: 'app-login',
     imports: [ReactiveFormsModule, CardModule, InputTextModule, PasswordModule, ButtonModule],
@@ -27,7 +34,7 @@ export class LoginComponent {
 
     readonly loginForm = this.fb.nonNullable.group({
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(PASSWORD_REQUIREMENTS.MIN_LENGTH)]],
     });
 
     onSubmit(): void {
@@ -49,9 +56,10 @@ export class LoginComponent {
                 const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
                 this.router.navigateByUrl(returnUrl);
             },
-            error: (err) => {
+            error: () => {
                 this.loading.set(false);
-                this.error.set(err.error?.detail || 'Invalid credentials');
+                // SECURITY: Generic error message to prevent user enumeration
+                this.error.set('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
             },
         });
     }

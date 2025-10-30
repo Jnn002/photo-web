@@ -11,18 +11,19 @@
 
 /**
  * Session status enum
+ * Values match backend API (PascalCase with spaces)
  */
 export enum SessionStatus {
-  REQUEST = 'REQUEST',
-  NEGOTIATION = 'NEGOTIATION',
-  PRE_SCHEDULED = 'PRE_SCHEDULED',
-  CONFIRMED = 'CONFIRMED',
-  ASSIGNED = 'ASSIGNED',
-  ATTENDED = 'ATTENDED',
-  IN_EDITING = 'IN_EDITING',
-  READY_FOR_DELIVERY = 'READY_FOR_DELIVERY',
-  COMPLETED = 'COMPLETED',
-  CANCELED = 'CANCELED',
+  REQUEST = 'Request',
+  NEGOTIATION = 'Negotiation',
+  PRE_SCHEDULED = 'Pre-scheduled',
+  CONFIRMED = 'Confirmed',
+  ASSIGNED = 'Assigned',
+  ATTENDED = 'Attended',
+  IN_EDITING = 'In Editing',
+  READY_FOR_DELIVERY = 'Ready for Delivery',
+  COMPLETED = 'Completed',
+  CANCELED = 'Canceled',
 }
 
 /**

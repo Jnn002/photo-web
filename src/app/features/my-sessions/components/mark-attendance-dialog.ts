@@ -10,7 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { TextareaModule } from 'primeng/textarea';
+import { Textarea } from 'primeng/textarea';
 
 import { MarkAttendedRequest } from '../models/photographer.models';
 
@@ -22,7 +22,7 @@ import { MarkAttendedRequest } from '../models/photographer.models';
  */
 @Component({
   selector: 'app-mark-attendance-dialog',
-  imports: [DialogModule, ButtonModule, TextareaModule, FormsModule],
+  imports: [DialogModule, ButtonModule, Textarea, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p-dialog
@@ -40,13 +40,14 @@ import { MarkAttendedRequest } from '../models/photographer.models';
 
         <div class="field">
           <label for="notes">Notas (opcional)</label>
-          <p-textarea
+          <textarea
+            pInputTextarea
             id="notes"
             [(ngModel)]="notes"
             [maxlength]="1000"
+            rows="5"
             placeholder="Agrega observaciones o comentarios sobre la sesión..."
-            [style]="{ width: '100%', height: '120px' }"
-          />
+          ></textarea>
           <small class="char-counter">{{ notes().length }} / 1000 caracteres</small>
         </div>
       </div>
@@ -91,6 +92,11 @@ import { MarkAttendedRequest } from '../models/photographer.models';
       font-weight: 600;
       font-size: 0.875rem;
       color: var(--text-color);
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
     }
 
     .char-counter {
